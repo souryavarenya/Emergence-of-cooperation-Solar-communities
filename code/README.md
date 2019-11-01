@@ -1,3 +1,19 @@
-# Code Folder 
+# Instructions to run the code
 
-Your code goes here. You could also replace the content of this file with something more meaningful
+#### Directory Structure
+
+```bash
+.
+├── Agent
+├── Model
+├── Simulation
+└── README.md
+```
+
+#### Running it on your machine
+
+```shell
+python launch.py -params xyz
+```
+
+
