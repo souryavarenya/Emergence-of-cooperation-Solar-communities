@@ -6,8 +6,7 @@
 .
 ├── Agent
 ├── Model
-├── Simulation
-└── README.md
+└── Simulation
 ```
 
 #### Running it on your machine
