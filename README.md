@@ -4,7 +4,7 @@
 > * Group participants names: 
 >   * Fornt Mas, Jordi
 >   * Kovvali, Sourya
->   * Nunez Jiminez, Alejandro
+>   * Nuñez-Jimenez, Alejandro
 >   * Schwarz, Marius
 > * Project Title: Emergence of Co-operation for Solar Communities
 
