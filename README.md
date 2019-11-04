@@ -8,6 +8,12 @@
 >   * Schwarz, Marius
 > * Project Title: Emergence of Co-operation for Solar Communities
 
+## <REMOVE> G-Drive
+
+[https://drive.google.com/drive/folders/1p-_3aSWZEwiGsiweO4M7A74dusm4do5C](https://drive.google.com/drive/folders/1p-_3aSWZEwiGsiweO4M7A74dusm4do5C)
+
+(sign-in access required)
+
 ## General Introduction
 
 (States your motivation clearly: why is it important / interesting to solve this problem?)
