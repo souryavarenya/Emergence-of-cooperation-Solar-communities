@@ -1,3 +1,4 @@
+#%%
 from emergence_of_cooperation_solar_communities_v1 import BuildingModel
 import matplotlib.pyplot as plt
 import numpy as np
@@ -77,7 +78,8 @@ fixed_params = {
 
 variable_params = {"N": range(10, 500, 10)}
 
-# The variables parameters will be invoke along with the fixed parameters allowing for either or both to be honored.
+# The variables parameters will be invoke along with the fixed parameters 
+# allowing for either or both to be honored.
 batch_run = BatchRunner(
     MoneyModel,
     variable_params,
