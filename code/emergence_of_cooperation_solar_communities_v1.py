@@ -1,40 +1,82 @@
-from mesa import Agent, Model
-from mesa.time import RandomActivation
-from mesa.space import MultiGrid
-from mesa.datacollection import DataCollector
+#%%
+# Import packages from standard library
+import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
 
+# Import packaches from mesa library
+
+# Import main classes from mesa package
+from mesa import Agent, Model
+
+# Import random agent activator
+from mesa.time import RandomActivation
+
+# Import space package
+from mesa.space import MultiGrid
+#--> SingleGrid - uses a grid lattice that allows only one agent per cell
+#--> MultiGrid - uses a grid lattice that allows multiple agents per cell
+
+# Import data collector object class
+from mesa.datacollection import DataCollector
+
+#%%
 # MODEL FUNCTIONING
 # --> See ..._run.py for running the code
 
 
+#%%
+# Define main object classes in the code
 
-#####################################################################################
-#############################       Model      ######################################
-#####################################################################################
+###############################################################################
+#######################       Model      ######################################
+###############################################################################
 
 class BuildingModel(Model):
     """A model with some number of agents."""
+    
     def __init__(self):
-        self.schedule = RandomActivation(self)
-        self.running = True
-        
-        # Read in Building and Neighborhood Data
+        '''
+        This method initializes the instantiation of the model class.
+        Inputs:
+            ?
+            ?
+        '''        
+        # 0. Read in Building and Neighborhood Data
         # !!! Only 10 Buildings for faster debugging 
-        buildings_data = pd.read_csv("../01_Data/buildings_data.csv", nrows = 10)
+        buildings_data = pd.read_csv("../01_Data/buildings_data.csv",
+                                     nrows = 10)
         
-        buildings_data["xcoord"] = buildings_data["building_coord_x"] - min(buildings_data["building_coord_x"])
-        buildings_data["ycoord"] = buildings_data["building_coord_y"] - min(buildings_data["building_coord_y"])
+        min_x = min(buildings_data["building_coord_x"])
+        min_y = min(buildings_data["building_coord_y"])
         
+        buildings_data["xcoord"] = buildings_data["building_coord_x"] - min_x
+        buildings_data["ycoord"] = buildings_data["building_coord_y"] - min_y
+        
+        buildings_n = len(buildings_data["xcoord"])
+        
+        # 1. Define the number of agents in the model
+        self.num_agents = buildings_n
+        
+        # 2. Define the spatial dimension of the model creating a grid
+        # Set grid width and height based on location of buildings
         neighborhood_width = int(round(max(buildings_data["xcoord"]))) + 1
         neighborhood_height = int(round(max(buildings_data["ycoord"]))) + 1
+        # Create the grid with calculated dimensions
+        self.grid = MultiGrid(neighborhood_width,
+                              neighborhood_height,
+                              False)
+        # Note: "False" input means grid is not toroidal, this means that 
+        # the edges of the grid do not wrap around.
         
-        buildings_amount = len(buildings_data["xcoord"])
+        # 3. Define activator method used in the model
+        self.schedule = RandomActivation(self)
         
-        self.num_agents = buildings_amount
-        self.grid = MultiGrid(neighborhood_width, neighborhood_height, True)
+        # 4. Define a variable for conditional shut off of the model
+        self.running = True
+        # Note: here set as always true so model runs until max step.
         
-        # Setup Global Variables
+        # 5. Setup Global Variables
         self.profit = 0.5
         self.awareness = 0.5
         self.social = 0.5
@@ -66,7 +108,7 @@ class BuildingModel(Model):
             self.grid.place_agent(a, (x,y))
     
         self.datacollector = DataCollector(
-            #model_reporters={"Gini": compute_gini},  # `compute_gini` defined above
+            #model_reporters={"Gini": compute_gini},  
             #agent_reporters={"Wealth": "wealth"}
             )        
                
@@ -76,9 +118,9 @@ class BuildingModel(Model):
         self.schedule.step()   
 
 
-#####################################################################################
-#############################       Agent      ######################################
-#####################################################################################
+###############################################################################
+#######################       Agent      ######################################
+###############################################################################
 
 class BuildingAgent(Agent):
     """
@@ -130,7 +172,7 @@ class BuildingAgent(Agent):
         # (b) to adopt solar PV and join a solar community -> threshold_high
         self.threshold_high = model.threshold_high
         
-        # Initialize the agent's attributes that track progress in adoption process
+        # Initialize the agent's attributes that track adoption process
         # By default, no agent has intention to adopt solar or alreay has it
         
         # Track if the agent develops the intention to adopt solar PV
@@ -144,42 +186,97 @@ class BuildingAgent(Agent):
         
         
     def step(self):
-        #The agent's step will go here.
-        self.update_neighbor()
-        self.get_idea()
-        self.adopt()
+        '''
+        This method describes what the agent does when activated.
+        '''
         
+        # 0. Check if the agent is already in a solar community
+        if self.pv_community == True:
+            
+            # If the agent is in a solar community, then go on to next agent
+            return
         
+        # If the agent is not in a solar community, go through adoption process
+        else:
+
+            # 1. Update influence of peer effects            
+            self.update_neighbor()
+            
+            # 2. Update payback period
+            # to do
+            
+            # 3. Update social norms pressure
+            # to do
+            
+            # 4. Update agent's utility
+            # to do
+            
+            # 5. check the agent's intention
+            
+            # 5.0 if the utility is below threshold for adoption
+            if self.utility < self.threshold_low:
+                
+                # go on to next agent
+                return
+            
+            # 5.1 if the utility is above threshold for adoption
+            elif self.utility >= self.threshold_low:
+                
+                # Set adoption intention True
+                self.idea = True
+                
+                # if agent does not have solar PV yet, install it
+                if self.pv_alone == False:
+                    self.adopt_individual()
+                    
+                # 5.2 if the utility is above threshold for community
+                if self.utility >= self.threshold_high:
+                    
+                    # Set intention to join community True
+                    self.community = True
+                    
+                    # Join community
+                    self.join_community()           
 
     def get_idea(self):
+        '''
+        This method determines if the agent develops the intention of
+        adopting solar PV or not, and joining a solar community or not.
+        Input:
+            None (based on values of agent attributes)
+        Output:
+            None (it modifies agent attributes self.idea and self.community).
+        '''
+        
+        # 1. Compute the agent's utility
         self.utility = self.profit * self.model.profit_weight + self.awareness * self.model.awareness_weight
         
-        if (self.utility > self.model.threshold_low) & (self.utility < self.model.threshold_high):
+        # 2. Compare the agent's utility to the threshold for:
+        # 2.a Developing the intention to install solar PV alone
+        if self.utility > self.model.threshold_low:
             self.idea = True
-        
+        # 2.b Developing the intention to install solar & join a community
         if self.utility > self.model.threshold_high:
             self.community = True
             
         
-    def adopt(self):
-        # Check for PV alone adoption
-        if self.idea == True & self.community == False:
-            self.pv_alone = True
+    def adopt_individual(self):
+        '''
+        This method installs a solar PV system in the agent's rooftop.
+        '''
+        self.pv_alone = True
         
-        # Check for adoption in community
-        if self.idea == True & self.community == True:
-            
-            # all "neighboring agents", so far all agents on the same grid
-            cellmates = self.model.grid.get_cell_list_contents([self.pos])
-            
-            # 
-            for mates in cellmates:
-                if mates.community == True:
-                    mates.pv_community == True
-                    self.pv_community == True
+    def join_community(self):
+        '''
+        This method tries to integrate agent in a solar community.
+        '''
+        self.pv_community = True
                 
                 
     def update_neighbor(self):
+        '''
+        This method updates the peer effect of nearby adopters.
+        '''
         cellmates = self.model.grid.get_cell_list_contents([self.pos])
         cellmates_community = 0
         for mates in cellmates:
