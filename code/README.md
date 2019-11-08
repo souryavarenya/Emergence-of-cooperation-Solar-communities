@@ -1,6 +1,6 @@
 # Instructions to run the code
 
-#### Directory Structure
+#### Directory Structure (NOT CORRECT NOW ---> GENERATE ONCE FINALIZED)
 
 ```bash
 .
