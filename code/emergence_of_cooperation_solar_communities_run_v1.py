@@ -15,6 +15,9 @@ import pandas as pd
 # Import classes from model code
 from emergence_of_cooperation_solar_communities_v1 import *
 
+# Import functions from Visualization code
+from VisualizationFunctions import *
+
 #%%
 ### Collect data and set model parameters
 
@@ -48,15 +51,45 @@ b_data["xcoord"] = b_data["xcoord"].round().astype(int)
 b_data["ycoord"] = b_data["ycoord"].round().astype(int)
 
 #%%
+### VISUALIZATION VARIABLES
+
+#Example of arrays that will contain data wrto time and agent
+profit_array = np.zeros([n_steps+1,n_agents])
+idea_array = np.zeros([n_steps+1,n_agents])
+utility_array = np.zeros([n_steps+1,n_agents])
+
+#%%
 ### RUN MODEL
 
 model = BuildingModel(b_data, n_agents, hood_width, hood_height)
 
+#Get initial data of interest
+for i in range(0,n_agents):
+    profit_array[0,i] = model.agent_list[i].profit
+    idea_array[0,i] = float(model.agent_list[i].idea)
+    utility_array[0,i] = model.agent_list[i].utility
+
 for timestep in range(n_steps):
+        
     model.step()
+    
+    #Get current data of interest
+    for i in range(0,n_agents):
+        profit_array[1+timestep,i] = model.agent_list[i].profit
+        idea_array[1+timestep,i] = float(model.agent_list[i].idea)
+        utility_array[1+timestep,i] = model.agent_list[i].utility
     
 #%%
 #    
+### DATA VISUALIZATION WITH MATPLOTLIB-BASED FUNCTIONS
+
+#Final Idea ColourMap
+ColourMap(model.x_coord, model.y_coord, idea_array[n_steps], col_range=(0,1), x_label="", y_label="", colorbar=0, Nlegend=2, color_label=['No idea', 'Idea'], title="Final idea distribution", size=(10,5),cmap='RdYlGn',markersize=50,save=0,filename="IdeaMap.svg")
+
+#Evolution of profit .gif
+AnimateColourMap(n_steps, model.x_coord, model.y_coord, profit_array, dlyfactor=3, col_range=(0,2), x_label="", y_label="", colorbar=1, Nlegend=3, color_label=['Low', '', 'High'], title="Evolution of Profit", size=(10,5),cmap='RdYlGn',markersize=50,filename="ProfitEvolution.gif")
+AnimateColourMap(n_steps, model.x_coord, model.y_coord, utility_array, dlyfactor=3, col_range=(0.6,0.9), x_label="", y_label="", colorbar=1, Nlegend=3, color_label=['Low', '', 'High'], title="Evolution of Utility", size=(10,5),cmap='RdYlGn',markersize=50,filename="Utility.gif")        
+
 #### DATA VISUALIZATION OF GRID
 #  
 #

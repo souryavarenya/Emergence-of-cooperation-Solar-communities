@@ -83,6 +83,11 @@ class BuildingModel(Model):
         self.threshold_low = 0.5
         self.threshold_high = 0.75
         
+        # 6. Visualization variables
+        self.x_coord = []
+        self.y_coord = []
+        self.agent_list = []
+        
         # Create agents
         for i in range(self.num_agents):
             a = BuildingAgent(i, self)
@@ -93,6 +98,11 @@ class BuildingModel(Model):
             # Add the agent to its cell
             x = b_data.at[i,"xcoord"]
             y = b_data.at[i,"ycoord"]
+            
+            # Get data for visualization
+            self.x_coord.append(x)
+            self.y_coord.append(x)
+            self.agent_list.append(a)
             
             print("new_agent")
             print(x)
