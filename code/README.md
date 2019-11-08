@@ -4,15 +4,20 @@
 
 ```bash
 .
-├── Agent
-├── Model
-└── Simulation
+├── Visualization
+│   ├── adoption_rate.png
+│   ├── co-operation.png
+│   └── ...
+
+├── BuildingAgent.py
+├── BuildingModel.py
+└── main.ipynb
 ```
 
 #### Running it on your machine
 
 ```shell
-python launch.py -params xyz
+----
 ```
 
 
