@@ -81,20 +81,65 @@ class BuildingModel(Model):
 #####################################################################################
 
 class BuildingAgent(Agent):
-    """An agent with fixed initial wealth."""
+    """
+    Creates a building owner agent.
+    """
+    
     def __init__(self, unique_id, model):
+        '''
+        Initializes all the attributes of the building owner agent.
+        '''
+        # To do:
+        # 1. Update agent attribute initialization
+        # 1.1 set awareness based on normal distribution
+        # 1.2 set profit based on payback period calculation
+        # 1.3 set social pressure as result of relative agreement algorithm
+        # 1.4 set neighbor effect as calculation of nearby adopters
+        # 2. Create mechanism to form a social network for each agent during
+        # the agent initialization
+        # 3. Create process for updating the attributes that change over time
+        # 3.1 profit -> via payback calculation
+        # 3.2 social -> via relative agreement algorithm
+        # 3.3 neighbor -> via fraction of nearby adopters
+        # 4. Create process for joining community        
+        
+        # Set the agent's unique_id from the model object
         super().__init__(unique_id, model)
+        
+        # Set the agent's attributes
+        # Currently, all agents take the same values defined for model
+        
+        # Define agent's payback period
+        # ***to-do: update this to change every time step and depend on 
+        # agent's attributes, solar and electricity prices***
         self.profit = model.awareness
+        # Define the agent's environmental awareness
+        # ***to-do: take value from normal distribution***
         self.awareness = model.awareness
+        # Define initial social pressure
+        # ***to-do: initialize to zero?***
         self.social = model.social
+        # Define neighbor effect
+        # ***to-do: initialize to zero?***
+        # Q: does it need to be an attribute?
         self.neighbor = model.neighbor
+        
+        # Define the threshold for developing the intention:
+        # (a) to adopt solar PV -> threshold_low
         self.threshold_low = model.threshold_low
+        # (b) to adopt solar PV and join a solar community -> threshold_high
         self.threshold_high = model.threshold_high
         
-        self.idea = False
-        self.community = False
+        # Initialize the agent's attributes that track progress in adoption process
+        # By default, no agent has intention to adopt solar or alreay has it
         
+        # Track if the agent develops the intention to adopt solar PV
+        self.idea = False
+        # Track if the agent develops the intention to join a solar community
+        self.community = False
+        # Track if the agent has adopted solar PV individually
         self.pv_alone = False
+        # Track if the agent has joined a solar community
         self.pv_community = False
         
         
