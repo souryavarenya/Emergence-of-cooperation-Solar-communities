@@ -15,11 +15,14 @@ import pandas as pd
 # Import classes from model code
 from emergence_of_cooperation_solar_communities_v1 import *
 
+# Import functions from Visualization code
+from VisualizationFunctions import *
+
 #%%
 ### Collect data and set model parameters
 
 # Define number of agents
-n_agents = 5
+n_agents = 3
 
 # Define number of time steps each model runs
 n_steps = 10
@@ -31,8 +34,6 @@ b_data_file = "buildings_data.csv"
 b_data = pd.read_csv(b_data_file, nrows=n_agents)
 
 # From the data, calculate the dimensions of the neighborhood
-## Unnecessary computation every run
-
 min_x = min(b_data["building_coord_x"])
 max_x = max(b_data["building_coord_x"])
 min_y = min(b_data["building_coord_y"])
@@ -42,25 +43,53 @@ hood_width = int(round(max_x - min_x)) + 1
 hood_height = int(round(max_y - min_y)) + 1
 
 # Compute new coordinates for agents in the model
-## Unnecessary computation - Continuous Space model of MESA will mitigate this
 b_data["xcoord"] = b_data["building_coord_x"] - min_x
 b_data["ycoord"] = b_data["building_coord_y"] - min_y
 
 # Round the coordinates and make them integers so they refer to one cell
-## Unnecessary computation - Continuous Space model of MESA will handle this
 b_data["xcoord"] = b_data["xcoord"].round().astype(int)
 b_data["ycoord"] = b_data["ycoord"].round().astype(int)
+
+#%%
+### VISUALIZATION VARIABLES
+
+#Example of arrays that will contain data wrto time and agent
+profit_array = np.zeros([n_steps+1,n_agents])
+idea_array = np.zeros([n_steps+1,n_agents])
+utility_array = np.zeros([n_steps+1,n_agents])
 
 #%%
 ### RUN MODEL
 
 model = BuildingModel(b_data, n_agents, hood_width, hood_height)
 
+#Get initial data of interest
+for i in range(0,n_agents):
+    profit_array[0,i] = model.agent_list[i].profit
+    idea_array[0,i] = float(model.agent_list[i].idea)
+    utility_array[0,i] = model.agent_list[i].utility
+
 for timestep in range(n_steps):
+        
     model.step()
+    
+    #Get current data of interest
+    for i in range(0,n_agents):
+        profit_array[1+timestep,i] = model.agent_list[i].profit
+        idea_array[1+timestep,i] = float(model.agent_list[i].idea)
+        utility_array[1+timestep,i] = model.agent_list[i].utility
     
 #%%
 #    
+### DATA VISUALIZATION WITH MATPLOTLIB-BASED FUNCTIONS
+
+#Final Idea ColourMap
+ColourMap(model.x_coord, model.y_coord, idea_array[n_steps], col_range=(0,1), x_label="", y_label="", colorbar=0, Nlegend=2, color_label=['No idea', 'Idea'], title="Final idea distribution", size=(10,5),cmap='RdYlGn',markersize=50,save=0,filename="IdeaMap.svg")
+
+#Evolution of profit .gif
+AnimateColourMap(n_steps, model.x_coord, model.y_coord, profit_array, dlyfactor=3, col_range=(0,2), x_label="", y_label="", colorbar=1, Nlegend=3, color_label=['Low', '', 'High'], title="Evolution of Profit", size=(10,5),cmap='RdYlGn',markersize=50,filename="ProfitEvolution.gif")
+AnimateColourMap(n_steps, model.x_coord, model.y_coord, utility_array, dlyfactor=3, col_range=(0.6,0.9), x_label="", y_label="", colorbar=1, Nlegend=3, color_label=['Low', '', 'High'], title="Evolution of Utility", size=(10,5),cmap='RdYlGn',markersize=50,filename="Utility.gif")        
+
 #### DATA VISUALIZATION OF GRID
 #  
 #
