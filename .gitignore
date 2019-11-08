@@ -1,0 +1,7 @@
+code/__pycache__
+code/Agent/__pycache__
+code/Model/__pycache__
+.ipynb_checkpoints
+
+!code/Experiments
+!code/Obselete
