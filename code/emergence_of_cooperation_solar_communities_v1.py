@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+"""
+Created on November, 2019
+
+@authors: anunezji, JFornt, marius-ethz, souryavarenya,
+"""
 #%%
 # Import packages from standard library
 import matplotlib.pyplot as plt
@@ -35,36 +41,22 @@ from mesa.datacollection import DataCollector
 class BuildingModel(Model):
     """A model with some number of agents."""
     
-    def __init__(self):
+    def __init__(self, b_data, n_agents, width, height):
         '''
         This method initializes the instantiation of the model class.
         Inputs:
-            ?
-            ?
-        '''        
-        # 0. Read in Building and Neighborhood Data
-        # !!! Only 10 Buildings for faster debugging 
-        buildings_data = pd.read_csv("../01_Data/buildings_data.csv",
-                                     nrows = 10)
-        
-        min_x = min(buildings_data["building_coord_x"])
-        min_y = min(buildings_data["building_coord_y"])
-        
-        buildings_data["xcoord"] = buildings_data["building_coord_x"] - min_x
-        buildings_data["ycoord"] = buildings_data["building_coord_y"] - min_y
-        
-        buildings_n = len(buildings_data["xcoord"])
-        
+            b_data = csv file with data about buildings
+            n_agents = number of building owners populating the model
+            width = horizontal dimension of model's grid (i.e. n_cols)
+            height = vertical dimension of model's grid (i.e. n_rows)
+        '''                
         # 1. Define the number of agents in the model
-        self.num_agents = buildings_n
+        self.num_agents = n_agents
         
         # 2. Define the spatial dimension of the model creating a grid
-        # Set grid width and height based on location of buildings
-        neighborhood_width = int(round(max(buildings_data["xcoord"]))) + 1
-        neighborhood_height = int(round(max(buildings_data["ycoord"]))) + 1
         # Create the grid with calculated dimensions
-        self.grid = MultiGrid(neighborhood_width,
-                              neighborhood_height,
+        self.grid = MultiGrid(width,
+                              height,
                               False)
         # Note: "False" input means grid is not toroidal, this means that 
         # the edges of the grid do not wrap around.
@@ -94,11 +86,13 @@ class BuildingModel(Model):
         # Create agents
         for i in range(self.num_agents):
             a = BuildingAgent(i, self)
+            
+            # Add agent to model schedule
             self.schedule.add(a)
             
-            # Add the agent to a random grid cell
-            x = int(round(buildings_data.at[i,"xcoord"]))
-            y = int(round(buildings_data.at[i,"ycoord"]))
+            # Add the agent to its cell
+            x = b_data.at[i,"xcoord"]
+            y = b_data.at[i,"ycoord"]
             
             print("new_agent")
             print(x)
@@ -116,6 +110,7 @@ class BuildingModel(Model):
         '''Advance the model by one step.'''
         #self.datacollector.collect(self)
         self.schedule.step()   
+        print("==")
 
 
 ###############################################################################
@@ -157,7 +152,7 @@ class BuildingAgent(Agent):
         self.profit = model.awareness
         # Define the agent's environmental awareness
         # ***to-do: take value from normal distribution***
-        self.awareness = model.awareness
+        self.awareness = self.random.triangular(0,1, 0.5)
         # Define initial social pressure
         # ***to-do: initialize to zero?***
         self.social = model.social
@@ -165,6 +160,9 @@ class BuildingAgent(Agent):
         # ***to-do: initialize to zero?***
         # Q: does it need to be an attribute?
         self.neighbor = model.neighbor
+        # Define agent's utility level
+        # By default, all agents start at zero
+        self.utility = 0
         
         # Define the threshold for developing the intention:
         # (a) to adopt solar PV -> threshold_low
@@ -194,49 +192,41 @@ class BuildingAgent(Agent):
         if self.pv_community == True:
             
             # If the agent is in a solar community, then go on to next agent
-            return
+            pass
         
         # If the agent is not in a solar community, go through adoption process
         else:
-
-            # 1. Update influence of peer effects            
-            self.update_neighbor()
             
-            # 2. Update payback period
-            # to do
+            # Agents need to update values here, in get_idea or somewhere else
+            # TEST FUNCTION
+            # profit increases 0.1 per time step
+            self.profit += 0.1 * self.model.schedule.steps
             
-            # 3. Update social norms pressure
-            # to do
+            self.get_idea()
             
-            # 4. Update agent's utility
-            # to do
-            
-            # 5. check the agent's intention
-            
-            # 5.0 if the utility is below threshold for adoption
-            if self.utility < self.threshold_low:
+            # Check if the agent develop the intention
+            if self.idea == True:
                 
-                # go on to next agent
-                return
-            
-            # 5.1 if the utility is above threshold for adoption
-            elif self.utility >= self.threshold_low:
+                # If the agent developped the intention to join a community
+                if self.community == True:
+                    self.join_community()
                 
-                # Set adoption intention True
-                self.idea = True
-                
-                # if agent does not have solar PV yet, install it
-                if self.pv_alone == False:
+                # If the agent didn't develop the intention to join a community
+                # and does not yet have solar on its rooftop
+                elif self.pv_alone == False:
                     self.adopt_individual()
                     
-                # 5.2 if the utility is above threshold for community
-                if self.utility >= self.threshold_high:
+                else:
+                    # If the agent didn't want to join a community and already
+                    # has solar in its rooftop, go on to next agent
+                    pass
+            else:
+                
+                # If the agent did not develop the intention
+                pass
                     
-                    # Set intention to join community True
-                    self.community = True
-                    
-                    # Join community
-                    self.join_community()           
+                
+
 
     def get_idea(self):
         '''
@@ -247,16 +237,45 @@ class BuildingAgent(Agent):
         Output:
             None (it modifies agent attributes self.idea and self.community).
         '''
+        # 1. Update influence of peer effects            
+#        self.update_neighbor()
         
-        # 1. Compute the agent's utility
-        self.utility = self.profit * self.model.profit_weight + self.awareness * self.model.awareness_weight
+        # 2. Update payback period
+        # to do
         
-        # 2. Compare the agent's utility to the threshold for:
-        # 2.a Developing the intention to install solar PV alone
-        if self.utility > self.model.threshold_low:
+        # 3. Update social norms pressure
+        # to do
+        
+        # 4. Update agent's utility
+        # to do
+        
+        # 5. check the agent's intention
+        # Factor payback period
+        f_pp = self.profit * self.model.profit_weight
+        # Factor awareness
+        f_aw = self.awareness * self.model.awareness_weight
+        # Factor social pressure
+        f_sp = self.social * self.model.social
+        # Factor peer effects
+        f_pe = self.neighbor * self.model.neighbor
+        # Update agent's utility
+        if self.utility < 1:
+            self.utility = min([f_pp + f_aw + f_sp + f_pe, 1])
+        else:
+            self.utility = 1
+        
+        print("\n--\nHi there, I am agent " + str(self.unique_id) +
+              " and I have a utility level of " + str(round(self.utility,2)) + 
+              " during the step number " + str(self.model.schedule.steps) +
+              ".")
+        
+        # 5. Compare the agent's utility to the threshold for:
+        # 5.a Developing the intention to install solar PV alone
+        if self.utility >= self.model.threshold_low:
             self.idea = True
-        # 2.b Developing the intention to install solar & join a community
-        if self.utility > self.model.threshold_high:
+        # 5.b Developing the intention to install solar & join a community
+        if self.utility >= self.model.threshold_high:
+            self.idea = True
             self.community = True
             
         
@@ -266,11 +285,22 @@ class BuildingAgent(Agent):
         '''
         self.pv_alone = True
         
+        print("\nOh wow! I just install solar PV on my rooftop!" +
+              "\nMy id is " + str(self.unique_id) + 
+              ", and my utility is " + str(self.utility) +
+              ".")
+        
     def join_community(self):
         '''
         This method tries to integrate agent in a solar community.
         '''
+        self.pv_alone = True
         self.pv_community = True
+        
+        print("\nSweet! Just joined a community!" +
+              "\nMy id is " + str(self.unique_id) + 
+              ", and my utility is " + str(self.utility) +
+              ".")
                 
                 
     def update_neighbor(self):
