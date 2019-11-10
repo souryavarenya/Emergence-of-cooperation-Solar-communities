@@ -52,6 +52,8 @@
 - Python 3.6 + Jupyter Notebook
 - [Mesa Python](https://mesa.readthedocs.io/en/master/) library for agent-based modeling
 - Pandas
-- GeoPandas 
-
-
+- GeoPandas ?
+- ffmpeg
+- numpy
+- json
+- ImageMagick

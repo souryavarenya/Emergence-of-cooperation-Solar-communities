@@ -43,13 +43,13 @@ import matplotlib.animation as animation
 # -fig         -> Pointer to figure generated
 # -scatter     -> Pointer to scatter plot generated
 
-def ColourMap(x_axis, y_axis, col_axis, col_range=(0,1), x_label="X_label", y_label="Y_label", colorbar=1, Nlegend=3, color_label=['Low', 'Medium', 'High'], title="Title", size=(15,10),cmap='RdYlGn',markersize=5,save=0,filename="test.svg"):
+def ColourMap(x_axis, y_axis, col_axis, col_range=(0,1), x_label="X_label", y_label="Y_label", colorbar=1, Nlegend=3, color_label=['Low', 'Medium', 'High'], title="Title", size=(15,10),cmap='RdYlGn',markersize=5,save=0,filename="test.svg", internal=False):
 
     #Configure Scatter Plot
     fig = plt.figure(figsize=size)
     plt.title(title, fontsize=16)
-    plt.xlabel(y_label, fontsize=8)
-    plt.ylabel(x_label, fontsize=8)
+    plt.xlabel(y_label, fontsize=12)
+    plt.ylabel(x_label, fontsize=12)
     
     #Create Scatter Plot
     scatter = plt.scatter(x_axis,y_axis, c=col_axis, cmap=cmap, marker='s',s=markersize, vmin=col_range[0], vmax=col_range[1])
@@ -71,14 +71,15 @@ def ColourMap(x_axis, y_axis, col_axis, col_range=(0,1), x_label="X_label", y_la
         for i in range(0,Nlegend):
             legend_elements.append(Line2D([0],[0], marker='s', color='w', label=color_label[i],markerfacecolor=viridis(i), markersize=15))
         
-        plt.legend(handles=legend_elements, loc='lower left')
+        plt.legend(handles=legend_elements, loc='upper left')
     
     #Save image if requested
     if(save==1):
         plt.savefig(filename, format='svg')
     
     #Return values for animation
-    return fig, scatter
+    if internal is True:
+        return fig, scatter
 
 # --------------------------
 # COLOURED MAP ANIMATION FUNCTION
@@ -119,7 +120,7 @@ def ColourMap(x_axis, y_axis, col_axis, col_range=(0,1), x_label="X_label", y_la
 def AnimateColourMap(numframes, x_axis, y_axis, col_matrix, dlyfactor=1, col_range=(0,1), x_label="X_label", y_label="Y_label", colorbar=1, Nlegend=3, color_label=['Low', 'Medium', 'High'], title="Title", size=(15,10),cmap='RdYlGn',markersize=5,filename="test.gif"):
         
     #Implement the initial figure
-    fig, scatter = ColourMap(x_axis, y_axis, col_matrix[0], col_range=col_range, x_label=x_label, y_label=y_label, colorbar=colorbar, Nlegend=Nlegend, color_label=color_label, title=title, size=size, cmap=cmap, markersize=markersize, save=0)
+    fig, scatter = ColourMap(x_axis, y_axis, col_matrix[0], col_range=col_range, x_label=x_label, y_label=y_label, colorbar=colorbar, Nlegend=Nlegend, color_label=color_label, title=title, size=size, cmap=cmap, markersize=markersize, save=0, internal=True)
         
     #Create animation and save .gif
     ani = animation.FuncAnimation(fig, update_plot, frames=range(int(numframes*dlyfactor)),fargs=(col_matrix, scatter, dlyfactor),blit=True)
