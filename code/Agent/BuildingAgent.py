@@ -64,7 +64,7 @@ class BuildingAgent(Agent):
         # Track if the agent has joined a solar community
         self.pv_community = False
         
-    def step(self):
+    def step(self, idea_phase):
         '''
         This method describes what the agent does when activated.
         '''
@@ -83,28 +83,13 @@ class BuildingAgent(Agent):
             # profit increases 0.1 per time step
             self.profit += 0.1 * self.model.schedule.steps
             
-            self.get_idea()
-            
-            # Check if the agent develop the intention
-            if self.idea == True:
-                
-                # If the agent developped the intention to join a community
-                if self.community == True:
-                    self.join_community()
-                
-                # If the agent didn't develop the intention to join a community
-                # and does not yet have solar on its rooftop
-                elif self.pv_alone == False:
-                    self.adopt_individual()
-                    
-                else:
-                    # If the agent didn't want to join a community and already
-                    # has solar in its rooftop, go on to next agent
-                    pass
+            if idea_phase is True:
+                self.get_idea()
             else:
-                
-                # If the agent did not develop the intention
-                pass
+                self.implement_pv()
+
+            
+            
                     
     def get_idea(self):
         '''
@@ -133,14 +118,11 @@ class BuildingAgent(Agent):
         # Factor awareness
         f_aw = self.awareness * self.model.awareness_weight
         # Factor social pressure
-        f_sp = self.social * self.model.social
+        f_sp = self.social * self.model.social_weight
         # Factor peer effects
-        f_pe = self.neighbor * self.model.neighbor
+        f_pe = self.neighbor * self.model.neighbor_weight
         # Update agent's utility
-        if self.utility < 1:
-            self.utility = min([f_pp + f_aw + f_sp + f_pe, 1])
-        else:
-            self.utility = 1
+        self.utility = min([f_pp + f_aw + f_sp + f_pe, 1])
         
         print("\n--\nHi there, I am agent " + str(self.unique_id) +
               " and I have a utility level of " + str(round(self.utility,2)) + 
@@ -155,6 +137,28 @@ class BuildingAgent(Agent):
         if self.utility >= self.model.threshold_high:
             self.idea = True
             self.community = True
+
+    def implement_pv(self):
+        # Check if the agent develop the intention
+        if self.idea == True:
+            
+            # If the agent developped the intention to join a community
+            if self.community == True:
+                self.join_community()
+            
+            # If the agent didn't develop the intention to join a community
+            # and does not yet have solar on its rooftop
+            elif self.pv_alone == False:
+                self.adopt_individual()
+                
+            else:
+                # If the agent didn't want to join a community and already
+                # has solar in its rooftop, go on to next agent
+                pass
+        else:
+            
+            # If the agent did not develop the intention
+            pass
             
     def adopt_individual(self):
         '''

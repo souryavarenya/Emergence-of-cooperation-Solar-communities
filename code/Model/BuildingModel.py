@@ -76,6 +76,8 @@ class BuildingModel(Model):
             # Add the agent to its cell
             x = b_data.at[i,"building_coord_x"]
             y = b_data.at[i,"building_coord_y"]
+
+            block = b_data.at[i, "building_block"]
             
             # Get data for visualization
             self.x_coord.append(x)
@@ -97,5 +99,6 @@ class BuildingModel(Model):
     def step(self):
         '''Advance the model by one step.'''
         #self.datacollector.collect(self)
-        self.schedule.step()   
+        self.schedule.step(True)
+        self.schedule.step(False)   
         print("==")
