@@ -68,6 +68,13 @@ class BuildingAgent(Agent):
         '''
         This method describes what the agent does when activated.
         '''
+
+        # 0. Update parameters for all agents
+        self.update_profit()
+        self.update_awareness()
+        self.update_neighbors()
+        self.update_social()
+
         
         # 0. Check if the agent is already in a solar community
         if self.pv_community == True:
@@ -90,7 +97,21 @@ class BuildingAgent(Agent):
 
             
             
-                    
+    def update_profit(self):
+        ''' Update profit of agent for idea calculation. Model updates global PV prices'''
+        profit = 1 - self.model.price
+
+    def update_awareness(self):
+        pass
+
+    def update_neighbors(self):
+        ''' Update neighbor parameter for idea calculation. Agent calculates the share of buildings in their building block having a pv adopted'''
+        pass
+
+    def update_social(self):
+        pass
+
+
     def get_idea(self):
         '''
         This method determines if the agent develops the intention of

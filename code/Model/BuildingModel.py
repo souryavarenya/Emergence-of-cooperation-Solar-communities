@@ -46,19 +46,22 @@ class BuildingModel(Model):
         # Note: here set as always true so model runs until max step.
         
         # 5. Setup Global Variables
-        self.profit = 0.5
-        self.awareness = 0.5
-        self.social = 0.5
-        self.neighbor = 0.5
-        self.threshold = 0
+        self.profit = data_dict["profit"]
+        self.awareness = data_dict["awareness"]
+        self.social = data_dict["social"]
+        self.neighbor = data_dict["neighbor"]
         
-        self.profit_weight = 0.2
-        self.awareness_weight = 0.2
-        self.social_weight = 0.3
-        self.neighbor_weight = 0.3
+        self.profit_weight = data_dict["profit_weight"]
+        self.awareness_weight = data_dict["awareness_weight"]
+        self.social_weight = data_dict["social_weight"]
+        self.neighbor_weight = data_dict["neighbor_weight"]
         
-        self.threshold_low = 0.5
-        self.threshold_high = 0.75
+        self.threshold_low = data_dict["threshold_low"]
+        self.threshold_high = data_dict["threshold_high"]
+
+        self.start_price = data_dict["start_price"]
+        self.learning_rate = data_dict["learning_rate"]
+        self.price = self.start_price
         
         # 6. Visualization variables
         self.x_coord = []
@@ -100,5 +103,13 @@ class BuildingModel(Model):
         '''Advance the model by one step.'''
         #self.datacollector.collect(self)
         self.schedule.step(True)
-        self.schedule.step(False)   
+        self.schedule.step(False)
+
+        self.update_global_pv_price()   
         print("==")
+
+    
+    def update_global_pv_price(self):
+        '''Update global pv prices. Agents can then use this global pv price for their idea calculation'''
+        self.price = self.price / (1 + self.learning_rate)     # WRONG formula so far; so far we assume that the cumulative capacity doubles every year
+
