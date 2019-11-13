@@ -62,6 +62,9 @@ class BuildingModel(Model):
         self.start_price = data_dict["start_price"]
         self.learning_rate = data_dict["learning_rate"]
         self.price = self.start_price
+
+        self.idea_phase = True
+            # Flag for switching between
         
         # 6. Visualization variables
         self.x_coord = []
@@ -102,8 +105,11 @@ class BuildingModel(Model):
     def step(self):
         '''Advance the model by one step.'''
         #self.datacollector.collect(self)
-        self.schedule.step(True)
-        self.schedule.step(False)
+        self.idea_phase = True
+        self.schedule.step()
+        
+        self.idea_phase = False
+        self.schedule.step()
 
         self.update_global_pv_price()   
         print("==")

@@ -63,8 +63,11 @@ class BuildingAgent(Agent):
         self.pv_alone = False
         # Track if the agent has joined a solar community
         self.pv_community = False
+
+        # Divide the step into idea formation and implementation
+        # Flag for checking idea phase 
         
-    def step(self, idea_phase):
+    def step(self):
         '''
         This method describes what the agent does when activated.
         '''
@@ -90,7 +93,7 @@ class BuildingAgent(Agent):
             # profit increases 0.1 per time step
             self.profit += 0.1 * self.model.schedule.steps
             
-            if idea_phase is True:
+            if self.model.idea_phase is True:
                 self.get_idea()
             else:
                 self.implement_pv()
