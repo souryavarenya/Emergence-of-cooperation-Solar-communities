@@ -14,7 +14,7 @@ class casy(object):
     def printy(self):
         print(self.bxyobj.value)
 
-bx1 = boxy("Sourya")
+bx1 = boxy("Sou")
 cs1 = casy(bx1)
 cs1.printy()
 bx1.toggle_value()
