@@ -1,7 +1,10 @@
 # Import Model class from mesa as a parent class for the model
 from mesa import Model
 
-# Import our agent from /Agent/BuildingAgent.py
+### Import our agent from /Agent/BuildingAgent.py - NOT NEEDED ANYMORE!
+
+# Import NetworkX Library
+import networkx as nx
 
 # Import random agent activator
 from mesa.time import RandomActivation
@@ -48,6 +51,8 @@ class BuildingModel(Model):
         # 5. Setup Global Variables
         self.profit = data_dict["profit"]
         self.awareness = data_dict["awareness"]
+        self.awareness_var = data_dict["awareness_var"]
+        self.awareness_unc = data_dict["awareness_unc"]
         self.social = data_dict["social"]
         self.neighbor = data_dict["neighbor"]
         
@@ -64,12 +69,17 @@ class BuildingModel(Model):
         self.price = self.start_price
 
         self.idea_phase = True
-            # Flag for switching between
+        # Flag for switching between
         
         # 6. Visualization variables
         self.x_coord = []
         self.y_coord = []
         self.agent_list = []
+
+        # Create Small World Network between agents (Done before agents)
+        self.num_neighbors_wsg = data_dict["swn_k"]
+        self.rewire_prob_wsg = data_dict["swn_p"]
+        self.net = self.init_small_world()
         
         # Create agents
         for i in range(self.num_agents):
@@ -96,7 +106,7 @@ class BuildingModel(Model):
             print(i)
             
             self.space.place_agent(a,(x,y))
-    
+
         self.datacollector = DataCollector(
             #model_reporters={"Gini": compute_gini},  
             #agent_reporters={"Wealth": "wealth"}
@@ -119,3 +129,5 @@ class BuildingModel(Model):
         '''Update global pv prices. Agents can then use this global pv price for their idea calculation'''
         self.price = self.price / (1 + self.learning_rate)     # WRONG formula so far; so far we assume that the cumulative capacity doubles every year
 
+    def init_small_world(self):
+        return nx.generators.random_graphs.watts_strogatz_graph(self.num_agents, self.num_neighbors_wsg, self.rewire_prob_wsg)

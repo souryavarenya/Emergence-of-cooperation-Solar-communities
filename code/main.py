@@ -20,7 +20,7 @@ from Visualization.VisualizationFunctions import AnimateColourMap
 
 ### Setting up some parameters for initialization
 # Define number of agents
-n_agents = 5
+n_agents = 15
 
 # Define number of time steps each model runs
 n_steps = 10
@@ -28,13 +28,18 @@ n_steps = 10
 # Name of csv file containing data on individual buildings
 b_data_file = "Data/buildings_data.csv"
 m_data_file = "Data/meta.json"
+m_prof_file = "Data/profile1.json"
 
 # Read building data from the CSV %%file
 b_data = pd.read_csv(b_data_file, nrows=n_agents)
 
-# Read meta data off JSON file
+# Read building meta data off JSON file
 with open(m_data_file) as myjson:
     data_dict = json.loads(myjson.read())
+
+# Reads the profile file and appends it to data_dict
+with open(m_prof_file) as myjson:
+    data_dict.update(json.loads(myjson.read()))
 
 # Set up data arrays for visualization
 

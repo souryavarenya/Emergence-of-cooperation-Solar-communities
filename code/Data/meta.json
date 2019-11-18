@@ -5,20 +5,5 @@
     "min_y": 245686,
     "max_y": 248037,
     "range_x": 2183,
-    "range_y": 2351,
-    "profit": 0.5,
-    "awareness": 0.5,
-    "social": 0.5,
-    "neighbor": 0.5,
-    "profit_weight": 0.2,
-    "awareness_weight": 0.2,
-    "social_weight": 0.3,
-    "neighbor_weight": 0.3,
-    "threshold_low": 0.5,
-    "threshold_high": 0.75,
-    "learning_rate": 0.24,
-    "start_price": 1,
-    "years_pv_production_doubles": 1
-
-
+    "range_y": 2351
 }

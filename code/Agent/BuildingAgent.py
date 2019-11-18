@@ -1,4 +1,7 @@
 from mesa import Agent
+import numpy as np
+from Tools import RelativeAgreement
+import random
 
 class BuildingAgent(Agent):
     """
@@ -27,21 +30,29 @@ class BuildingAgent(Agent):
         
         # Set the agent's attributes
         # Currently, all agents take the same values defined for model
+
+        # Defining a list of neighbors for the given agent from a given network
+        self.connection_list = [n for n in model.net.neighbors(unique_id)]
         
         # Define agent's payback period
         # ***to-do: update this to change every time step and depend on 
         # agent's attributes, solar and electricity prices***
-        self.profit = model.awareness
+        self.profit = model.profit
+
         # Define the agent's environmental awareness
-        # ***to-do: take value from normal distribution***
-        self.awareness = self.random.triangular(0,1, 0.5)
+        # Initializes a random value around the given mean awareness and clips it between 0 and 1
+        self.awareness = np.clip(np.random.normal(model.awareness,model.awareness_var),0,1)
+        self.awareness_unc = np.random.normal(model.awareness_unc,model.awareness_var/3) 
+
         # Define initial social pressure
-        # ***to-do: initialize to zero?***
+        # ***to-do: initialize to random variable from gaussian***
         self.social = model.social
+
         # Define neighbor effect
         # ***to-do: initialize to zero?***
         # Q: does it need to be an attribute?
         self.neighbor = model.neighbor
+
         # Define agent's utility level
         # By default, all agents start at zero
         self.utility = 0
@@ -102,10 +113,30 @@ class BuildingAgent(Agent):
             
     def update_profit(self):
         ''' Update profit of agent for idea calculation. Model updates global PV prices'''
-        profit = 1 - self.model.price
+        self.profit = 1 - self.model.price
 
     def update_awareness(self):
-        pass
+        
+        # Selects connection randomly
+        sel_connection = random.choice(self.connection_list)
+
+        # initial opunc values of self
+        opunc0 = (self.awareness,self.awareness_unc)
+
+        # initial opunc values of selected connection
+        connection_agent = self.model.schedule._agents[sel_connection]
+        opunc1 = (connection_agent.awareness,connection_agent.awareness_unc)
+
+        # Update the opuncs
+        opunc0, opunc1 = RelativeAgreement.interact(opunc0, opunc1, 1)
+
+        # Assign new opunc values to self
+        self.awareness = opunc0[0]
+        self.awareness_unc = opunc0[1]
+
+        # Assign new opun values to connection
+        connection_agent.awareness = opunc1[0]
+        connection_agent.awareness_unc = opunc1[1]
 
     def update_neighbors(self):
         ''' Update neighbor parameter for idea calculation. Agent calculates the share of buildings in their building block having a pv adopted'''
@@ -211,7 +242,7 @@ class BuildingAgent(Agent):
         '''
         This method updates the peer effect of nearby adopters.
         '''
-        cellmates = self.model.grid.get_cell_list_contents([self.pos])
+        cellmates = self.model.grid.get_cell_list_contents([(0,0)])
         cellmates_community = 0
         for mates in cellmates:
             if mates.community == True:
