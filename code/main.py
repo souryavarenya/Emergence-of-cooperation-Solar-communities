@@ -51,16 +51,16 @@ utility_array = np.zeros([n_steps+1,n_agents])
 # Sample run for few steps
 model = BuildingModel(BuildingAgent, b_data, n_agents, data_dict)
 
-#Get initial data of interest
-for i in range(0,n_agents):
-    profit_array[0,i] = model.agent_list[i].profit
-    idea_array[0,i] = float(model.agent_list[i].idea)
-    utility_array[0,i] = model.agent_list[i].utility
+# Get initial data of interest
+#for i in range(0,n_agents):
+#    profit_array[0,i] = model.agent_list[i].profit
+#    idea_array[0,i] = float(model.agent_list[i].idea)
+#    utility_array[0,i] = model.agent_list[i].utility
 
 for timestep in range(n_steps):
     model.step()
-    
-    #Get current data of interest
+#%%
+    # Get current data of interest
     for i in range(0,n_agents):
         profit_array[1+timestep,i] = model.agent_list[i].profit
         idea_array[1+timestep,i] = float(model.agent_list[i].idea)
