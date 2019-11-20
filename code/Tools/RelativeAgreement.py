@@ -15,6 +15,7 @@ def interact(opunc0, opunc1, gain):
         opunc1_mod : tuple, modified opinion value, uncertainty of agent 1
     
     This formulation follows Deffuant et al (2002).
+    http://jasss.soc.surrey.ac.uk/5/4/1.html
     '''
     # Expressed in the formulation employed by Deffuant et al (2002)
     # For agents i and j, their opinion is represented by x_i, x_j and
