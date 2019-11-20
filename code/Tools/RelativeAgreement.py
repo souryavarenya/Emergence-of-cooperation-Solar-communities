@@ -1,4 +1,5 @@
-### Relative Agreement interaction - Takes in two opinion-uncertainty <tuples> and returns respective modified op-unc return tuples
+### Relative Agreement interaction - Takes in two opinion-uncertainty <tuples> 
+# and returns respective modified op-unc return tuples
 # opunc is in the range ([0,100],[0,50])
 # reference http://jasss.soc.surrey.ac.uk/5/4/1.html
 
