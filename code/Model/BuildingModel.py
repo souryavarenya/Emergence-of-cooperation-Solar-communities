@@ -76,6 +76,9 @@ class BuildingModel(Model):
         self.y_coord = []
         self.agent_list = []
 
+        # Solar Community blocks
+        self.communities = []
+
         # Create Small World Network between agents (Done before agents)
         self.num_neighbors_wsg = data_dict["swn_k"]
         self.rewire_prob_wsg = data_dict["swn_p"]
@@ -93,7 +96,7 @@ class BuildingModel(Model):
             x = b_data.at[i,"building_coord_x"]
             y = b_data.at[i,"building_coord_y"]
 
-            block = b_data.at[i, "building_block"]
+            a.block = b_data.at[i, "building_block"]
             
             # Get data for visualization
             self.x_coord.append(x)
