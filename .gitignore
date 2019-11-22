@@ -5,3 +5,5 @@ code/Visualization/__pycache__
 .ipynb_checkpoints
 !code/1Experiments
 !code/1Obselete
+.vscode
+.vscode/settings.json

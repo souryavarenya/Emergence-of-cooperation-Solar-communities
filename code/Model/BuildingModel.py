@@ -123,7 +123,7 @@ class BuildingModel(Model):
             self.x_coord.append(x)
             self.y_coord.append(y)
 
-            a.block = b_data.at[i, "building_block"]
+            block = b_data.at[i, "building_block"]
             
             # Retrieve agent's electricity demand from data
             el_demand = b_data.at[i, "demand_kwh"]

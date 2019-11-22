@@ -37,7 +37,7 @@ class BuildingAgent(Agent):
         
         # Set the agent's attributes
         # Currently, all agents take the same values defined for model
-        self.block = ""
+        self.block = block
 
         # Defining a list of contacts for the given agent from a given network
         self.connection_list = [n for n in model.net.neighbors(unique_id)]
