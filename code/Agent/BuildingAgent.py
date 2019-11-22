@@ -1,15 +1,22 @@
 from mesa import Agent
 import numpy as np
 from Tools import RelativeAgreement
+from Tools import SimplePayback
 import random
 
 class BuildingAgent(Agent):
     """
     Creates a building owner agent.
     """    
-    def __init__(self, unique_id, model):
+    def __init__(self, unique_id, model, block, el_demand, pv_potential, pv_sf):
         '''
         Initializes all the attributes of the building owner agent.
+        Inputs:
+            self : agent object
+            model : model object
+            block : string, building block unique identifier
+            el_demand : integer, annual electricity demand [kWh]
+            pv_sf : float, scaling factor of PV system size agent may buy [-]
         '''
         # To do:
         # 1. Update agent attribute initialization
@@ -32,17 +39,28 @@ class BuildingAgent(Agent):
         # Currently, all agents take the same values defined for model
         self.block = ""
 
-        # Defining a list of neighbors for the given agent from a given network
+        # Defining a list of contacts for the given agent from a given network
         self.connection_list = [n for n in model.net.neighbors(unique_id)]
         
-        # Define agent's payback period
-        # ***to-do: update this to change every time step and depend on 
-        # agent's attributes, solar and electricity prices***
-        self.profit = model.profit
+        # Initialize agent's profitability
+        # Agent's payback period pbp and profit set to zero
+        # These parameters are recalculated every step
+        self.pv_sf = pv_sf
+        self.pbp = 0
+        self.profit = 0
+        
+        # Define agent's solar generation potential
+        self.pv_potential = pv_potential
+        
+        # Define agent's building block
+        self.block = block
 
         # Define the agent's environmental awareness
-        # Initializes a random value around the given mean awareness and clips it between 0 and 1
-        self.awareness = np.clip(np.random.normal(model.awareness,model.awareness_var),0,1)
+        # Initializes a random value around the given mean awareness 
+        # and clips it between 0 and 1
+        # ***IMPORTANT RANDOM MANAGEMENT -> maybe we need to use the mesa
+        # package random package instead of the numpy??
+        self.awareness = np.clip(np.random.normal(model.awareness, model.awareness_var),0,1)
         self.awareness_unc = np.random.normal(model.awareness_unc,model.awareness_var/3) 
         ### TODO - Change it to uniform distribution
         ### TODO - Simplify awareness_uncertainty to linear func of awareness
@@ -101,32 +119,47 @@ class BuildingAgent(Agent):
         
         # If the agent is not in a solar community, go through adoption process
         else:
-            
-            # Agents need to update values here, in get_idea or somewhere else
-            # TEST FUNCTION
-            # profit increases 0.1 per time step
-            self.profit += 0.1 * self.model.schedule.steps
-            
+                       
             if self.model.idea_phase is True:
                 self.get_idea()
             else:
-                self.implement_pv()
-
-            
+                self.implement_pv()            
             
     def update_profit(self):
-        ''' Update profit of agent for idea calculation. Model updates global PV prices'''
-        self.profit = 1 - self.model.price
+        '''
+        Update profit of agent for idea calculation. 
+        Model updates global PV prices
+        
+        This method is based on a simplified, linear relation of the results
+        for stated willingness to adopt solar PV photovoltaics for
+        different payback periods by households in the U.S. as reported in:
+        Conference paper Figure 3 in Sigrin and Drury (2014)
+        https://pdfs.semanticscholar.org/4ea3/669e1d2058dc01bfd0baf5e0532ed3a6dbf6.pdf
+        Full paper (w/o referenced figure): Sigrin, Pless, Drury (2015)
+        https://doi.org/10.1088/1748-9326/10/8/084001      
+        '''
+        # Compute payback period with current prices
+        self.pbp = SimplePayback.compute_pbp(self, 
+                                             self.pv_sf, 
+                                             self.pv_potential)
+        
+        # Estimate profitability perception of agent
+        self.profit = 1 - (self.pbp / self.model.max_pbp)
 
     def update_awareness(self):
+        '''
+        This method models the social interactions of the agent with 
+        other agents in its social network, and how both agents' awareness
+        are modified as a result of the interaction.
+        '''
         
         # Selects connection randomly
         sel_connection = random.choice(self.connection_list)
 
-        # initial opunc values of self
+        # initial opinion and uncertainty values of self
         opunc0 = (self.awareness,self.awareness_unc)
 
-        # initial opunc values of selected connection
+        # initial pinion and uncertainty values of selected connection
         connection_agent = self.model.schedule._agents[sel_connection]
         opunc1 = (connection_agent.awareness,connection_agent.awareness_unc)
 
@@ -142,12 +175,14 @@ class BuildingAgent(Agent):
         connection_agent.awareness_unc = opunc1[1]
 
     def update_neighbors(self):
-        ''' Update neighbor parameter for idea calculation. Agent calculates the share of buildings in their building block having a pv adopted'''
+        '''
+        Update neighbor parameter for idea calculation. Agent calculates 
+        the share of buildings in their building block having a pv adopted
+        '''
         pass
 
     def update_social(self):
         pass
-
 
     def get_idea(self):
         '''
