@@ -117,6 +117,9 @@ class BuildingModel(Model):
             x = b_data.at[i,"building_coord_x"]
             y = b_data.at[i,"building_coord_y"]
             
+            self.x_coord.append(x)
+            self.y_coord.append(y)
+
             # Retrieve agent's block from data
             block = b_data.at[i, "building_block"]
             
