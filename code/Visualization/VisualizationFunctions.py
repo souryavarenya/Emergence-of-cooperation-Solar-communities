@@ -81,6 +81,8 @@ def ColourMap(x_axis, y_axis, col_axis, col_range=(0,1), x_label="X_label", y_la
     if internal is True:
         return fig, scatter
 
+#%%
+
 # --------------------------
 # COLOURED MAP ANIMATION FUNCTION
 # --------------------------

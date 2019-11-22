@@ -152,24 +152,22 @@ class BuildingModel(Model):
             # Locate agent in the map
             self.space.place_agent(a,(x,y))
             
-            # Get data for visualization
-#            self.x_coord.append(x)
-#            self.y_coord.append(x)
-#            self.agent_list.append(a)
-            
-#            print("new_agent")
-#            print(x)
-#            print(y)
-#            print(i)         
-
-        self.datacollector = DataCollector(
-            #model_reporters={"Gini": compute_gini},  
-            #agent_reporters={"Wealth": "wealth"}
-            )        
+            # Define collector data
+            self.datacollector = DataCollector(
+                model_reporters ={
+                    "Awareness" : "awareness"},
+                agent_reporters ={
+                    "Utility" : "utility",
+                    "Opinion" : "awareness",
+                    "Uncertainty" : "awareness_unc",
+                    "pv_alone" : "pv_alone",
+                    "pv_community" : "pv_community",
+                    "idea": "idea"}       
+                )                
                
     def step(self):
         '''Advance the model by one step.'''
-        #self.datacollector.collect(self)
+        self.datacollector.collect(self)
         self.idea_phase = True
         self.schedule.step()
         
