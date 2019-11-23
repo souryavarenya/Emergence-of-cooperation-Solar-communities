@@ -10,31 +10,144 @@ import numpy as np
 
 # MATPLOTLIB-BASED VISUALIZATION FUNCTIONS
 
-def MultiAgentLinePlot(data_matrix, n_agents, x_axis=[], step=0, show=1, x_label="X_label", y_label="Y_label", legend=1, cmap='RdYlGn', title="Title", size=(15,10), save=0, filename="test.svg"):
+#%%
 
+# --------------------------
+# HISTOGRAM PLOT FUNCTION
+# --------------------------
+#
+# DESCRIPTION: it creates a histogram plot from data.
+#
+# INPUT ARGUMENTS
+#
+# -data        -> vector with the data values to plot
+# -n_bins      -> number of histogram categories
+#
+# -show        -> 1 if the image must be shown in screen
+# -x_label     -> label that will appear on the x-axis
+# -y_label     -> label that will appear on the y-axis
+#
+# -title       -> Title that will appear on the graph
+# -size        -> Size of the graph (x,y)
+# -cmap        -> Color map being used for the categories
+# -save        -> 1 if the image must be saved into a .svg file
+# -filename    -> Name that will be given to the image file
+#
+
+def HistogramPlot(data, n_bins=20, show=1, x_label="X_label", y_label="Y_label", cmap='RdYlGn', title="Title", size=(15,10), save=0, filename="test.svg"):
+
+    #Configure Plot
     plt.figure(figsize=size)
     plt.title(title, fontsize=16)
     plt.xlabel(x_label, fontsize=12)
     plt.ylabel(y_label, fontsize=12)
 
-    viridis = cm.get_cmap(cmap, n_agents)
+    #Create Histogram
+    a,b,patches = plt.hist(data,bins=n_bins)
+
+    #Get color scheme
+    viridis = cm.get_cmap(cmap, len(patches))
+
+    #Color patches
+    for i in range(0,len(patches)):
+        color = viridis(i)
+        thispatch = patches[i]
+        thispatch.set_facecolor(color)
+
+    #Save image if requested
+    if(save==1):
+        plt.savefig(filename, format='svg')
+
+    #Show image if requested
+    if(show==1):
+        plt.show()
+
+
+#%%
+
+# --------------------------
+# MULTI LINE PLOT FUNCTION
+# --------------------------
+#
+# DESCRIPTION: it creates a plot with multiple lines or steps from an array of data.
+#              Can be used to represent evolution of all agents, or evolution through all runs, etc
+#
+# INPUT ARGUMENTS
+#
+# -data        -> vector with the data values to plot
+# -n_lines     -> number of lines to plot
+#
+# -x_axis      -> vector with x-coordinates (optional)
+# -stepshape   -> 1 for Step Plot, 0 for Line Plot
+#
+# -show        -> 1 if the image must be shown in screen
+# -x_label     -> label that will appear on the x-axis
+# -y_label     -> label that will appear on the y-axis
+#
+# -legend      -> 1 if a legend is wanted
+# -legendlabel -> label to name the elements of the legend sequentially
+#
+# -title       -> Title that will appear on the graph
+# -size        -> Size of the graph (x,y)
+# -cmap        -> Color map being used to differentiate lines
+# -save        -> 1 if the image must be saved into a .svg file
+# -filename    -> Name that will be given to the image file
+#
+
+def MultiLinePlot(data, n_lines, x_axis=[], stepshape=0, show=1, x_label="X_label", y_label="Y_label", legend=1, legendlabel='Agent', cmap='RdYlGn', title="Title", size=(15,10), save=0, filename="test.svg"):
+
+    #Configure Plot
+    plt.figure(figsize=size)
+    plt.title(title, fontsize=16)
+    plt.xlabel(x_label, fontsize=12)
+    plt.ylabel(y_label, fontsize=12)
+
+    #Get color scheme for legend
+    viridis = cm.get_cmap(cmap, n_lines)
     legend_elements = []
 
-    for i in range(0,n_agents):
-        if(np.size(x_axis)==np.size(data_matrix)):
-            if(step==1):
-                plt.step(x_axis[:,0],data_matrix[:,i],color=viridis(i))
-            else:
-                plt.plot(x_axis[:,0],data_matrix[:,i],color=viridis(i))
-        else:
-            if(step==1):
-                plt.step(range(0,len(data_matrix[:,i])),data_matrix[:,i],color=viridis(i))
-            else:
-                plt.plot(data_matrix[:,i],color=viridis(i))
+    #For every line to plot
+    for i in range(0,n_lines):
 
+        #If the input data is a List:
+        if (type(data)==type([])):
+
+            y_array = data[i]
+
+            #If both x and y axes are inputs
+            if(np.size(x_axis)==np.size(data)):
+                x_array = x_axis[i]
+
+            #Otherwise generate linear x axis
+            else:
+                x_array = range(0,len(data[:,i]))
+
+        #Otherwise we assume it is a Matrix:
+        else:
+
+            y_array = data[:,i]
+
+            #If both x and y axes are inputs
+            if(np.size(x_axis)==np.size(data)):
+                x_array = x_axis[:,i]
+
+            #Otherwise generate linear x axis
+            else:
+                x_array = range(0,len(data[:,i]))
+
+        #If a Step splot is requested
+        if(stepshape==1):
+            plt.step(x_array,y_array,color=viridis(i),where='post')
+
+        #Otherwise it's a Line plot
+        else:
+            plt.plot(x_array,y_array,color=viridis(i))
+
+        #If legend is requested, append element with label
         if(legend==1):
-            legend_elements.append(Line2D([0],[0], marker='s', color='w', label="Agent "+str(i),markerfacecolor=viridis(i), markersize=15))
-        
+            legend_elements.append(Line2D([0],[0], marker='s', color='w', label=legendlabel+" "+str(i),markerfacecolor=viridis(i), markersize=15))
+    
+    #If legend is requested, crete legend
     if(legend==1):
         plt.legend(handles=legend_elements, loc='lower right')
 
@@ -95,7 +208,7 @@ def ColourMap(x_axis, y_axis, col_axis, col_range=(0,1), x_label="X_label", y_la
     #Create Scatter Plot
     scatter = plt.scatter(x_axis,y_axis, c=col_axis, cmap=cmap, marker='s',s=markersize, vmin=col_range[0], vmax=col_range[1])
     
-    #Setup Colorbar
+    #Setup Colorbar if requested
     if(colorbar==1):
         min_col = col_range[0]+0.001
         max_col = col_range[1]-0.001
@@ -105,6 +218,7 @@ def ColourMap(x_axis, y_axis, col_axis, col_range=(0,1), x_label="X_label", y_la
     #Alternatively, setup Legend
     else:
         
+        #Get color scheme for legend
         viridis = cm.get_cmap(cmap, Nlegend)
         
         legend_elements = []
