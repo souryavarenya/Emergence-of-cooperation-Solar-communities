@@ -130,7 +130,7 @@ class BuildingModel(Model):
             block = b_data.at[i, "building_block"]
 
             # Add agent to the community block initialized with False
-            # Only possible if the agent lives in a block. 
+            # Only possible if the agent lives in a block - so just attempt blindly. 
             try:
                 self.community_blocks[block].update({i:False})
             except KeyError:

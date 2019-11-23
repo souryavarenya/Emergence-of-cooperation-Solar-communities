@@ -108,16 +108,20 @@ class BuildingAgent(Agent):
         '''
         This method describes what the agent does when activated.
         '''
-        # 0. Presets some variables that only need one 
+        # 0. Presets some variables that only need to be called once but
+        # can't be initialized through __init__ because other agents haven't 
+        # been created yet
         if self.first_step:
             self.set_fixed_vars()
             self.first_step = False
 
         # 0. Update parameters for all agents
-        self.update_profit()
-        self.update_awareness()
-        self.update_neighbors()
-        # ^ to be only done if there are more block neighbors
+        # (must happen only once in a model time step)
+        if self.model.idea_phase == True:
+            self.update_profit()
+            self.update_awareness()
+            self.update_neighbors()
+            # ^ to be only done if there are more block neighbors
         
         # 0. Check if the agent is already in a solar community and if so, can move on to next agent
         if self.pv_community == True:
@@ -125,7 +129,7 @@ class BuildingAgent(Agent):
         
         # If the agent is not in a solar community, go through adoption process
         else:  
-            if self.model.idea_phase is True:
+            if self.model.idea_phase == True:
                 self.get_idea()
             else:
                 self.implement_pv()   
@@ -137,7 +141,7 @@ class BuildingAgent(Agent):
         '''
         # Counts the number of block neighbors a building has 
         if self.block in self.model.community_blocks:
-            self.total_neighbors = len(self.model.community_blocks[self.block])
+            self.total_neighbors = len(self.model.community_blocks[self.block])-1
         else:
             self.total_neighbors = 0         
             
@@ -235,12 +239,8 @@ class BuildingAgent(Agent):
         This method is for the agent to implement his idea into either individual 
         or community solar PV
         '''
-        # Do nothing if agent is already a part of the community
-        if self.pv_community == True:
-            pass
-
         # Check if the agent develop the intention
-        elif self.pv_alone == True:
+        if self.idea == True:
             
             # If the agent developped the intention to join a community
             if self.community == True:
@@ -273,10 +273,11 @@ class BuildingAgent(Agent):
         
     def join_community(self):
         '''
-        This method tries to integrate agent in a solar community.
+        This method integrates the agent in a solar community.
         '''
         self.pv_alone = True
         self.pv_community = True
+        self.model.community_blocks[self.block].update({self.unique_id:True})
         
         print("\nSweet! Just joined a community!" +
               "\nMy id is " + str(self.unique_id) + 
