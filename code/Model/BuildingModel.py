@@ -122,6 +122,7 @@ class BuildingModel(Model):
             x = b_data.at[i,"building_coord_x"]
             y = b_data.at[i,"building_coord_y"]
             
+            # Creating an X,Y list for _____
             self.x_coord.append(x)
             self.y_coord.append(y)
 
@@ -129,7 +130,11 @@ class BuildingModel(Model):
             block = b_data.at[i, "building_block"]
 
             # Add agent to the community block initialized with False
-            self.community_blocks[block].update({i:False})
+            # Only possible if the agent lives in a block. 
+            try:
+                self.community_blocks[block].update({i:False})
+            except KeyError:
+                pass
             
             # Retrieve agent's electricity demand from data
             el_demand = b_data.at[i, "demand_kwh"]
@@ -179,11 +184,18 @@ class BuildingModel(Model):
     def step(self):
         '''Advance the model by one step.'''
         self.datacollector.collect(self)
+
+        # Agents are randomly activated to develop the idea
         self.idea_phase = True
         self.schedule.step()
         
+        #
         self.idea_phase = False
         self.schedule.step()
+
+        # Effectively, one time step of the model 
+        # = 1 MONTH
+        # = 2 Agent steps - one idea and one 
 
         self.update_global_prices()   
         print("==")

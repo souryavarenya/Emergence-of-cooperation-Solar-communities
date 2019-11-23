@@ -119,21 +119,22 @@ class BuildingAgent(Agent):
         self.update_neighbors()
         # ^ to be only done if there are more block neighbors
         
-        # 0. Check if the agent is already in a solar community
+        # 0. Check if the agent is already in a solar community and if so, can move on to next agent
         if self.pv_community == True:
-            
-            # If the agent is in a solar community, then go on to next agent
             pass
         
         # If the agent is not in a solar community, go through adoption process
-        else:
-                       
+        else:  
             if self.model.idea_phase is True:
                 self.get_idea()
             else:
                 self.implement_pv()   
 
     def set_fixed_vars(self):
+        '''
+        Function that sets the variables dependent on other agents after the
+        creation of all agents
+        '''
         # Counts the number of block neighbors a building has 
         if self.block in self.model.community_blocks:
             self.total_neighbors = len(self.model.community_blocks[self.block])
@@ -239,7 +240,7 @@ class BuildingAgent(Agent):
             pass
 
         # Check if the agent develop the intention
-        elif self.idea == True:
+        elif self.pv_alone == True:
             
             # If the agent developped the intention to join a community
             if self.community == True:

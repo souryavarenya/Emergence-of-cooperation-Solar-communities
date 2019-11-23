@@ -32,7 +32,7 @@ def ChangeCount(bool_mat):
 
     # Matrix of changes per timestep -> XOR Operation with shifted input matrix
     change_mat = bool_mat[1:bool_mat.shape[0]]^bool_mat[0:bool_mat.shape[0]-1]
-    change_mat = np.insert(change_mat,0,0,axis=0)   # By definition nothing changes at time Zero.
+    change_mat = np.insert(change_mat,0,1,axis=0)   # Consider time 0 as everyone changing to initial state.
 
     # Vector with the total number of changes on each timestep
     count_change = change_mat.sum(axis=1)
@@ -119,8 +119,15 @@ def Write2CSV (filename,columns,collector_dataframe,run,n_steps,n_agents,df_type
     if df_type == "HF":
         
         # Remove main indexes for truncation
-        columns.remove('AgentID')
-        columns.remove('Run')
+        try:
+            columns.remove('AgentID')
+        except:
+            pass
+        
+        try:
+            columns.remove('Run')
+        except:
+            pass
         
         dataframe_truncated = collector_dataframe[columns]  # Truncate the complete dataframe only with the columns we want
         dataframe_truncated.insert(0,'Run',np.full(len(collector_dataframe.index),run))     # Fill the Run column with the run value
