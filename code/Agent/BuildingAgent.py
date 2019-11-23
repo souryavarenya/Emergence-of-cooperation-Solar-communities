@@ -37,6 +37,7 @@ class BuildingAgent(Agent):
         
         # Set the agent's attributes
         # Currently, all agents take the same values defined for model
+        self.block = block
 
         # Defining a list of contacts for the given agent from a given network
         self.connection_list = [n for n in model.net.neighbors(unique_id)]
@@ -61,6 +62,8 @@ class BuildingAgent(Agent):
         # package random package instead of the numpy??
         self.awareness = np.clip(np.random.normal(model.awareness, model.awareness_var),0,1)
         self.awareness_unc = np.random.normal(model.awareness_unc,model.awareness_var/3) 
+        ### TODO - Change it to uniform distribution
+        ### TODO - Simplify awareness_uncertainty to linear func of awareness
 
         # Define initial social pressure
         # ***to-do: initialize to random variable from gaussian***

@@ -105,6 +105,9 @@ class BuildingModel(Model):
         self.y_coord = []
         self.agent_list = []
 
+        # Solar Community blocks
+        self.communities = []
+
         # Create Small World Network between agents (Done before agents)
         self.num_neighbors_wsg = data_dict["swn_k"]
         self.rewire_prob_wsg = data_dict["swn_p"]
@@ -120,7 +123,6 @@ class BuildingModel(Model):
             self.x_coord.append(x)
             self.y_coord.append(y)
 
-            # Retrieve agent's block from data
             block = b_data.at[i, "building_block"]
             
             # Retrieve agent's electricity demand from data
