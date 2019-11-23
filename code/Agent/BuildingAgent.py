@@ -1,8 +1,13 @@
-from mesa import Agent
-import numpy as np
-from Tools import RelativeAgreement
-from Tools import SimplePayback
+
 import random
+
+import numpy as np
+from mesa import Agent
+
+from Tools import RelativeAgreement, SimplePayback
+## The above only works because they're called from the main script
+## Ignore the linting
+
 
 class BuildingAgent(Agent):
     """
@@ -34,6 +39,9 @@ class BuildingAgent(Agent):
         
         # Set the agent's unique_id from the model object
         super().__init__(unique_id, model)
+
+        # Flag for marking first step
+        self.first_step = True
         
         # Set the agent's attributes
         # Currently, all agents take the same values defined for model
@@ -65,14 +73,11 @@ class BuildingAgent(Agent):
         ### TODO - Change it to uniform distribution
         ### TODO - Simplify awareness_uncertainty to linear func of awareness
 
-        # Define initial social pressure
-        # ***to-do: initialize to random variable from gaussian***
-        self.social = model.social
-
         # Define neighbor effect
         # ***to-do: initialize to zero?***
         # Q: does it need to be an attribute?
-        self.neighbor = model.neighbor
+        self.neighbor = 0
+        self.total_neighbors = 0
 
         # Define agent's utility level
         # By default, all agents start at zero
@@ -103,13 +108,16 @@ class BuildingAgent(Agent):
         '''
         This method describes what the agent does when activated.
         '''
+        # 0. Presets some variables that only need one 
+        if self.first_step:
+            self.set_fixed_vars()
+            self.first_step = False
 
         # 0. Update parameters for all agents
         self.update_profit()
         self.update_awareness()
         self.update_neighbors()
-        self.update_social()
-
+        # ^ to be only done if there are more block neighbors
         
         # 0. Check if the agent is already in a solar community
         if self.pv_community == True:
@@ -123,7 +131,14 @@ class BuildingAgent(Agent):
             if self.model.idea_phase is True:
                 self.get_idea()
             else:
-                self.implement_pv()            
+                self.implement_pv()   
+
+    def set_fixed_vars(self):
+        # Counts the number of block neighbors a building has 
+        if self.block in self.model.community_blocks:
+            self.total_neighbors = len(self.model.community_blocks[self.block])
+        else:
+            self.total_neighbors = 0         
             
     def update_profit(self):
         '''
@@ -150,10 +165,10 @@ class BuildingAgent(Agent):
         '''
         This method models the social interactions of the agent with 
         other agents in its social network, and how both agents' awareness
-        are modified as a result of the interaction.
+        and uncertainty are modified as a result of the interaction.
         '''
         
-        # Selects connection randomly
+        # Selects a connection randomly
         sel_connection = random.choice(self.connection_list)
 
         # initial opinion and uncertainty values of self
@@ -179,10 +194,8 @@ class BuildingAgent(Agent):
         Update neighbor parameter for idea calculation. Agent calculates 
         the share of buildings in their building block having a pv adopted
         '''
-        pass
-
-    def update_social(self):
-        pass
+        if self.total_neighbors != 0:
+            self.neighbor = sum(self.model.community_blocks[self.block].values())/self.total_neighbors
 
     def get_idea(self):
         '''
@@ -192,30 +205,16 @@ class BuildingAgent(Agent):
             None (based on values of agent attributes)
         Output:
             None (it modifies agent attributes self.idea and self.community).
-        '''
-        # 1. Update influence of peer effects            
-        # self.update_neighbor()
-        
-        # 2. Update payback period
-        # to do
-        
-        # 3. Update social norms pressure
-        # to do
-        
-        # 4. Update agent's utility
-        # to do
-        
+        '''      
         # 5. check the agent's intention
         # Factor payback period
         f_pp = self.profit * self.model.profit_weight
         # Factor awareness
         f_aw = self.awareness * self.model.awareness_weight
-        # Factor social pressure
-        f_sp = self.social * self.model.social_weight
         # Factor peer effects
         f_pe = self.neighbor * self.model.neighbor_weight
         # Update agent's utility
-        self.utility = min([f_pp + f_aw + f_sp + f_pe, 1])
+        self.utility = min([f_pp + f_aw + f_pe, 1])
         
         print("\n--\nHi there, I am agent " + str(self.unique_id) +
               " and I have a utility level of " + str(round(self.utility,2)) + 
@@ -228,12 +227,19 @@ class BuildingAgent(Agent):
             self.idea = True
         # 5.b Developing the intention to install solar & join a community
         if self.utility >= self.model.threshold_high:
-            self.idea = True
             self.community = True
 
     def implement_pv(self):
+        '''
+        This method is for the agent to implement his idea into either individual 
+        or community solar PV
+        '''
+        # Do nothing if agent is already a part of the community
+        if self.pv_community == True:
+            pass
+
         # Check if the agent develop the intention
-        if self.idea == True:
+        elif self.idea == True:
             
             # If the agent developped the intention to join a community
             if self.community == True:
@@ -275,15 +281,3 @@ class BuildingAgent(Agent):
               "\nMy id is " + str(self.unique_id) + 
               ", and my utility is " + str(self.utility) +
               ".")
-        
-    def update_neighbor(self):
-        '''
-        This method updates the peer effect of nearby adopters.
-        '''
-        cellmates = self.model.grid.get_cell_list_contents([(0,0)])
-        cellmates_community = 0
-        for mates in cellmates:
-            if mates.community == True:
-                cellmates_community += 1
-        
-        self.neighbor = cellmates_community / len(cellmates)

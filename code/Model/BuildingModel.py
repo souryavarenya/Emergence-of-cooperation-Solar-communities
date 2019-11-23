@@ -29,10 +29,14 @@ class BuildingModel(Model):
             b_data      > csv file with data about buildings
             n_agents    > number of building owners populating the model
             data_dict   > meta data of the data file containing properties
-                        like min_x, max_x, range_x,...
+                        like min_x, max_x, ...
         '''                
         # 1. Define the number of agents in the model
         self.num_agents = n_agents
+
+        # Initialize a dictionary of community blocks (block has more than 2 buildings)
+        self.community_blocks = dict.fromkeys(data_dict["comm_blocks"],{})
+        # - community blocks -> Dictionary of dictionaries containing agent id and corresponding community value
         
         # 2. Define the spatial dimension of the model creating a grid
         # Create the grid with calculated dimensions
@@ -58,13 +62,11 @@ class BuildingModel(Model):
         self.awareness = data_dict["awareness"]
         self.awareness_var = data_dict["awareness_var"]
         self.awareness_unc = data_dict["awareness_unc"]
-        self.social = data_dict["social"]
         self.neighbor = data_dict["neighbor"]
         
         # Weights of decision-making variables
         self.profit_weight = data_dict["profit_weight"]
         self.awareness_weight = data_dict["awareness_weight"]
-        self.social_weight = data_dict["social_weight"]
         self.neighbor_weight = data_dict["neighbor_weight"]
         
         # Thresholds for solar individual (low) and community (high) intentions
@@ -123,7 +125,11 @@ class BuildingModel(Model):
             self.x_coord.append(x)
             self.y_coord.append(y)
 
+            # Retrieve agent's block ID
             block = b_data.at[i, "building_block"]
+
+            # Add agent to the community block initialized with False
+            self.community_blocks[block].update({i:False})
             
             # Retrieve agent's electricity demand from data
             el_demand = b_data.at[i, "demand_kwh"]
