@@ -104,6 +104,7 @@ def InitializeCSV (filename,columns):
 # -run                  -> model run# in the context of a batch
 # -n_steps              -> number of steps executed
 # -n_agents             -> number of agents in the model
+# -seed                 -> seed of current run
 # -df_type              -> type of DataFrame (either ='MF' or ='HF', otherwise it will give an error)
 #
 # OUTPUT ARGUMENTS
@@ -111,7 +112,7 @@ def InitializeCSV (filename,columns):
 # -err                  -> returns 1 if has detected an error
 #
 
-def Write2CSV (filename,columns,collector_dataframe,run,n_steps,n_agents,df_type='HF'):
+def Write2CSV (filename,columns,collector_dataframe,run,n_steps,n_agents,seed,df_type='HF'):
 
     err=0   # If nothing bad happens, err remanins at 0
 
@@ -165,9 +166,17 @@ def Write2CSV (filename,columns,collector_dataframe,run,n_steps,n_agents,df_type
         # Merge the dataframes with the join function. Values on one DataFrame that don't exist on the other are replaced by NaN
         joint_dataframe = dataframe_pv_alone.join(dataframe_pv_com,how='outer')
         joint_dataframe = joint_dataframe.join(dataframe_idea,how='outer')
-        joint_dataframe.insert(0,"Run",np.full(len(joint_dataframe.index),run))     # Add current run to Run column
 
+        # Add current run to Run column
+        joint_dataframe.insert(0,"Run",np.full(len(joint_dataframe.index),run))
+
+        # Write to CSV
         joint_dataframe.to_csv(filename, sep=';', mode='a', header=False) # Write data to CSV, without header and in append mode
+
+        # Add Seed to CSV
+        seed_row = pd.DataFrame([{'Run':run,'PV_alone_cnt':np.nan,'PV_alone_chg':np.nan,'PV_com_cnt':np.nan,'PV_com_chg':np.nan,'Idea_cnt':np.nan,'Idea_chg':np.nan,'Seed':seed}])
+        seed_row.index.name = 'Step'
+        seed_row.to_csv(filename, sep=';', mode='a', header=False) # Write data to CSV, without header and in append mode
 
     # Erroneous Type
     else:

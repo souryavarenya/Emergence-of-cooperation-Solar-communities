@@ -22,6 +22,9 @@ from Visualization.VisualizationFunctions import AnimateColourMap
 from Datalogs.DataloggingFunctions import InitializeCSV
 from Datalogs.DataloggingFunctions import Write2CSV
 
+# Import Analysis Functions
+from Visualization.AnalysisFunctions import AverageHFDataframe
+
 ### Setting up some parameters for initialization
 # Define number of agents
 n_agents = 23
@@ -81,6 +84,9 @@ batch_size = 8
 
 for run in range(0,batch_size):
 
+    #Seed
+    seed = 123456789
+
     # Re-Initialize model
     model = BuildingModel(BuildingAgent, b_data, n_agents, data_dict)
 
@@ -92,7 +98,7 @@ for run in range(0,batch_size):
     dataframe = model.datacollector.get_agent_vars_dataframe()
 
     # Write data of interest to csv files - Once per run
-    Write2CSV(HF_out_file,HF_data_columns,dataframe,run,n_steps,n_agents,df_type='HF')
-    Write2CSV(MF_out_file,MF_data_columns,dataframe,run,n_steps,n_agents,df_type='MF')
+    Write2CSV(HF_out_file,HF_data_columns,dataframe,run,n_steps,n_agents,seed,df_type='HF')
+    Write2CSV(MF_out_file,MF_data_columns,dataframe,run,n_steps,n_agents,seed,df_type='MF')
 
 ### Results and graphs -> DataAnalysis.py

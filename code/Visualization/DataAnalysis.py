@@ -13,6 +13,7 @@ from VisualizationFunctions import HistogramPlot
 # Import Analysis Functions
 from AnalysisFunctions import CountVarsList
 from AnalysisFunctions import ReconstructBoolMatrix
+from AnalysisFunctions import AverageHFDataframe
 
 #%%
 # --------------------------------------
@@ -38,6 +39,10 @@ Coords = pd.read_csv(Coord_file, sep=';', index_col=['AgentID'])
 # Extract Coordinate Arrays
 x_coord = Coords['x'].to_numpy()
 y_coord = Coords['y'].to_numpy()
+
+# Extract Seeds
+seeds = MF_data['Seed'].dropna().to_numpy()
+print(seeds)
 
 # Extract number of Steps and Number of Agents -> Last run, last step, last agents
 # IMPORTANT - We assume constant number of runs, steps and agents through the Batch

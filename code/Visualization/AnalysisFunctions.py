@@ -4,6 +4,53 @@ import pandas as pd
 #%%
 
 # --------------------------
+# AVERAGE HF DATAFRAME FUNCTION
+# --------------------------
+#
+# DESCRIPTION: gets the average value of the HF data of a dataframe through its runs and
+#              drops the 'Run' dimension
+#
+# INPUT ARGUMENTS
+#
+# -dataframe    -> HF Dataframe
+# -n_runs       -> number of runs
+# -n_steps      -> number of steps per run
+# -n_agents     -> number of agents
+#
+# OUTPUT ARGUMENTS
+#
+# -avg_dataframe -> dataframe of average values
+#
+
+def AverageHFDataframe(dataframe,n_runs,n_steps,n_agents):
+
+    # Factor for averaging the data
+    avg_factor = 1/n_runs
+
+    # For all runs
+    for run in range(0,n_runs):
+
+        # The first run for initialization
+        if(run==0):
+
+            # Initialize the average as the first value and scale it with the avg_factor
+            avg_dataframe = dataframe[dataframe.index.get_level_values('Run') == run].droplevel('Run')
+            avg_dataframe = np.multiply(avg_dataframe,avg_factor)
+        else:
+
+            # Take the data on that run
+            Data_curr_run = dataframe[dataframe.index.get_level_values('Run') == run].droplevel('Run')
+
+            # Avg data = Avg data + factor*curr_data
+            Data_curr_run = np.multiply(Data_curr_run,avg_factor)
+            avg_dataframe = np.add(avg_dataframe,Data_curr_run)
+
+    return avg_dataframe
+
+
+#%%
+
+# --------------------------
 # COUNT VARS LIST FUNCTION
 # --------------------------
 #
