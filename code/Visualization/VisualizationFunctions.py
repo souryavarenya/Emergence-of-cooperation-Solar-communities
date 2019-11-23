@@ -4,10 +4,50 @@ import matplotlib.pyplot as plt
 from matplotlib import cm
 from matplotlib.lines import Line2D
 import matplotlib.animation as animation
+import numpy as np
 
 #%%
 
 # MATPLOTLIB-BASED VISUALIZATION FUNCTIONS
+
+def MultiAgentLinePlot(data_matrix, n_agents, x_axis=[], step=0, show=1, x_label="X_label", y_label="Y_label", legend=1, cmap='RdYlGn', title="Title", size=(15,10), save=0, filename="test.svg"):
+
+    plt.figure(figsize=size)
+    plt.title(title, fontsize=16)
+    plt.xlabel(x_label, fontsize=12)
+    plt.ylabel(y_label, fontsize=12)
+
+    viridis = cm.get_cmap(cmap, n_agents)
+    legend_elements = []
+
+    for i in range(0,n_agents):
+        if(np.size(x_axis)==np.size(data_matrix)):
+            if(step==1):
+                plt.step(x_axis[:,0],data_matrix[:,i],color=viridis(i))
+            else:
+                plt.plot(x_axis[:,0],data_matrix[:,i],color=viridis(i))
+        else:
+            if(step==1):
+                plt.step(range(0,len(data_matrix[:,i])),data_matrix[:,i],color=viridis(i))
+            else:
+                plt.plot(data_matrix[:,i],color=viridis(i))
+
+        if(legend==1):
+            legend_elements.append(Line2D([0],[0], marker='s', color='w', label="Agent "+str(i),markerfacecolor=viridis(i), markersize=15))
+        
+    if(legend==1):
+        plt.legend(handles=legend_elements, loc='lower right')
+
+    #Save image if requested
+    if(save==1):
+        plt.savefig(filename, format='svg')
+
+    #Show image if requested
+    if(show==1):
+        plt.show()
+
+
+#%%
 
 # --------------------------
 # COLOURED MAP PLOT FUNCTION
@@ -36,6 +76,7 @@ import matplotlib.animation as animation
 # -cmap        -> Color map being used
 # -markersize  -> Size of the markers for the Scatter plot
 # -save        -> 1 if the image must be saved into a .svg file
+# -show        -> 1 if the image must be shown in screen
 # -filename    -> Name that will be given to the image file
 #
 # OUTPUT ARGUMENTS (only required if animation is used)
@@ -43,7 +84,7 @@ import matplotlib.animation as animation
 # -fig         -> Pointer to figure generated
 # -scatter     -> Pointer to scatter plot generated
 
-def ColourMap(x_axis, y_axis, col_axis, col_range=(0,1), x_label="X_label", y_label="Y_label", colorbar=1, Nlegend=3, color_label=['Low', 'Medium', 'High'], title="Title", size=(15,10),cmap='RdYlGn',markersize=5,save=0,filename="test.svg", internal=False):
+def ColourMap(x_axis, y_axis, col_axis, col_range=(0,1), x_label="X_label", y_label="Y_label", colorbar=1, Nlegend=3, color_label=['Low', 'Medium', 'High'], title="Title", size=(15,10),cmap='RdYlGn',markersize=5,save=0,show=0,filename="test.svg", internal=False):
 
     #Configure Scatter Plot
     fig = plt.figure(figsize=size)
@@ -77,6 +118,10 @@ def ColourMap(x_axis, y_axis, col_axis, col_range=(0,1), x_label="X_label", y_la
     if(save==1):
         plt.savefig(filename, format='svg')
     
+    #Show image if requested
+    if(show==1):
+        plt.show()
+
     #Return values for animation
     if internal is True:
         return fig, scatter
