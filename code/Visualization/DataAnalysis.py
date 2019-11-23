@@ -83,10 +83,10 @@ AnimateColourMap(n_steps, x_coord, y_coord, Opinion_matrix[run], dlyfactor=0.2, 
 MultiLinePlot(Opinion_matrix[run], n_agents, x_axis=[], stepshape=0, show=1, x_label="Time", y_label="Opinion Value", legendlabel='Agent', legend=1, cmap='RdYlGn', title="Evolution of Opinion", size=(15,10), save=1, filename="Visualization/res/OpinionMultiagent.svg")
 
 # Initial Opinion Histogram
-HistogramPlot(Opinion_matrix[run,0], n_bins=25, show=1, x_label="Opinion value", y_label="Frequency", cmap='RdYlGn', title="Initial Opinion Histogram", size=(15,10), save=1, filename="InitialOpinionHistogram.svg")
+HistogramPlot(Opinion_matrix[run,0], n_bins=25, show=1, x_label="Opinion value", y_label="Frequency", cmap='RdYlGn', title="Initial Opinion Histogram", size=(15,10), save=1, filename="Visualization/res/InitialOpinionHistogram.svg")
 
 # Final Opinion Histogram
-HistogramPlot(Opinion_matrix[run,n_agents-1], n_bins=25, show=1, x_label="Opinion value", y_label="Frequency", cmap='RdYlGn', title="Final Opinion Histogram", size=(15,10), save=1, filename="FinalOpinionHistogram.svg")
+HistogramPlot(Opinion_matrix[run,n_agents-1], n_bins=25, show=1, x_label="Opinion value", y_label="Frequency", cmap='RdYlGn', title="Final Opinion Histogram", size=(15,10), save=1, filename="Visualization/res/FinalOpinionHistogram.svg")
 
 #%%
 # -------------
