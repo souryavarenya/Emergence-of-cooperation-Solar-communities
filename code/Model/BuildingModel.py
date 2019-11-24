@@ -77,27 +77,21 @@ class BuildingModel(Model):
         
         # Maximum payback period beyond which agents see no profitability
         # in the adoption of solar PV [years]
-        self.max_pbp = 15
+        self.max_pbp = data_dict["max_pbp"]
         # Source: please, see agent.update_profit method.
-        # ***PLEASE, MOVE TO .JSON WITH VALUE 15
         
         # Price of solar PV system [CHF/kW]
-        self.pv_price = 2000
-        #self.pv_price = data_dict["pv_price_0"]
-        # ***PLEASE, UPDATE NAME IN .JSON AND VALUE TO 2000
+        self.pv_price = data_dict["pv_price"]
         
         # Price of electricity [CHF/kWh]
-        self.el_price = 0.30
-        #self.el_price = data_dict["el_price_0"]
-        # ***PLEASE, MOVE TO .JSON WITH VALUE 0.30   
+        # self.el_price = 0.30
+        self.el_price = data_dict["el_price"] 
         
         # Change of solar PV system prices every year [as fraction of prior]
-        self.pv_price_yoy = 0.05
-        # ***PLEASE, MOVE TO .JSON WITH VALUE 0.05
+        self.pv_price_yoy = data_dict["pv_price_yoy"]
         
         # Change of electricity prices every year [as fraction of prior]
-        self.el_price_yoy = 0.01
-        # ***PLEASE, MOVE TO .JSON WITH VALUE 0.01        
+        self.el_price_yoy = data_dict["el_price_yoy"]   
 
         self.idea_phase = True
         # Flag for switching between phase steps

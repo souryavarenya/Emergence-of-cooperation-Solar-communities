@@ -15,5 +15,10 @@
     "start_price": 1,
     "years_pv_production_doubles": 1,
     "swn_k": 11,
-    "swn_p": 0.28
+    "swn_p": 0.28,
+    "pv_price": 4000,
+    "max_pbp": 15,
+    "el_price": 0.30,
+    "pv_price_yoy": 0.05,
+    "el_price_yoy": 0.01
 }
