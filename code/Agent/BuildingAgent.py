@@ -221,10 +221,10 @@ class BuildingAgent(Agent):
         # Update agent's utility
         self.utility = min([f_pp + f_aw + f_pe, 1])
         
-        print("\n--\nHi there, I am agent " + str(self.unique_id) +
-              " and I have a utility level of " + str(round(self.utility,2)) + 
-              " during the step number " + str(self.model.schedule.steps) +
-              ".")
+        # print("\n--\nHi there, I am agent " + str(self.unique_id) +
+        #       " and I have a utility level of " + str(round(self.utility,2)) + 
+        #       " during the step number " + str(self.model.schedule.steps) +
+        #       ".")
         
         # 5. Compare the agent's utility to the threshold for:
         # 5.a Developing the intention to install solar PV alone
@@ -266,10 +266,10 @@ class BuildingAgent(Agent):
         '''
         self.pv_alone = True
         
-        print("\nOh wow! I just install solar PV on my rooftop!" +
-              "\nMy id is " + str(self.unique_id) + 
-              ", and my utility is " + str(self.utility) +
-              ".")
+        # print("\nOh wow! I just install solar PV on my rooftop!" +
+        #       "\nMy id is " + str(self.unique_id) + 
+        #       ", and my utility is " + str(self.utility) +
+        #       ".")
         
     def join_community(self):
         '''
@@ -279,7 +279,7 @@ class BuildingAgent(Agent):
         self.pv_community = True
         self.model.community_blocks[self.block].update({self.unique_id:True})
         
-        print("\nSweet! Just joined a community!" +
-              "\nMy id is " + str(self.unique_id) + 
-              ", and my utility is " + str(self.utility) +
-              ".")
+        # print("\nSweet! Just joined a community!" +
+        #       "\nMy id is " + str(self.unique_id) + 
+        #       ", and my utility is " + str(self.utility) +
+        #       ".")

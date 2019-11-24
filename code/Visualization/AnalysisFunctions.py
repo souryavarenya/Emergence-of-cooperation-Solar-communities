@@ -84,8 +84,8 @@ def CountVarsList(dataframe,col_to_analyze,runs_to_analyze,n_steps):
         Data_onrun = dataframe[dataframe.index.get_level_values('Run') == run].droplevel('Run')
 
         # Extract arrays: time and count values
-        Change_t = Data_onrun.index.to_numpy()/2       # Correct scale factor - Collector counts 2 steps!
-        Count = Data_onrun[[col_to_analyze]].to_numpy().transpose()
+        Change_t = Data_onrun[[col_to_analyze]].dropna().index.to_numpy()/2       # Correct scale factor - Collector counts 2 steps!
+        Count = Data_onrun[[col_to_analyze]].dropna().to_numpy().transpose()
         Count = np.reshape(Count,np.size(Count))
 
         # Add last state - Otherwise step plot looks like garbage

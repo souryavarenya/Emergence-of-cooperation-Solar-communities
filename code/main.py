@@ -28,10 +28,10 @@ from Visualization.AnalysisFunctions import AverageHFDataframe
 
 ### Setting up some parameters for initialization
 # Define number of agents
-n_agents = 23
+n_agents = 30
 
 # Define number of time steps each model runs
-n_steps = 65
+n_steps = 100
 
 # Name of csv file containing data on individual buildings
 b_data_file = "Data/buildings_data_1.csv"
