@@ -33,7 +33,7 @@ Coord_file = "Datalogs/Logs/Coordinates.csv"
 
 # Read data from the CSV
 MF_data = pd.read_csv(MF_data_file, sep=';', index_col=['Run','Step'])
-HF_data = pd.read_csv(HF_data_file, sep=';', index_col=['Run','Step','AgentID'])
+HF_data = pd.read_csv(HF_data_file, sep=';', index_col=['Step','AgentID'])
 Coords = pd.read_csv(Coord_file, sep=';', index_col=['AgentID'])
 
 # Extract Coordinate Arrays
@@ -45,13 +45,14 @@ seeds = MF_data['Seed'].dropna().to_numpy()
 
 # Extract number of Steps and Number of Agents -> Last run, last step, last agents
 # IMPORTANT - We assume constant number of runs, steps and agents through the Batch
-(n_runs, n_steps, n_agents) = HF_data.index[len(HF_data.index)-1]
+(n_runs,n_steps) = MF_data.index[len(MF_data.index)-1]
+(n_steps, n_agents) = HF_data.index[len(HF_data.index)-1]
 n_steps = int((n_steps/2)+1)    # Correct to actual number (length value = last+1), steps re-scaled
 n_runs +=1
 n_agents +=1
 
 # SHOW PLOTS OR NOT
-show = 0
+show = 1
 
 # SAVE PLOTS OR NOT
 save = 1
@@ -66,16 +67,16 @@ save = 1
 run = 3
 
 # Utility
-Utility_matrix = np.reshape(HF_data['Utility'].to_numpy(),(n_runs,n_steps,n_agents))
-MultiLinePlot(Utility_matrix[run], n_agents, x_axis=[], stepshape=0, show=show, x_label="Time", y_label="Utility Value", legendlabel='Agent', legend=1, cmap='RdYlGn', title="Evolution of Utility", size=(15,10), save=save, filename="Visualization/res/UtilityMultiagent.svg")
+Utility_matrix = np.reshape(HF_data['Utility'].to_numpy(),(n_steps,n_agents))
+MultiLinePlot(Utility_matrix, n_agents, x_axis=[], stepshape=0, show=show, x_label="Time", y_label="Utility Value", legendlabel='Agent', legend=1, cmap='RdYlGn', title="Evolution of Utility", size=(15,10), save=save, filename="Visualization/res/UtilityMultiagent.svg")
 
 # Opinion
-Opinion_matrix = np.reshape(HF_data['Opinion'].to_numpy(),(n_runs,n_steps,n_agents))
-MultiLinePlot(Opinion_matrix[run], n_agents, x_axis=[], stepshape=0, show=show, x_label="Time", y_label="Opinion Value", legendlabel='Agent', legend=1, cmap='RdYlGn', title="Evolution of Opinion", size=(15,10), save=save, filename="Visualization/res/OpinionMultiagent.svg")
+Opinion_matrix = np.reshape(HF_data['Opinion'].to_numpy(),(n_steps,n_agents))
+MultiLinePlot(Opinion_matrix, n_agents, x_axis=[], stepshape=0, show=show, x_label="Time", y_label="Opinion Value", legendlabel='Agent', legend=1, cmap='RdYlGn', title="Evolution of Opinion", size=(15,10), save=save, filename="Visualization/res/OpinionMultiagent.svg")
 
 # Uncertainty
-Uncertainty_matrix = np.reshape(HF_data['Uncertainty'].to_numpy(),(n_runs,n_steps,n_agents))
-MultiLinePlot(Uncertainty_matrix[run], n_agents, x_axis=[], stepshape=0, show=show, x_label="Time", y_label="Uncertainty Value", legendlabel='Agent', legend=1, cmap='RdYlGn', title="Evolution of Uncertainty", size=(15,10), save=save, filename="Visualization/res/UncertaintyMultiagent.svg")
+Uncertainty_matrix = np.reshape(HF_data['Uncertainty'].to_numpy(),(n_steps,n_agents))
+MultiLinePlot(Uncertainty_matrix, n_agents, x_axis=[], stepshape=0, show=show, x_label="Time", y_label="Uncertainty Value", legendlabel='Agent', legend=1, cmap='RdYlGn', title="Evolution of Uncertainty", size=(15,10), save=save, filename="Visualization/res/UncertaintyMultiagent.svg")
 
 # DISCRETE STATE VARIABLES
 
@@ -99,10 +100,10 @@ MultiLinePlot(PV_com_count_list, runs_to_analyze, x_axis=PV_com_change_list, ste
 # ----------------------------
 
 # Initial Opinion Histogram
-HistogramPlot(Opinion_matrix[run,0], n_bins=25, show=show, x_label="Opinion value", y_label="Frequency", cmap='RdYlGn', title="Initial Opinion Histogram", size=(15,10), save=save, filename="Visualization/res/InitialOpinionHistogram.svg")
+HistogramPlot(Opinion_matrix[0], n_bins=25, show=show, x_label="Opinion value", y_label="Frequency", cmap='RdYlGn', title="Initial Opinion Histogram", size=(15,10), save=save, filename="Visualization/res/InitialOpinionHistogram.svg")
 
 # Final Opinion Histogram
-HistogramPlot(Opinion_matrix[run,n_agents-1], n_bins=25, show=show, x_label="Opinion value", y_label="Frequency", cmap='RdYlGn', title="Final Opinion Histogram", size=(15,10), save=save, filename="Visualization/res/FinalOpinionHistogram.svg")
+HistogramPlot(Opinion_matrix[n_agents-1], n_bins=25, show=show, x_label="Opinion value", y_label="Frequency", cmap='RdYlGn', title="Final Opinion Histogram", size=(15,10), save=save, filename="Visualization/res/FinalOpinionHistogram.svg")
 
 #%%
 # ----------------------------
@@ -112,13 +113,13 @@ HistogramPlot(Opinion_matrix[run,n_agents-1], n_bins=25, show=show, x_label="Opi
 run = 3
 
 # Final Utility Color Map
-ColourMap(x_coord, y_coord, Opinion_matrix[run,n_steps-1], col_range=(0,1), x_label="x coordinate", y_label="y coordinate", colorbar=1, Nlegend=2, color_label=['Low (0)','', 'High (1)'],title="Final utility distribution",size=(10,5),cmap='RdYlGn',markersize=50,save=save,show=show,filename="Visualization/res/FinalUtilityMap.svg")
+ColourMap(x_coord, y_coord, Opinion_matrix[n_steps-1], col_range=(0,1), x_label="x coordinate", y_label="y coordinate", colorbar=1, Nlegend=2, color_label=['Low (0)','', 'High (1)'],title="Final utility distribution",size=(10,5),cmap='RdYlGn',markersize=50,save=save,show=show,filename="Visualization/res/FinalUtilityMap.svg")
 
 # Initial Opinion Color Map
-ColourMap(x_coord, y_coord, Opinion_matrix[run,0], col_range=(0,1), x_label="x coordinate", y_label="y coordinate", colorbar=1, Nlegend=2, color_label=['Low (0)','', 'High (1)'],title="Initial Opinion distribution",size=(10,5),cmap='RdYlGn',markersize=50,save=save,show=show,filename="Visualization/res/InitialOpinionMap.svg")
+ColourMap(x_coord, y_coord, Opinion_matrix[0], col_range=(0,1), x_label="x coordinate", y_label="y coordinate", colorbar=1, Nlegend=2, color_label=['Low (0)','', 'High (1)'],title="Initial Opinion distribution",size=(10,5),cmap='RdYlGn',markersize=50,save=save,show=show,filename="Visualization/res/InitialOpinionMap.svg")
 
 # Final Opinion Color Map
-ColourMap(x_coord, y_coord, Utility_matrix[run][n_steps-1], col_range=(0,1), x_label="x coordinate", y_label="y coordinate", colorbar=1, Nlegend=2, color_label=['Low (0)','', 'High (1)'],title="Final Opinion distribution",size=(10,5),cmap='RdYlGn',markersize=50,save=save,show=show,filename="Visualization/res/FinalOpinionMap.svg")
+ColourMap(x_coord, y_coord, Utility_matrix[n_steps-1], col_range=(0,1), x_label="x coordinate", y_label="y coordinate", colorbar=1, Nlegend=2, color_label=['Low (0)','', 'High (1)'],title="Final Opinion distribution",size=(10,5),cmap='RdYlGn',markersize=50,save=save,show=show,filename="Visualization/res/FinalOpinionMap.svg")
 
 
 #%%

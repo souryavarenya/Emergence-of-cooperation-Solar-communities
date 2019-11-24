@@ -22,28 +22,22 @@ import pandas as pd
 # -avg_dataframe -> dataframe of average values
 #
 
-def AverageHFDataframe(dataframe,n_runs,n_steps,n_agents):
+def AverageHFDataframe(dataframe,prev_average_dataframe,curr_run,n_runs,n_steps,n_agents):
 
     # Factor for averaging the data
     avg_factor = 1/n_runs
 
-    # For all runs
-    for run in range(0,n_runs):
+    # The first run for initialization
+    if(curr_run==0):
 
-        # The first run for initialization
-        if(run==0):
+        # Initialize the average as the first value and scale it with the avg_factor
+        avg_dataframe = np.multiply(dataframe,avg_factor)
+        
+    else:
 
-            # Initialize the average as the first value and scale it with the avg_factor
-            avg_dataframe = dataframe[dataframe.index.get_level_values('Run') == run].droplevel('Run')
-            avg_dataframe = np.multiply(avg_dataframe,avg_factor)
-        else:
-
-            # Take the data on that run
-            Data_curr_run = dataframe[dataframe.index.get_level_values('Run') == run].droplevel('Run')
-
-            # Avg data = Avg data + factor*curr_data
-            Data_curr_run = np.multiply(Data_curr_run,avg_factor)
-            avg_dataframe = np.add(avg_dataframe,Data_curr_run)
+        # Avg data = Avg data + factor*curr_data
+        Data_curr_run = np.multiply(dataframe,avg_factor)
+        avg_dataframe = np.add(prev_average_dataframe,Data_curr_run)
 
     return avg_dataframe
 

@@ -47,7 +47,8 @@ HF_out_file = "Datalogs/Logs/"+curr_profile_name+"_HF.csv"
 MF_out_file = "Datalogs/Logs/"+curr_profile_name+"_MF.csv"
 Building_Coord_file = "Datalogs/Logs/Coordinates.csv"
 
-HF_data_columns = ['AgentID','Run','Utility','Opinion','Uncertainty']
+#HF_data_columns = ['AgentID','Run','Utility','Opinion','Uncertainty']
+HF_data_columns = ['AgentID','Utility','Opinion','Uncertainty']
 MF_data_columns = ['Run','PV_alone_cnt','PV_alone_chg','PV_com_cnt','PV_com_chg','Idea_cnt','Idea_chg','Seed']
 Building_Coord_columns = ['x','y']
 
@@ -80,7 +81,7 @@ InitializeCSV(MF_out_file,MF_data_columns)
 
 batch_size = 8
 
-# Batch of batch_size runs (PROVISIONAL, FOR TESTING)
+# Batch of batch_size runs
 
 for run in range(0,batch_size):
 
@@ -97,8 +98,16 @@ for run in range(0,batch_size):
     # Get Data Collector Data - Once per run
     dataframe = model.datacollector.get_agent_vars_dataframe()
 
-    # Write data of interest to csv files - Once per run
-    Write2CSV(HF_out_file,HF_data_columns,dataframe,run,n_steps,n_agents,seed,df_type='HF')
+    # On-line averaging of HF data
+    if(run==0):
+        dataframe_avg = dataframe
+
+    dataframe_avg = AverageHFDataframe(dataframe,dataframe_avg,run,batch_size,n_steps,n_agents)
+
+    # Write data of interest to MF csv files - Once per run
     Write2CSV(MF_out_file,MF_data_columns,dataframe,run,n_steps,n_agents,seed,df_type='MF')
+
+# Write average data of interest to MF csv files - Once per batch
+Write2CSV(HF_out_file,HF_data_columns,dataframe_avg,0,n_steps,n_agents,seed,df_type='HF')
 
 ### Results and graphs -> DataAnalysis.py

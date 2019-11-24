@@ -131,7 +131,7 @@ def Write2CSV (filename,columns,collector_dataframe,run,n_steps,n_agents,seed,df
             pass
         
         dataframe_truncated = collector_dataframe[columns]  # Truncate the complete dataframe only with the columns we want
-        dataframe_truncated.insert(0,'Run',np.full(len(collector_dataframe.index),run))     # Fill the Run column with the run value
+        #dataframe_truncated.insert(0,'Run',np.full(len(collector_dataframe.index),run))     # Fill the Run column with the run value
         dataframe_truncated.to_csv(filename, sep=';', mode='a', header=False)   # Write data to CSV, without header and in append mode
 
     # If we want to write a Medium Frequency DataFrame
