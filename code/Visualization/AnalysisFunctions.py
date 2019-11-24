@@ -7,19 +7,21 @@ import pandas as pd
 # AVERAGE HF DATAFRAME FUNCTION
 # --------------------------
 #
-# DESCRIPTION: gets the average value of the HF data of a dataframe through its runs and
-#              drops the 'Run' dimension
+# DESCRIPTION: computes the average value of the HF data by successively scaling and
+#              adding dataframes, one per each run
 #
 # INPUT ARGUMENTS
 #
-# -dataframe    -> HF Dataframe
-# -n_runs       -> number of runs
-# -n_steps      -> number of steps per run
-# -n_agents     -> number of agents
+# -dataframe                -> HF Dataframe of current run
+# -prev_average_dataframe   -> Previous value of the averaging accumulator
+# -curr_run                 -> Current run
+# -n_runs                   -> number of runs
+# -n_steps                  -> number of steps per run
+# -n_agents                 -> number of agents
 #
 # OUTPUT ARGUMENTS
 #
-# -avg_dataframe -> dataframe of average values
+# -avg_dataframe -> accumulator for dataframe of average values
 #
 
 def AverageHFDataframe(dataframe,prev_average_dataframe,curr_run,n_runs,n_steps,n_agents):
@@ -40,6 +42,63 @@ def AverageHFDataframe(dataframe,prev_average_dataframe,curr_run,n_runs,n_steps,
         avg_dataframe = np.add(prev_average_dataframe,Data_curr_run)
 
     return avg_dataframe
+
+#%%
+
+# --------------------------
+# COUNT VARS AVERAGE FUNCTION
+# --------------------------
+#
+# DESCRIPTION: from a MF Dataframe, it averages the counting data over
+#              all runs and returns the array of values per timestep
+#
+# INPUT ARGUMENTS
+#
+# -dataframe        -> MF Dataframe
+# -col_to_analyze   -> String with the name of the column to analyze (only 1)
+# -runs_to_analyze  -> number of runs to consider
+# -n_steps          -> number of steps per run
+#
+# OUTPUT ARGUMENTS
+#
+# -Average_count_arr    -> array with the counting values averaged through all runs
+#
+
+def CountVarsAverage(dataframe,col_to_analyze,n_runs,n_steps):
+
+    Count_Matrix = np.zeros((n_runs,n_steps))       # Matrix will all counting values per Step, per Run
+
+    # For all the wanted runs
+    for run in range(0,n_runs):
+
+        # Take the data on that run
+        Data_onrun = dataframe[dataframe.index.get_level_values('Run') == run].droplevel('Run')
+
+        # Extract arrays: time and count values
+        Change_t = Data_onrun[[col_to_analyze]].dropna().index.to_numpy()/2       # Correct scale factor - Collector counts 2 steps!
+        Count = Data_onrun[[col_to_analyze]].dropna().to_numpy().transpose()
+        Count = np.reshape(Count,np.size(Count))
+
+        # Fill in Full Count Array, of n_steps dimension
+        for step in range(0,n_steps):
+
+            # For all steps >0 (otherwise assume values=0)
+            if(step>0):
+
+                # Copy values from last step
+                Count_Matrix[run,step] = Count_Matrix[run,step-1]
+
+                # If current step is in list of changes
+                if(step in Change_t):
+
+                    # Get index of current step and get count value at that index
+                    idx = np.where(Change_t == step)[0][0]
+                    Count_Matrix[run,step] = Count[idx]
+
+    # Average the counting values over all Runs
+    Average_count_arr = Count_Matrix.sum(axis=0)/n_runs
+    
+    return Average_count_arr
 
 
 #%%

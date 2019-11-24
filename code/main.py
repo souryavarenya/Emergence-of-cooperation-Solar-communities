@@ -26,9 +26,11 @@ from Datalogs.DataloggingFunctions import Write2CSV
 # Import Analysis Functions
 from Visualization.AnalysisFunctions import AverageHFDataframe
 
+#%%
+
 ### Setting up some parameters for initialization
 # Define number of agents
-n_agents = 30
+n_agents = 50
 
 # Define number of time steps each model runs
 n_steps = 100
@@ -37,77 +39,87 @@ n_steps = 100
 b_data_file = "Data/buildings_data_1.csv"
 m_data_file = "Data/meta_1.json"
 
-# Systematical naming for input and output files
-curr_profile = 1                                    # Current Profile #
-curr_profile_name = "profile_"+str(curr_profile)    # Current Profile name
-m_prof_file = "Data/"+curr_profile_name+".json"     # Current input profile
-
-# Datalogging files
-HF_out_file = "Datalogs/Logs/"+curr_profile_name+"_HF.csv"
-MF_out_file = "Datalogs/Logs/"+curr_profile_name+"_MF.csv"
-Building_Coord_file = "Datalogs/Logs/Coordinates.csv"
-
 #HF_data_columns = ['AgentID','Run','Utility','Opinion','Uncertainty']
-HF_data_columns = ['AgentID','Utility','Opinion','Uncertainty']
+HF_data_columns = ['Utility','Opinion','Uncertainty']
 MF_data_columns = ['Run','PV_alone_cnt','PV_alone_chg','PV_com_cnt','PV_com_chg','Idea_cnt','Idea_chg','Seed']
 Building_Coord_columns = ['x','y']
 
 # Read building data from the CSV %%file
 b_data = pd.read_csv(b_data_file, nrows=n_agents)
 
-# Read building meta data off JSON file
-with open(m_data_file) as myjson:
-    data_dict = json.loads(myjson.read())
+#%%
 
-# Reads the profile file and appends it to data_dict
-with open(m_prof_file) as myjson:
-    data_dict.update(json.loads(myjson.read()))
+# ITERATE OVER ALL PROFILES OF THE EXPERIMENT
+n_profiles = 5
 
-# Init model
-model = BuildingModel(BuildingAgent, b_data, n_agents, data_dict)
+for curr_profile in range(0,n_profiles):
 
-# Get coordinates
-x_coord = model.x_coord
-y_coord = model.y_coord
+    print("****************************************")
+    print(" RUNNING PROFILE "+str(curr_profile)+"...")
+    print("****************************************")
 
-# Create dataframe and write coordinates to csv file
-coord_dataframe = pd.DataFrame(data={'x': x_coord, 'y': y_coord})
-coord_dataframe.index.name = 'AgentID'                                         # The main index must also have a name!
-coord_dataframe.to_csv(Building_Coord_file, sep=';', mode='w', header=True)    # Write dataframe to CSV, with header and in write mode
+    # Systematical naming for input and output files                                 
+    curr_profile_name = "profile_"+str(curr_profile)    # Current Profile name
+    m_prof_file = "Data/"+curr_profile_name+".json"     # Current input profile
 
-# Initialize CSV Outputs - Once per batch
-InitializeCSV(HF_out_file,HF_data_columns)
-InitializeCSV(MF_out_file,MF_data_columns)
+    # Read building meta data off JSON file
+    with open(m_data_file) as myjson:
+        data_dict = json.loads(myjson.read())
 
-batch_size = 8
+    # Reads the profile file and appends it to data_dict
+    with open(m_prof_file) as myjson:
+        data_dict.update(json.loads(myjson.read()))
 
-# Batch of batch_size runs
-
-for run in range(0,batch_size):
-
-    #Seed
-    seed = 123456789
-
-    # Re-Initialize model
+    # Initialize model
     model = BuildingModel(BuildingAgent, b_data, n_agents, data_dict)
 
-    # Run n_steps
-    for timestep in range(n_steps):
-        model.step()
+    # Get coordinates
+    x_coord = model.x_coord
+    y_coord = model.y_coord
 
-    # Get Data Collector Data - Once per run
-    dataframe = model.datacollector.get_agent_vars_dataframe()
+    # Datalogging files
+    HF_out_file = "Datalogs/Logs/"+curr_profile_name+"_HF.csv"
+    MF_out_file = "Datalogs/Logs/"+curr_profile_name+"_MF.csv"
+    Building_Coord_file = "Datalogs/Logs/Coordinates.csv"
 
-    # On-line averaging of HF data
-    if(run==0):
-        dataframe_avg = dataframe
+    # Create dataframe and write coordinates to csv file
+    coord_dataframe = pd.DataFrame(data={'x': x_coord, 'y': y_coord})
+    coord_dataframe.index.name = 'AgentID'                                         # The main index must also have a name!
+    coord_dataframe.to_csv(Building_Coord_file, sep=';', mode='w', header=True)    # Write dataframe to CSV, with header and in write mode
 
-    dataframe_avg = AverageHFDataframe(dataframe,dataframe_avg,run,batch_size,n_steps,n_agents)
+    # Initialize CSV Outputs - Once per batch
+    InitializeCSV(HF_out_file,HF_data_columns,['Step','AgentID'])
+    InitializeCSV(MF_out_file,MF_data_columns,['Step'])
 
-    # Write data of interest to MF csv files - Once per run
-    Write2CSV(MF_out_file,MF_data_columns,dataframe,run,n_steps,n_agents,seed,df_type='MF')
+    batch_size = 10
 
-# Write average data of interest to MF csv files - Once per batch
-Write2CSV(HF_out_file,HF_data_columns,dataframe_avg,0,n_steps,n_agents,seed,df_type='HF')
+    # Batch of batch_size runs
+
+    for run in range(0,batch_size):
+
+        #Seed
+        seed = 123456789
+
+        # Re-Initialize model
+        model = BuildingModel(BuildingAgent, b_data, n_agents, data_dict)
+
+        # Run n_steps
+        for timestep in range(n_steps):
+            model.step()
+
+        # Get Data Collector Data - Once per run
+        dataframe = model.datacollector.get_agent_vars_dataframe()
+
+        # On-line averaging of HF data
+        if(run==0):
+            dataframe_avg = dataframe
+
+        dataframe_avg = AverageHFDataframe(dataframe,dataframe_avg,run,batch_size,n_steps,n_agents)
+
+        # Write data of interest to MF csv files - Once per run
+        Write2CSV(MF_out_file,MF_data_columns,dataframe,run,n_steps,n_agents,seed,df_type='MF')
+
+    # Write average data of interest to MF csv files - Once per batch
+    Write2CSV(HF_out_file,HF_data_columns,dataframe_avg,0,n_steps,n_agents,seed,df_type='HF')
 
 ### Results and graphs -> DataAnalysis.py

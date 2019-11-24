@@ -192,7 +192,7 @@ class BuildingModel(Model):
         # = 2 Agent steps - one idea and one 
 
         self.update_global_prices()   
-        print("==")
+        #print("==")
 
     
     def update_global_prices(self):

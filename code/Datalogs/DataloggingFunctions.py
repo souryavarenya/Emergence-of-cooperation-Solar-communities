@@ -1,6 +1,7 @@
 
 import numpy as np
 import pandas as pd
+import json
 
 #%%
 
@@ -27,7 +28,7 @@ import pandas as pd
 
 def ChangeCount(bool_mat):
 
-    # Vector with the total number of 'True' values on each timestep
+    # Vector with the total number of 'True' values on each timestep = sum over Agent dimension
     count_v = bool_mat.sum(axis=1)
 
     # Matrix of changes per timestep -> XOR Operation with shifted input matrix
@@ -77,10 +78,12 @@ def ChangeCount(bool_mat):
 # -columns    -> list of desired column indexes
 #
 
-def InitializeCSV (filename,columns):
+def InitializeCSV (filename,columns,indexes):
 
-    header = pd.DataFrame(columns=columns)  # Create an empty dataframe with only the header with the column indexes
-    header.index.name = 'Step'              # The main index must also have a name!
+    df = pd.DataFrame(columns=indexes)
+    idx = pd.MultiIndex.from_frame(df)
+
+    header = pd.DataFrame(columns=columns,index=idx)  # Create an empty dataframe with only the header with the column indexes
 
     header.to_csv(filename, sep=';', mode='w', header=True)     # Write the column indexes overwriting existing data
 
@@ -118,20 +121,8 @@ def Write2CSV (filename,columns,collector_dataframe,run,n_steps,n_agents,seed,df
 
     # If we want to write a High Frequency DataFrame
     if df_type == "HF":
-        
-        # Remove main indexes for truncation
-        try:
-            columns.remove('AgentID')
-        except:
-            pass
-        
-        try:
-            columns.remove('Run')
-        except:
-            pass
-        
+                
         dataframe_truncated = collector_dataframe[columns]  # Truncate the complete dataframe only with the columns we want
-        #dataframe_truncated.insert(0,'Run',np.full(len(collector_dataframe.index),run))     # Fill the Run column with the run value
         dataframe_truncated.to_csv(filename, sep=';', mode='a', header=False)   # Write data to CSV, without header and in append mode
 
     # If we want to write a Medium Frequency DataFrame
@@ -184,3 +175,72 @@ def Write2CSV (filename,columns,collector_dataframe,run,n_steps,n_agents,seed,df
         print("CSV ERROR: Type not recognized.")
 
     return(err)
+
+
+#%%
+
+# --------------------------
+# READ CSV BATCH
+# --------------------------
+#
+# DESCRIPTION: Reads a CSV batch, including input and output data and returns all useful variables.
+#
+# INPUT ARGUMENTS
+#
+# -curr_profile     -> number of batch to read
+# -profile_suffix   -> string with the suffix used for data storage, eg "profile_"
+#   
+# OUTPUT ARGUMENTS
+#
+# -HF_data      -> High Frequency Dataframe
+# -MF_data      -> Medium Frequency Dataframe
+# -x_coord      -> Array with building x-coordinates
+# -y_coord      -> Array with building y-coordinates
+# -n_runs       -> Total number of runs
+# -n_steps      -> Total number of steps
+# -n_agents     -> Total number of agents
+# -input_dict   -> Input data dictionary from profile
+# -seeds        -> Array with seeds for all runs, in order
+#
+# HF_data,MF_data,x_coord,y_coord,n_runs,n_steps,n_agents,input_dict,seeds
+
+def ReadCSVBatch (curr_profile,profile_suffix):
+
+    # Systematical naming for input and output files                                
+    curr_profile_name = profile_suffix+str(curr_profile)     # Current Profile name
+    m_prof_file = "Data/"+curr_profile_name+".json"         # Current input profile
+    m_data_file = "Data/meta_1.json"
+
+    # Datalogging files
+    HF_data_file = "Datalogs/Logs/"+curr_profile_name+"_HF.csv"
+    MF_data_file = "Datalogs/Logs/"+curr_profile_name+"_MF.csv"
+    Coord_file = "Datalogs/Logs/Coordinates.csv"
+
+    # Input JSON File
+    with open(m_data_file) as myjson:
+        input_dict = json.loads(myjson.read())
+
+    with open(m_prof_file) as myjson:
+        input_dict.update(json.loads(myjson.read()))
+
+    # Read data from the CSV
+    MF_data = pd.read_csv(MF_data_file, sep=';', index_col=['Run','Step'])
+    HF_data = pd.read_csv(HF_data_file, sep=';', index_col=['Step','AgentID'])
+    Coords = pd.read_csv(Coord_file, sep=';', index_col=['AgentID'])
+
+    # Extract Coordinate Arrays
+    x_coord = Coords['x'].to_numpy()
+    y_coord = Coords['y'].to_numpy()
+
+    # Extract Seeds
+    seeds = MF_data['Seed'].dropna().to_numpy()
+
+    # Extract number of Steps and Number of Agents -> Last run, last step, last agents
+    # IMPORTANT - We assume constant number of runs, steps and agents through the Batch
+    (n_runs,n_steps) = MF_data.index[len(MF_data.index)-1]
+    (n_steps, n_agents) = HF_data.index[len(HF_data.index)-1]
+    n_steps = int((n_steps/2)+1)    # Correct to actual number (length value = last+1), steps re-scaled
+    n_runs +=1
+    n_agents +=1
+
+    return HF_data,MF_data,x_coord,y_coord,n_runs,n_steps,n_agents,input_dict,seeds
