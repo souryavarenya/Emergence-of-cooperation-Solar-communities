@@ -32,6 +32,7 @@ save = True
 
 # COMPARE BATCHES?
 batch_comparison = True
+n_profiles = 5
 
 # ANALYZE SIGNE BATCH?
 single_batch = False
@@ -68,8 +69,6 @@ Inter-Batch Comparison
 # --------------------------
 # MULTILINE EVOLUTION PLOTS
 # --------------------------
-
-n_profiles = 5
 
 if(batch_comparison==1):
 
@@ -173,15 +172,15 @@ if(single_batch==1):
 
         # Evolution of #ideas over time for all runs
         Idea_change_list,Idea_count_list = CountVarsList(MF_data,'Idea_cnt',n_runs,n_steps)
-        MultiLinePlot(Idea_count_list, n_runs, x_axis=Idea_change_list, stepshape=1, show=show, x_label="Time", y_label="# Nodes with the Idea", legendlabel='Run', legend=0, cmap='RdYlGn', title=("# Nodes with the Idea for different runs on profile "+str(batch_2_analyze)), size=(15,10), save=save, filename="Visualization/res/B_Profile_"+str(batch_2_analyze)+"_Multi_State_Idea.svg")
+        MultiLinePlot(Idea_count_list, n_runs, x_axis=Idea_change_list, stepshape=1, show=show, x_label="Time", y_label="# Nodes with the Idea", legendlabel='Run', legend=1, cmap='RdYlGn', title=("# Nodes with the Idea for different runs on profile "+str(batch_2_analyze)), size=(15,10), save=save, filename="Visualization/res/B_Profile_"+str(batch_2_analyze)+"_Multi_State_Idea.svg")
 
         # Evolution of #pv_alone buildings over time for all runs
         PV_alone_change_list,PV_alone_count_list = CountVarsList(MF_data,'PV_alone_cnt',n_runs,n_steps)
-        MultiLinePlot(PV_alone_count_list, n_runs, x_axis=PV_alone_change_list, stepshape=1, show=show, x_label="Time", y_label="# Individual PV", legendlabel='Run', legend=0, cmap='RdYlGn', title=("# Individual PV for different runs on profile "+str(batch_2_analyze)), size=(15,10), save=save, filename="Visualization/res/B_Profile_"+str(batch_2_analyze)+"_Multi_State_PValone.svg")
+        MultiLinePlot(PV_alone_count_list, n_runs, x_axis=PV_alone_change_list, stepshape=1, show=show, x_label="Time", y_label="# Individual PV", legendlabel='Run', legend=1, cmap='RdYlGn', title=("# Individual PV for different runs on profile "+str(batch_2_analyze)), size=(15,10), save=save, filename="Visualization/res/B_Profile_"+str(batch_2_analyze)+"_Multi_State_PValone.svg")
 
         # Evolution of #pv communities over time for all runs
         PV_com_change_list,PV_com_count_list = CountVarsList(MF_data,'PV_com_cnt',n_runs,n_steps)
-        MultiLinePlot(PV_com_count_list, n_runs, x_axis=PV_com_change_list, stepshape=1, show=show, x_label="Time", y_label="# PV Communities", legendlabel='Run', legend=0, cmap='RdYlGn', title=("# PV Communities for different runs on profile "+str(batch_2_analyze)), size=(15,10), save=save, filename="Visualization/res/B_Profile_"+str(batch_2_analyze)+"_Multi_State_PVcommunity.svg")
+        MultiLinePlot(PV_com_count_list, n_runs, x_axis=PV_com_change_list, stepshape=1, show=show, x_label="Time", y_label="# PV Communities", legendlabel='Run', legend=1, cmap='RdYlGn', title=("# PV Communities for different runs on profile "+str(batch_2_analyze)), size=(15,10), save=save, filename="Visualization/res/B_Profile_"+str(batch_2_analyze)+"_Multi_State_PVcommunity.svg")
 
     # ----------------------------
     # FINAL AND INITIAL HISTOGRAMS
