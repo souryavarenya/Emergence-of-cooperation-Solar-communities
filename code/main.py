@@ -1,8 +1,9 @@
-### Team Red Panda
-# - Fornt Mas, Jordi
-# - Kovvali, Sourya
-# - Nuñez-Jimenez, Alejandro
-# - Schwarz, Marius
+########## Team Red Panda ###########
+# - Fornt Mas, Jordi                #
+# - Kovvali, Sourya                 #
+# - Nuñez-Jimenez, Alejandro        #
+# - Schwarz, Marius                 #
+#####################################
 
 # Standard Imports
 import matplotlib.pyplot as plt
@@ -33,13 +34,12 @@ n_agents = 23
 n_steps = 65
 
 # Name of csv file containing data on individual buildings
-b_data_file = "Data/buildings_data.csv"
-m_data_file = "Data/meta.json"
+b_data_file = "Data/buildings_data_1.csv"
+m_data_file = "Data/meta_1.json"
 
 # Systematical naming for input and output files
 curr_profile = 1                                    # Current Profile #
-curr_profile_name = "profile"+str(curr_profile)     # Current Profile name
-
+curr_profile_name = "profile_"+str(curr_profile)    # Current Profile name
 m_prof_file = "Data/"+curr_profile_name+".json"     # Current input profile
 
 # Datalogging files
