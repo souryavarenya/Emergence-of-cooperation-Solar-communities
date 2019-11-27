@@ -54,7 +54,7 @@ b_data = pd.read_csv(b_data_file, nrows=n_agents)
 #%%
 
 # ITERATE OVER ALL PROFILES OF THE EXPERIMENT
-n_profiles = 2
+n_profiles = 7
 
 for curr_profile in range(0,n_profiles):
 
@@ -95,7 +95,7 @@ for curr_profile in range(0,n_profiles):
     InitializeCSV(HF_out_file,HF_data_columns,['Step','AgentID'])
     InitializeCSV(MF_out_file,MF_data_columns,['Step'])
 
-    batch_size = 10
+    batch_size = 50
 
     # Batch of batch_size runs
 

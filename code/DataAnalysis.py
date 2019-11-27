@@ -32,11 +32,11 @@ save = True
 
 # COMPARE BATCHES?
 batch_comparison = True
-n_profiles = 2
+n_profiles = 5
 
 # ANALYZE SIGNE BATCH?
-single_batch = True
-batch_2_analyze = 1
+single_batch = False
+batch_2_analyze = 3
 
 # => Make continuous data plots? (Utility, etc)
 continuous = True
@@ -102,15 +102,30 @@ if(batch_comparison==1):
     Opinion_avg = Opinion_space.sum(axis=2)/n_agents
     Uncertainty_avg = Uncertainty_space.sum(axis=2)/n_agents
 
+    # Get variances
+    Utility_sq = Utility_space**2
+    Utility_var = (Utility_sq.sum(axis=2)/n_agents)-(Utility_avg**2)
+
+    Opinion_sq = Opinion_space**2
+    Opinion_var = (Opinion_sq.sum(axis=2)/n_agents)-(Opinion_avg**2)
+
+    Uncertainty_sq = Uncertainty_space**2
+    Uncertainty_var = (Uncertainty_sq.sum(axis=2)/n_agents)-(Uncertainty_avg**2)
+
     # Swap axes to have (n_steps, n_profiles)
     Utility_avg = Utility_avg.transpose()
     Opinion_avg = Opinion_avg.transpose()
     Uncertainty_avg = Uncertainty_avg.transpose()
 
-    # Plots
+    # Average Plots
     MultiLinePlot(Utility_avg, n_profiles, x_axis=[], stepshape=0, show=show, x_label="Time", y_label="Utility Value", legendlabel='Profile', legend=1, cmap='RdYlGn', title="Evolution of Average Utility", size=(15,10), save=save, filename="Visualization/res/C_Multi_Cont_Utility.svg")
     MultiLinePlot(Opinion_avg, n_profiles, x_axis=[], stepshape=0, show=show, x_label="Time", y_label="Opinion Value", legendlabel='Profile', legend=1, cmap='RdYlGn', title="Evolution of Average Opinion", size=(15,10), save=save, filename="Visualization/res/C_Multi_Cont_Opinion.svg")
     MultiLinePlot(Uncertainty_avg, n_profiles, x_axis=[], stepshape=0, show=show, x_label="Time", y_label="Uncertainty Value", legendlabel='Profile', legend=1, cmap='RdYlGn', title="Evolution of Average Uncertainty", size=(15,10), save=save, filename="Visualization/res/C_Multi_Cont_Comparison.svg")
+
+     # Variance Plots
+    MultiLinePlot(Utility_var, n_profiles, x_axis=[], stepshape=0, show=show, x_label="Time", y_label="Utility Value", legendlabel='Profile', legend=1, cmap='RdYlGn', title="Evolution of Average Utility Variance", size=(15,10), save=save, filename="Visualization/res/C_Multi_Cont_Utility_Var.svg")
+    MultiLinePlot(Opinion_var, n_profiles, x_axis=[], stepshape=0, show=show, x_label="Time", y_label="Opinion Value", legendlabel='Profile', legend=1, cmap='RdYlGn', title="Evolution of Average Opinion Variance", size=(15,10), save=save, filename="Visualization/res/C_Multi_Cont_Opinion_Var.svg")
+    MultiLinePlot(Uncertainty_var, n_profiles, x_axis=[], stepshape=0, show=show, x_label="Time", y_label="Uncertainty Value", legendlabel='Profile', legend=1, cmap='RdYlGn', title="Evolution of Average Uncertainty Variance", size=(15,10), save=save, filename="Visualization/res/C_Multi_Cont_Comparison_Var.svg")
 
     # DISCRETE STATE VARIABLES
 
@@ -172,15 +187,15 @@ if(single_batch==1):
 
         # Evolution of #ideas over time for all runs
         Idea_change_list,Idea_count_list = CountVarsList(MF_data,'Idea_cnt',n_runs,n_steps)
-        MultiLinePlot(Idea_count_list, n_runs, x_axis=Idea_change_list, stepshape=1, show=show, x_label="Time", y_label="# Nodes with the Idea", legendlabel='Run', legend=1, cmap='RdYlGn', title=("# Nodes with the Idea for different runs on profile "+str(batch_2_analyze)), size=(15,10), save=save, filename="Visualization/res/B_Profile_"+str(batch_2_analyze)+"_Multi_State_Idea.svg")
+        MultiLinePlot(Idea_count_list, n_runs, x_axis=Idea_change_list, stepshape=1, show=show, x_label="Time", y_label="# Nodes with the Idea", legendlabel='Run', legend=0, cmap='RdYlGn', title=("# Nodes with the Idea for different runs on profile "+str(batch_2_analyze)), size=(15,10), save=save, filename="Visualization/res/B_Profile_"+str(batch_2_analyze)+"_Multi_State_Idea.svg")
 
         # Evolution of #pv_alone buildings over time for all runs
         PV_alone_change_list,PV_alone_count_list = CountVarsList(MF_data,'PV_alone_cnt',n_runs,n_steps)
-        MultiLinePlot(PV_alone_count_list, n_runs, x_axis=PV_alone_change_list, stepshape=1, show=show, x_label="Time", y_label="# Individual PV", legendlabel='Run', legend=1, cmap='RdYlGn', title=("# Individual PV for different runs on profile "+str(batch_2_analyze)), size=(15,10), save=save, filename="Visualization/res/B_Profile_"+str(batch_2_analyze)+"_Multi_State_PValone.svg")
+        MultiLinePlot(PV_alone_count_list, n_runs, x_axis=PV_alone_change_list, stepshape=1, show=show, x_label="Time", y_label="# Individual PV", legendlabel='Run', legend=0, cmap='RdYlGn', title=("# Individual PV for different runs on profile "+str(batch_2_analyze)), size=(15,10), save=save, filename="Visualization/res/B_Profile_"+str(batch_2_analyze)+"_Multi_State_PValone.svg")
 
         # Evolution of #pv communities over time for all runs
         PV_com_change_list,PV_com_count_list = CountVarsList(MF_data,'PV_com_cnt',n_runs,n_steps)
-        MultiLinePlot(PV_com_count_list, n_runs, x_axis=PV_com_change_list, stepshape=1, show=show, x_label="Time", y_label="# PV Communities", legendlabel='Run', legend=1, cmap='RdYlGn', title=("# PV Communities for different runs on profile "+str(batch_2_analyze)), size=(15,10), save=save, filename="Visualization/res/B_Profile_"+str(batch_2_analyze)+"_Multi_State_PVcommunity.svg")
+        MultiLinePlot(PV_com_count_list, n_runs, x_axis=PV_com_change_list, stepshape=1, show=show, x_label="Time", y_label="# PV Communities", legendlabel='Run', legend=0, cmap='RdYlGn', title=("# PV Communities for different runs on profile "+str(batch_2_analyze)), size=(15,10), save=save, filename="Visualization/res/B_Profile_"+str(batch_2_analyze)+"_Multi_State_PVcommunity.svg")
 
     # ----------------------------
     # FINAL AND INITIAL HISTOGRAMS

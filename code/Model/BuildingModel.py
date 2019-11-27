@@ -58,11 +58,8 @@ class BuildingModel(Model):
         # Note: here set as always true so model runs until max step.
         
         # 5. Setup Global Variables
-        self.profit = data_dict["profit"]
         self.awareness = data_dict["awareness"]
         self.awareness_var = data_dict["awareness_var"]
-        self.awareness_unc = data_dict["awareness_unc"]
-        self.neighbor = data_dict["neighbor"]
         
         # Weights of decision-making variables
         self.profit_weight = data_dict["profit_weight"]
