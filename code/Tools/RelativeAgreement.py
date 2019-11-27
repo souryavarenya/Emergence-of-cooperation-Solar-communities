@@ -1,6 +1,6 @@
 ### Relative Agreement interaction - Takes in two opinion-uncertainty <tuples> 
 # and returns respective modified op-unc return tuples
-# opunc is in the range ([0,100],[0,50])
+# opunc is in the range ([0,1],(0,0.27])
 # reference http://jasss.soc.surrey.ac.uk/5/4/1.html
 
 def interact(opunc0, opunc1, gain):
@@ -45,6 +45,10 @@ def interact(opunc0, opunc1, gain):
     # u_i_mod = u_i + RA(i,j) * (u_i - u_j)
     opunc0_mod = tuple(map(lambda x0,x1:x0 + beta0*(x1 - x0),opunc0,opunc1))
     opunc1_mod = tuple(map(lambda x0,x1:x0 + beta1*(x1 - x0),opunc1,opunc0))
+    
+    # Enforce Safety bounds for uncertainty
+    opunc0_mod = (opunc0_mod[0],max(opunc0_mod[1],0.02))
+    opunc1_mod = (opunc1_mod[0],max(opunc1_mod[1],0.02))
     
     # Return modified opinion value, uncertainty tuples
     return opunc0_mod, opunc1_mod

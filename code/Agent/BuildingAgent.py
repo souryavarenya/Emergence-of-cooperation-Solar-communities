@@ -69,7 +69,7 @@ class BuildingAgent(Agent):
         # ***IMPORTANT RANDOM MANAGEMENT -> maybe we need to use the mesa
         # package random package instead of the numpy??
         self.awareness = np.clip(np.random.normal(model.awareness, model.awareness_var),0,1)
-        self.awareness_unc = np.random.normal(model.awareness_unc,model.awareness_var/3)+0.02
+        self.awareness_unc = 0.02 + self.awareness*(1 - self.awareness) 
         ### TODO - Change it to uniform distribution
         ### TODO - Simplify awareness_uncertainty to linear func of awareness
 
