@@ -32,11 +32,11 @@ save = True
 
 # COMPARE BATCHES?
 batch_comparison = True
-n_profiles = 5
+n_profiles = 2
 
 # ANALYZE SIGNE BATCH?
-single_batch = False
-batch_2_analyze = 3
+single_batch = True
+batch_2_analyze = 1
 
 # => Make continuous data plots? (Utility, etc)
 continuous = True
@@ -191,7 +191,7 @@ if(single_batch==1):
         HistogramPlot(Opinion_matrix[0], n_bins=25, show=show, x_label="Opinion value", y_label="Frequency", cmap='RdYlGn', title=("Initial Opinion Histogram on profile "+str(batch_2_analyze)), size=(15,10), save=save, filename="Visualization/res/B_Profile_"+str(batch_2_analyze)+"_Hist_Opinion_Initial.svg")
 
         # Final Opinion Histogram
-        HistogramPlot(Opinion_matrix[n_agents-1], n_bins=25, show=show, x_label="Opinion value", y_label="Frequency", cmap='RdYlGn', title=("Final Opinion Histogram on profile "+str(batch_2_analyze)), size=(15,10), save=save, filename="Visualization/res/B_Profile_"+str(batch_2_analyze)+"_Hist_Opinion_Final.svg")
+        HistogramPlot(Opinion_matrix[n_steps-1], n_bins=25, show=show, x_label="Opinion value", y_label="Frequency", cmap='RdYlGn', title=("Final Opinion Histogram on profile "+str(batch_2_analyze)), size=(15,10), save=save, filename="Visualization/res/B_Profile_"+str(batch_2_analyze)+"_Hist_Opinion_Final.svg")
 
     # ----------------------------
     # COLORMAPS
@@ -199,19 +199,19 @@ if(single_batch==1):
     if(colormaps==1):
 
         # Final Utility Color Map
-        ColourMap(x_coord, y_coord, Opinion_matrix[n_steps-1], col_range=(0,1), x_label="x coordinate", y_label="y coordinate", colorbar=1, Nlegend=2, color_label=['Low (0)','', 'High (1)'],title=("Final utility distribution on profile "+str(batch_2_analyze)),size=(10,5),cmap='RdYlGn',markersize=50,save=save,show=show,filename="Visualization/res/B_Profile_"+str(batch_2_analyze)+"_Map_Utility_Final.svg")
+        ColourMap(x_coord, y_coord, Opinion_matrix[n_steps-1], col_range=(0,1), x_label="x coordinate", y_label="y coordinate", colorbar=1, Nlegend=2, color_label=['Low (0)','', 'High (1)'],title=("Final utility distribution on profile "+str(batch_2_analyze)),size=(10,5),cmap='RdYlGn',markersize=20,save=save,show=show,filename="Visualization/res/B_Profile_"+str(batch_2_analyze)+"_Map_Utility_Final.svg")
 
         # Initial Opinion Color Map
-        ColourMap(x_coord, y_coord, Opinion_matrix[0], col_range=(0,1), x_label="x coordinate", y_label="y coordinate", colorbar=1, Nlegend=2, color_label=['Low (0)','', 'High (1)'],title=("Initial Opinion distribution on profile "+str(batch_2_analyze)),size=(10,5),cmap='RdYlGn',markersize=50,save=save,show=show,filename="Visualization/res/B_Profile_"+str(batch_2_analyze)+"_Map_Opinion_Initial.svg")
+        ColourMap(x_coord, y_coord, Opinion_matrix[0], col_range=(0,1), x_label="x coordinate", y_label="y coordinate", colorbar=1, Nlegend=2, color_label=['Low (0)','', 'High (1)'],title=("Initial Opinion distribution on profile "+str(batch_2_analyze)),size=(10,5),cmap='RdYlGn',markersize=20,save=save,show=show,filename="Visualization/res/B_Profile_"+str(batch_2_analyze)+"_Map_Opinion_Initial.svg")
 
         # Final Opinion Color Map
-        ColourMap(x_coord, y_coord, Utility_matrix[n_steps-1], col_range=(0,1), x_label="x coordinate", y_label="y coordinate", colorbar=1, Nlegend=2, color_label=['Low (0)','', 'High (1)'],title=("Final Opinion distribution on profile "+str(batch_2_analyze)),size=(10,5),cmap='RdYlGn',markersize=50,save=save,show=show,filename="Visualization/res/B_Profile_"+str(batch_2_analyze)+"_Map_Opinion_Final.svg")
+        ColourMap(x_coord, y_coord, Utility_matrix[n_steps-1], col_range=(0,1), x_label="x coordinate", y_label="y coordinate", colorbar=1, Nlegend=2, color_label=['Low (0)','', 'High (1)'],title=("Final Opinion distribution on profile "+str(batch_2_analyze)),size=(10,5),cmap='RdYlGn',markersize=20,save=save,show=show,filename="Visualization/res/B_Profile_"+str(batch_2_analyze)+"_Map_Opinion_Final.svg")
 
         # Final Idea Color Map
-        ColourMap(x_coord, y_coord, Idea_M[n_steps-1], col_range=(0,1), x_label="x coordinate", y_label="y coordinate", colorbar=0, Nlegend=2, color_label=['No Idea', 'Idea'],title=("Final Idea distribution on profile "+str(batch_2_analyze))+" and run "+str(run_2_analyze),size=(10,5),cmap='RdYlGn',markersize=50,save=save,show=show,filename="Visualization/res/B_Profile_"+str(batch_2_analyze)+"_Run_"+str(run_2_analyze)+"_Map_Idea_Final.svg")
+        ColourMap(x_coord, y_coord, Idea_M[n_steps-1], col_range=(0,1), x_label="x coordinate", y_label="y coordinate", colorbar=0, Nlegend=2, color_label=['No Idea', 'Idea'],title=("Final Idea distribution on profile "+str(batch_2_analyze))+" and run "+str(run_2_analyze),size=(10,5),cmap='RdYlGn',markersize=20,save=save,show=show,filename="Visualization/res/B_Profile_"+str(batch_2_analyze)+"_Run_"+str(run_2_analyze)+"_Map_Idea_Final.svg")
 
         # Final PV Installations Color Map
-        ColourMap(x_coord, y_coord, Total_PV_M[n_steps-1], col_range=(0,2), x_label="x coordinate", y_label="y coordinate", colorbar=0, Nlegend=3, color_label=['No PV', 'Individual PV', 'PV Community'],title=("Final PV distribution on profile "+str(batch_2_analyze))+" and run "+str(run_2_analyze),size=(10,5),cmap='RdYlGn',markersize=50,save=save,show=show,filename="Visualization/res/B_Profile_"+str(batch_2_analyze)+"_Run_"+str(run_2_analyze)+"_Map_PV_Final.svg")
+        ColourMap(x_coord, y_coord, Total_PV_M[n_steps-1], col_range=(0,2), x_label="x coordinate", y_label="y coordinate", colorbar=0, Nlegend=3, color_label=['No PV', 'Individual PV', 'PV Community'],title=("Final PV distribution on profile "+str(batch_2_analyze))+" and run "+str(run_2_analyze),size=(10,5),cmap='RdYlGn',markersize=20,save=save,show=show,filename="Visualization/res/B_Profile_"+str(batch_2_analyze)+"_Run_"+str(run_2_analyze)+"_Map_PV_Final.svg")
 
     # ----------------------------
     # COLORMAP ANIMATIONS
@@ -220,6 +220,6 @@ if(single_batch==1):
     if(animations==1):
 
         # Create animations
-        AnimateColourMap(n_steps, x_coord, y_coord, Idea_M, dlyfactor=0.2, col_range=(0,1), x_label="", y_label="", colorbar=0, Nlegend=2, color_label=['No Idea', 'Idea'], title="Idea Spread", size=(10,5),cmap='RdYlGn',markersize=50,filename="Visualization/res/A_Profile_"+str(batch_2_analyze)+"_Run_"+str(run_2_analyze)+"_Anim_IdeaEvolution.gif")
-        AnimateColourMap(n_steps, x_coord, y_coord, Total_PV_M, dlyfactor=0.2, col_range=(0,2), x_label="", y_label="", colorbar=0, Nlegend=3, color_label=['No PV', 'Individual PV', 'PV Community'], title="Evolution of PV Installations", size=(10,5),cmap='RdYlGn',markersize=50,filename="Visualization/res/A_Profile_"+str(batch_2_analyze)+"_Run_"+str(run_2_analyze)+"_Anim_PVEvolution.gif")
+        AnimateColourMap(n_steps, x_coord, y_coord, Idea_M, dlyfactor=0.2, col_range=(0,1), x_label="", y_label="", colorbar=0, Nlegend=2, color_label=['No Idea', 'Idea'], title="Idea Spread", size=(10,5),cmap='RdYlGn',markersize=20,filename="Visualization/res/A_Profile_"+str(batch_2_analyze)+"_Run_"+str(run_2_analyze)+"_Anim_IdeaEvolution.gif")
+        AnimateColourMap(n_steps, x_coord, y_coord, Total_PV_M, dlyfactor=0.2, col_range=(0,2), x_label="", y_label="", colorbar=0, Nlegend=3, color_label=['No PV', 'Individual PV', 'PV Community'], title="Evolution of PV Installations", size=(10,5),cmap='RdYlGn',markersize=20,filename="Visualization/res/A_Profile_"+str(batch_2_analyze)+"_Run_"+str(run_2_analyze)+"_Anim_PVEvolution.gif")
 

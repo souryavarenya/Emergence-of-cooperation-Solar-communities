@@ -28,16 +28,20 @@ from Visualization.AnalysisFunctions import AverageHFDataframe
 
 #%%
 
-### Setting up some parameters for initialization
-# Define number of agents
-n_agents = 50
-
-# Define number of time steps each model runs
-n_steps = 100
-
-# Name of csv file containing data on individual buildings
+# Name of files containing initialization data
 b_data_file = "Data/buildings_data_1.csv"
 m_data_file = "Data/meta_1.json"
+
+# Read building meta data off JSON file
+with open(m_data_file) as myjson:
+    data_dict = json.loads(myjson.read())
+
+### Setting up some parameters for initialization
+# Define number of agents
+n_agents = data_dict['total_num_buildings']
+
+# Define number of time steps each model runs -> 12 months * 10 years
+n_steps = 12*10
 
 #HF_data_columns = ['AgentID','Run','Utility','Opinion','Uncertainty']
 HF_data_columns = ['Utility','Opinion','Uncertainty']
@@ -50,7 +54,7 @@ b_data = pd.read_csv(b_data_file, nrows=n_agents)
 #%%
 
 # ITERATE OVER ALL PROFILES OF THE EXPERIMENT
-n_profiles = 5
+n_profiles = 2
 
 for curr_profile in range(0,n_profiles):
 

@@ -69,7 +69,7 @@ class BuildingAgent(Agent):
         # ***IMPORTANT RANDOM MANAGEMENT -> maybe we need to use the mesa
         # package random package instead of the numpy??
         self.awareness = np.clip(np.random.normal(model.awareness, model.awareness_var),0,1)
-        self.awareness_unc = np.random.normal(model.awareness_unc,model.awareness_var/3) 
+        self.awareness_unc = np.random.normal(model.awareness_unc,model.awareness_var/3)+0.02
         ### TODO - Change it to uniform distribution
         ### TODO - Simplify awareness_uncertainty to linear func of awareness
 
@@ -276,8 +276,12 @@ class BuildingAgent(Agent):
         This method integrates the agent in a solar community.
         '''
         self.pv_alone = True
-        self.pv_community = True
-        self.model.community_blocks[self.block].update({self.unique_id:True})
+        
+        try:
+            self.model.community_blocks[self.block].update({self.unique_id:True})
+            self.pv_community = True
+        except:
+            pass
         
         # print("\nSweet! Just joined a community!" +
         #       "\nMy id is " + str(self.unique_id) + 
