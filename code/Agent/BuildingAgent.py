@@ -70,8 +70,6 @@ class BuildingAgent(Agent):
         # package random package instead of the numpy??
         self.awareness = np.clip(np.random.normal(model.awareness, model.awareness_var),0,1)
         self.awareness_unc = 0.02 + self.awareness*(1 - self.awareness) 
-        ### TODO - Change it to uniform distribution
-        ### TODO - Simplify awareness_uncertainty to linear func of awareness
 
         # Define neighbor effect
         # ***to-do: initialize to zero?***

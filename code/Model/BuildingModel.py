@@ -35,9 +35,9 @@ class BuildingModel(Model):
         self.num_agents = n_agents
 
         # Initialize a dictionary of community blocks (block has more than 2 buildings)
-        self.community_blocks = dict.fromkeys(data_dict["comm_blocks"],{})
+        self.community_blocks = { block_id:{} for block_id in data_dict["comm_blocks"]}
         # - community blocks -> Dictionary of dictionaries containing agent id and corresponding community value
-        
+
         # 2. Define the spatial dimension of the model creating a grid
         # Create the grid with calculated dimensions
         ## self.grid = MultiGrid(width, height, False)
@@ -97,9 +97,6 @@ class BuildingModel(Model):
         self.x_coord = []
         self.y_coord = []
         self.agent_list = []
-
-        # Solar Community blocks
-        self.communities = []
 
         # Create Small World Network between agents (Done before agents)
         self.num_neighbors_wsg = data_dict["swn_k"]
