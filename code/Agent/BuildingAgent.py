@@ -13,7 +13,7 @@ class BuildingAgent(Agent):
     """
     Creates a building owner agent.
     """    
-    def __init__(self, unique_id, model, block, el_demand, pv_potential, pv_sf):
+    def __init__(self, unique_id, model, block, el_demand, pv_potential, pv_sf, is_extremist = False):
         '''
         Initializes all the attributes of the building owner agent.
         Inputs:
@@ -68,8 +68,12 @@ class BuildingAgent(Agent):
         # and clips it between 0 and 1
         # ***IMPORTANT RANDOM MANAGEMENT -> maybe we need to use the mesa
         # package random package instead of the numpy??
-        self.awareness = np.clip(np.random.normal(model.awareness, model.awareness_var),0,1)
-        self.awareness_unc = 0.02 + self.awareness*(1 - self.awareness) 
+        if is_extremist == False:
+            self.awareness = np.clip(np.random.normal(model.awareness, model.awareness_var),0,1)
+            self.awareness_unc = 0.02 + self.awareness*(1 - self.awareness)
+        elif is_extremist == True:
+            self.awareness = 0.06
+            self.awareness_unc = 0.03
 
         # Define neighbor effect
         # ***to-do: initialize to zero?***

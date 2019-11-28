@@ -21,7 +21,7 @@ from mesa.datacollection import DataCollector
 class BuildingModel(Model):
     """A model with some number of agents."""
     
-    def __init__(self, agent, b_data, n_agents, data_dict):
+    def __init__(self, agent, b_data, n_agents, data_dict, seed=None):
         '''
         This method initializes the instantiation of the model class.
         Inputs:
@@ -102,6 +102,10 @@ class BuildingModel(Model):
         self.num_neighbors_wsg = data_dict["swn_k"]
         self.rewire_prob_wsg = data_dict["swn_p"]
         self.net = self.init_small_world()
+
+        self.num_of_extremists = data_dict["extremists"]
+        if self.num_of_extremists != 0:
+            extremist_list = self.make_extremists(self.num_of_extremists)
         
         # Create agents
         for i in range(self.num_agents):
@@ -148,7 +152,7 @@ class BuildingModel(Model):
                 pv_sf = 1
             
             # Create agent
-            a = agent(i, self, block, el_demand, pv_potential, pv_sf)
+            a = agent(i, self, block, el_demand, pv_potential, pv_sf, is_extremist = True if i in extremist_list else False)
             
             # Add agent to model schedule
             self.schedule.add(a)
@@ -167,7 +171,9 @@ class BuildingModel(Model):
                     "pv_alone" : "pv_alone",
                     "pv_community" : "pv_community",
                     "idea": "idea"}       
-                )                
+                )
+
+        pass
                
     def step(self):
         '''Advance the model by one step.'''
@@ -187,6 +193,10 @@ class BuildingModel(Model):
 
         self.update_global_prices()   
         #print("==")
+
+    def make_extremists(self, number_of_extremists):
+        rlist = self.random.sample(range(self.num_agents), number_of_extremists)
+        return rlist
 
     
     def update_global_prices(self):

@@ -12,5 +12,6 @@
     "max_pbp": 15,
     "el_price": 0.21,
     "pv_price_yoy": 0.04,
-    "el_price_yoy": 0.045
+    "el_price_yoy": 0.045,
+    "extremists": 0
 }
