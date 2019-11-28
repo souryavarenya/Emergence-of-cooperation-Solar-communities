@@ -6,7 +6,7 @@
     "neighbor_weight": 0.3,
     "threshold_low": 0.5,
     "threshold_high": 0.75,
-    "swn_k": 11,            
+    "swn_k": 8,            
     "swn_p": 0.28,          
     "pv_price": 2850,
     "max_pbp": 15,

@@ -7,6 +7,7 @@
 # Avg shortest Path         L   -> 3.65 | 
 #### For 100 nodes - k=5/6, p=0.25
 #### For 1000 nodes - k=11, p=0.29
+#### For 540 nodes - k=8 , p=0.29
 
 import networkx as nx
 import numpy as np
