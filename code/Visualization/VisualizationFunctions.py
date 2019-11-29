@@ -35,13 +35,16 @@ import math
 # -filename    -> Name that will be given to the image file
 #
 
-def HistogramPlot(data, n_bins=20, show=1, x_label="X_label", y_label="Y_label", cmap='RdYlGn', title="Title", size=(15,10), save=0, filename="test.svg"):
+def HistogramPlot(data, n_bins=20, show=1, x_label="X_label", x_ax_lim = [], y_label="Y_label", cmap='RdYlGn', title="Title", size=(15,10), save=0, filename="test.svg"):
 
     #Configure Plot
     plt.figure(figsize=size)
     plt.title(title, fontsize=16)
     plt.xlabel(x_label, fontsize=12)
     plt.ylabel(y_label, fontsize=12)
+
+    if(len(x_ax_lim)==2):
+        plt.xlim(x_ax_lim)
 
     #Create Histogram
     a,b,patches = plt.hist(data,bins=n_bins)
@@ -225,7 +228,7 @@ def MultipleSubplot(data, n_lines, x_axis=[], stepshape=0, show=1, x_label="X_la
         else:
             m = 1
 
-    fig, axs = plt.subplots(n, m, sharex=True, sharey=True, figsize=size)
+    fig, axs = plt.subplots(m, n, sharex=True, sharey=True, figsize=size)
 
     #Configure Plot
 
@@ -245,21 +248,26 @@ def MultipleSubplot(data, n_lines, x_axis=[], stepshape=0, show=1, x_label="X_la
         ax.label_outer()
 
     for splot in range(0,n_subplots):
+
         if(len(x_axis)>1):
             if(n==1):
                 MultiLinePlot(data[splot], n_lines, x_axis=x_axis[splot], stepshape=0, show=0, subplot=1, ax=axs[int(splot/n)], x_label="", x_ax_lim = [], y_label="", y_ax_lim = [], legend=0, cmap='RdYlGn', save=0)
+                axs[int(splot/n)].set_title("Profile "+str(splot))
             else:
-                MultiLinePlot(data[splot], n_lines, x_axis=x_axis[splot], stepshape=0, show=0, subplot=1, ax=axs[int(splot%n),int(splot/n)], x_label="", x_ax_lim = [], y_label="", y_ax_lim = [], legend=0, cmap='RdYlGn', save=0)
+                MultiLinePlot(data[splot], n_lines, x_axis=x_axis[splot], stepshape=0, show=0, subplot=1, ax=axs[int(splot/n),int(splot%n)], x_label="", x_ax_lim = [], y_label="", y_ax_lim = [], legend=0, cmap='RdYlGn', save=0)
+                axs[int(splot/n),int(splot%n)].set_title("Profile "+str(splot))
 
         else:
             if(n==1):
                 MultiLinePlot(data[splot], n_lines, x_axis=[], stepshape=0, show=0, subplot=1, ax=axs[int(splot/n)], x_label="", x_ax_lim = [], y_label="", y_ax_lim = [], legend=0, cmap='RdYlGn', save=0)
+                axs[int(splot/n)].set_title("Profile "+str(splot))
             else:
-                MultiLinePlot(data[splot], n_lines, x_axis=[], stepshape=0, show=0, subplot=1, ax=axs[int(splot%n),int(splot/n)], x_label="", x_ax_lim = [], y_label="", y_ax_lim = [], legend=0, cmap='RdYlGn', save=0)
+                MultiLinePlot(data[splot], n_lines, x_axis=[], stepshape=0, show=0, subplot=1, ax=axs[int(splot/n),int(splot%n)], x_label="", x_ax_lim = [], y_label="", y_ax_lim = [], legend=0, cmap='RdYlGn', save=0)
+                axs[int(splot/n),int(splot%n)].set_title("Profile "+str(splot))
 
     #Save image if requested
     if(save==1):
-        plt.savefig(filename, format='svg')
+        fig.savefig(filename, format='svg')
 
     #Show image if requested
     if(show==1):
