@@ -189,7 +189,7 @@ class BuildingAgent(Agent):
         opunc1 = (connection_agent.awareness,connection_agent.awareness_unc)
 
         # Update the opuncs
-        opunc0, opunc1 = RelativeAgreement.interact(opunc0, opunc1, 1)
+        opunc0, opunc1 = RelativeAgreement.interact(opunc0, opunc1, self.model.ra_gain)
 
         # Assign new opunc values to self
         self.awareness = opunc0[0]

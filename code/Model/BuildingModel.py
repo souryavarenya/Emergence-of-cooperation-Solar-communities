@@ -60,6 +60,9 @@ class BuildingModel(Model):
         # 5. Setup Global Variables
         self.awareness = data_dict["awareness"]
         self.awareness_var = data_dict["awareness_var"]
+
+        # Rel Agreement Gain
+        self.ra_gain = data_dict["ra_gain"]
         
         # Weights of decision-making variables
         self.profit_weight = data_dict["profit_weight"]
