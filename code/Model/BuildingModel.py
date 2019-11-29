@@ -61,6 +61,15 @@ class BuildingModel(Model):
         self.awareness = data_dict["awareness"]
         self.awareness_var = data_dict["awareness_var"]
 
+        # Get Alpha and Beta for PERT
+            # alpha and beta calculated as shown here: https://stats.stackexchange.com/questions/12232/calculating-the-parameters-of-a-beta-distribution-using-the-mean-and-variance
+
+        self.alpha = (self.awareness**2)*(((1-self.awareness)/(self.awareness_var**2))-(1/self.awareness))
+        self.beta = self.alpha*((1/self.awareness)-1)
+
+        if((self.alpha<1)or((self.beta<1))):
+            print("WARNING: degenerate PERT for Awareness! Maybe awareness variance is too large?")
+
         # Rel Agreement Gain
         self.ra_gain = data_dict["ra_gain"]
         

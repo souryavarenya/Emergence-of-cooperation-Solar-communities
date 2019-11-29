@@ -69,9 +69,7 @@ class BuildingAgent(Agent):
         # ***IMPORTANT RANDOM MANAGEMENT -> maybe we need to use the mesa
         # package random package instead of the numpy??
         if is_extremist == None:
-            self.awareness = np.clip(np.random.normal(model.awareness, model.awareness_var),0,1)
-            while self.awareness < 0.01 or self.awareness > 0.99:
-                self.awareness = np.clip(np.random.normal(model.awareness, model.awareness_var),0,1)
+            self.awareness = np.random.beta(model.alpha, model.beta)
             self.awareness_unc = 0.02 + self.awareness*(1 - self.awareness)
         elif is_extremist == "pos":
             self.awareness = 0.94

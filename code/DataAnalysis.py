@@ -32,23 +32,23 @@ show = True
 save = True
 
 # COMPARE BATCHES?
-batch_comparison = True
-n_profiles = 5
+batch_comparison = False
+n_profiles = 1
 
 # ANALYZE SINGLE BATCH?
-single_batch = False
-batch_2_analyze = 2
+single_batch = True
+batch_2_analyze = 0
 
 # => Make continuous data plots? (Utility, etc)
-continuous = True
+continuous = False
 # => Make state data plots? (PV alone, etc)
-states = True
+states = False
 # => Make histograms? (PV alone, etc)              
 histograms = True
 # => Make colormaps?
-colormaps = True  
+colormaps = False  
 # => Make colormap animations?
-animations = True
+animations = False
 
 #%%
 
@@ -141,7 +141,7 @@ if(batch_comparison==1):
 
     MultiLinePlot(Utility_avg, n_profiles, x_axis=[], y_ax_lim=[0,1], stepshape=0, show=show, x_label="Time", y_label="Utility Value", legendlabel='Profile', legend=1, cmap='brg', title="Evolution of Average Utility", size=(15,10), save=save, filename="Visualization/res/C_Multi_Cont_Utility.svg")
     MultiLinePlot(Opinion_avg, n_profiles, x_axis=[], y_ax_lim=[0,1], stepshape=0, show=show, x_label="Time", y_label="Opinion Value", legendlabel='Profile', legend=1, cmap='brg', title="Evolution of Average Opinion", size=(15,10), save=save, filename="Visualization/res/C_Multi_Cont_Opinion.svg")
-    MultiLinePlot(Uncertainty_avg, n_profiles, x_axis=[], y_ax_lim=[0,1], stepshape=0, show=show, x_label="Time", y_label="Uncertainty Value", legendlabel='Profile', legend=1, cmap='brg', title="Evolution of Average Uncertainty", size=(15,10), save=save, filename="Visualization/res/C_Multi_Cont_Uncertainty.svg")
+    MultiLinePlot(Uncertainty_avg, n_profiles, x_axis=[], y_ax_lim=[0,0.5], stepshape=0, show=show, x_label="Time", y_label="Uncertainty Value", legendlabel='Profile', legend=1, cmap='brg', title="Evolution of Average Uncertainty", size=(15,10), save=save, filename="Visualization/res/C_Multi_Cont_Uncertainty.svg")
     MultiLinePlot(Profit_avg, n_profiles, x_axis=[], y_ax_lim=[0,1], stepshape=0, show=show, x_label="Time", y_label="Profit Value", legendlabel='Profile', legend=1, cmap='brg', title="Evolution of Average Profit", size=(15,10), save=save, filename="Visualization/res/C_Multi_Cont_Profit.svg")
     MultiLinePlot(Neighbor_avg, n_profiles, x_axis=[], y_ax_lim=[0,1], stepshape=0, show=show, x_label="Time", y_label="Neighbor Value", legendlabel='Profile', legend=1, cmap='brg', title="Evolution of Average Neighbor Value", size=(15,10), save=save, filename="Visualization/res/C_Multi_Cont_Neighbor.svg")
 
@@ -208,7 +208,7 @@ if(single_batch==1):
         MultiLinePlot(Opinion_space[batch_2_analyze,run_2_analyze], n_agents, x_axis=[], y_ax_lim=[0,1], stepshape=0, show=show, x_label="Time", y_label="Opinion Value", legendlabel='Agent', legend=0, cmap='brg', title=("Evolution of Average Opinion for different Agents on profile "+str(batch_2_analyze)), size=(15,10), save=save, filename="Visualization/res/B_Profile_"+str(batch_2_analyze)+"_Multi_Cont_Opinion.svg")
 
         # Uncertainty
-        MultiLinePlot(Uncertainty_space[batch_2_analyze,run_2_analyze], n_agents, x_axis=[], y_ax_lim=[0,1], stepshape=0, show=show, x_label="Time", y_label="Uncertainty Value", legendlabel='Agent', legend=0, cmap='brg', title=("Evolution of Average Uncertainty for different Agents on profile "+str(batch_2_analyze)), size=(15,10), save=save, filename="Visualization/res/B_Profile_"+str(batch_2_analyze)+"_Multi_Cont_Uncertainty.svg")
+        MultiLinePlot(Uncertainty_space[batch_2_analyze,run_2_analyze], n_agents, x_axis=[], y_ax_lim=[0,0.5], stepshape=0, show=show, x_label="Time", y_label="Uncertainty Value", legendlabel='Agent', legend=0, cmap='brg', title=("Evolution of Average Uncertainty for different Agents on profile "+str(batch_2_analyze)), size=(15,10), save=save, filename="Visualization/res/B_Profile_"+str(batch_2_analyze)+"_Multi_Cont_Uncertainty.svg")
 
     # DISCRETE STATE VARIABLES
     if(states==1):
