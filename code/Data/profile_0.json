@@ -1,9 +1,9 @@
 {
     "awareness": 0.5,
     "awareness_var": 0.1,
-    "profit_weight": 0.5,
-    "awareness_weight": 0.0,    
-    "neighbor_weight": 0.3,
+    "profit_weight": 0.8,
+    "awareness_weight": 0.8,    
+    "neighbor_weight": 0.0,
     "threshold_low": 0.5,
     "threshold_high": 0.75,
     "swn_k": 8,            
@@ -12,7 +12,7 @@
     "max_pbp": 15,
     "el_price": 0.21,
     "pv_price_yoy": 0.04,
-    "el_price_yoy": 0.045,
+    "el_price_yoy": -0.045,
     "pos_extremists": 0,
     "neg_extremists": 0
 }

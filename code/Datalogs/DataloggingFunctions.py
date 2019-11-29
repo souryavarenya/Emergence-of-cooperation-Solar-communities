@@ -115,13 +115,14 @@ def InitializeCSV (filename,columns,indexes):
 # -err                  -> returns 1 if has detected an error
 #
 
-def Write2CSV (filename,columns,collector_dataframe,run,n_steps,n_agents,seed,df_type='HF'):
+def Write2CSV (filename,columns,collector_dataframe,run,n_steps,n_agents,df_type='HF'):
 
     err=0   # If nothing bad happens, err remanins at 0
 
     # If we want to write a High Frequency DataFrame
     if df_type == "HF":
                 
+        collector_dataframe.insert(0,"Run",np.full(len(collector_dataframe.index),run)) # Insert Run column
         dataframe_truncated = collector_dataframe[columns]  # Truncate the complete dataframe only with the columns we want
         dataframe_truncated.to_csv(filename, sep=';', mode='a', header=False)   # Write data to CSV, without header and in append mode
 
@@ -163,11 +164,6 @@ def Write2CSV (filename,columns,collector_dataframe,run,n_steps,n_agents,seed,df
 
         # Write to CSV
         joint_dataframe.to_csv(filename, sep=';', mode='a', header=False) # Write data to CSV, without header and in append mode
-
-        # Add Seed to CSV
-        seed_row = pd.DataFrame([{'Run':run,'PV_alone_cnt':np.nan,'PV_alone_chg':np.nan,'PV_com_cnt':np.nan,'PV_com_chg':np.nan,'Idea_cnt':np.nan,'Idea_chg':np.nan,'Seed':seed}])
-        seed_row.index.name = 'Step'
-        seed_row.to_csv(filename, sep=';', mode='a', header=False) # Write data to CSV, without header and in append mode
 
     # Erroneous Type
     else:
@@ -225,7 +221,7 @@ def ReadCSVBatch (curr_profile,profile_suffix):
 
     # Read data from the CSV
     MF_data = pd.read_csv(MF_data_file, sep=';', index_col=['Run','Step'])
-    HF_data = pd.read_csv(HF_data_file, sep=';', index_col=['Step','AgentID'])
+    HF_data = pd.read_csv(HF_data_file, sep=';', index_col=['Run','Step','AgentID'])
     Coords = pd.read_csv(Coord_file, sep=';', index_col=['AgentID'])
 
     # Extract Coordinate Arrays
@@ -237,8 +233,7 @@ def ReadCSVBatch (curr_profile,profile_suffix):
 
     # Extract number of Steps and Number of Agents -> Last run, last step, last agents
     # IMPORTANT - We assume constant number of runs, steps and agents through the Batch
-    (n_runs,n_steps) = MF_data.index[len(MF_data.index)-1]
-    (n_steps, n_agents) = HF_data.index[len(HF_data.index)-1]
+    (n_runs, n_steps, n_agents) = HF_data.index[len(HF_data.index)-1]
     n_steps = int((n_steps/2)+1)    # Correct to actual number (length value = last+1), steps re-scaled
     n_runs +=1
     n_agents +=1

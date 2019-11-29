@@ -64,7 +64,7 @@ def AverageHFDataframe(dataframe,prev_average_dataframe,curr_run,n_runs,n_steps,
 # -Average_count_arr    -> array with the counting values averaged through all runs
 #
 
-def CountVarsAverage(dataframe,col_to_analyze,n_runs,n_steps):
+def CountVarsMatrix(dataframe,col_to_analyze,n_runs,n_steps):
 
     Count_Matrix = np.zeros((n_runs,n_steps))       # Matrix will all counting values per Step, per Run
 
@@ -95,10 +95,7 @@ def CountVarsAverage(dataframe,col_to_analyze,n_runs,n_steps):
                     idx = np.where(Change_t == step)[0][0]
                     Count_Matrix[run,step] = Count[idx]
 
-    # Average the counting values over all Runs
-    Average_count_arr = Count_Matrix.sum(axis=0)/n_runs
-    
-    return Average_count_arr
+    return Count_Matrix
 
 
 #%%

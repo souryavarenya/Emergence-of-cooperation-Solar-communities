@@ -41,11 +41,13 @@ with open(m_data_file) as myjson:
 n_agents = data_dict['total_num_buildings']
 
 # Define number of time steps each model runs -> 12 months * 10 years
-n_steps = 12*10
+#n_steps = 12*10
+n_steps = 175
 
-#HF_data_columns = ['AgentID','Run','Utility','Opinion','Uncertainty']
-HF_data_columns = ['Utility','Opinion','Uncertainty']
+#HF_data_columns = ['Run',Utility','Opinion','Uncertainty']
+HF_data_columns = ['Run','Utility','Opinion','Uncertainty','Neighbor','Profit']
 MF_data_columns = ['Run','PV_alone_cnt','PV_alone_chg','PV_com_cnt','PV_com_chg','Idea_cnt','Idea_chg','Seed']
+
 Building_Coord_columns = ['x','y']
 
 # Read building data from the CSV %%file
@@ -54,7 +56,7 @@ b_data = pd.read_csv(b_data_file, nrows=n_agents)
 #%%
 
 # ITERATE OVER ALL PROFILES OF THE EXPERIMENT
-n_profiles = 7
+n_profiles = 2
 
 for curr_profile in range(0,n_profiles):
 
@@ -114,16 +116,8 @@ for curr_profile in range(0,n_profiles):
         # Get Data Collector Data - Once per run
         dataframe = model.datacollector.get_agent_vars_dataframe()
 
-        # On-line averaging of HF data
-        if(run==0):
-            dataframe_avg = dataframe
-
-        dataframe_avg = AverageHFDataframe(dataframe,dataframe_avg,run,batch_size,n_steps,n_agents)
-
         # Write data of interest to MF csv files - Once per run
-        Write2CSV(MF_out_file,MF_data_columns,dataframe,run,n_steps,n_agents,seed,df_type='MF')
-
-    # Write average data of interest to MF csv files - Once per batch
-    Write2CSV(HF_out_file,HF_data_columns,dataframe_avg,0,n_steps,n_agents,seed,df_type='HF')
+        Write2CSV(MF_out_file,MF_data_columns,dataframe,run,n_steps,n_agents,df_type='MF')
+        Write2CSV(HF_out_file,HF_data_columns,dataframe,run,n_steps,n_agents,df_type='HF')
 
 ### Results and graphs -> DataAnalysis.py

@@ -5,6 +5,7 @@ from matplotlib import cm
 from matplotlib.lines import Line2D
 import matplotlib.animation as animation
 import numpy as np
+import math
 
 #%%
 
@@ -81,8 +82,14 @@ def HistogramPlot(data, n_bins=20, show=1, x_label="X_label", y_label="Y_label",
 # -stepshape   -> 1 for Step Plot, 0 for Line Plot
 #
 # -show        -> 1 if the image must be shown in screen
+#
+# -subplot     -> 1 if used as a subplot
+# -ax          -> If subplot==1, ax corresponding to the subplot
+#
 # -x_label     -> label that will appear on the x-axis
+# -x_ax_lim    -> list with the limit values of the x-axis (min,max)
 # -y_label     -> label that will appear on the y-axis
+# -y_ax_lim    -> list with the limit values of the y-axis (min,max)
 #
 # -legend      -> 1 if a legend is wanted
 # -legendlabel -> label to name the elements of the legend sequentially
@@ -94,13 +101,20 @@ def HistogramPlot(data, n_bins=20, show=1, x_label="X_label", y_label="Y_label",
 # -filename    -> Name that will be given to the image file
 #
 
-def MultiLinePlot(data, n_lines, x_axis=[], stepshape=0, show=1, x_label="X_label", y_label="Y_label", legend=1, legendlabel='Agent', cmap='RdYlGn', title="Title", size=(15,10), save=0, filename="test.svg"):
+def MultiLinePlot(data, n_lines, x_axis=[], stepshape=0, show=1, subplot=0, ax= 0, x_label="X_label", x_ax_lim = [], y_label="Y_label", y_ax_lim = [], legend=1, legendlabel='Agent', cmap='RdYlGn', alpha=0.5, title="Title", size=(15,10), save=0, filename="test.svg"):
 
-    #Configure Plot
-    plt.figure(figsize=size)
-    plt.title(title, fontsize=16)
-    plt.xlabel(x_label, fontsize=12)
-    plt.ylabel(y_label, fontsize=12)
+    #Configure Plot (only if it's not a subplot)
+    if(subplot==0):
+        plt.figure(figsize=size)
+        plt.title(title, fontsize=16)
+        plt.xlabel(x_label, fontsize=12)
+        plt.ylabel(y_label, fontsize=12)
+
+        if(len(x_ax_lim)==2):
+            plt.xlim(x_ax_lim)
+
+        if(len(y_ax_lim)==2):
+            plt.ylim(y_ax_lim)
 
     #Get color scheme for legend
     viridis = cm.get_cmap(cmap, n_lines)
@@ -137,19 +151,111 @@ def MultiLinePlot(data, n_lines, x_axis=[], stepshape=0, show=1, x_label="X_labe
 
         #If a Step splot is requested
         if(stepshape==1):
-            plt.step(x_array,y_array,color=viridis(i),where='post')
+            if(subplot==0):
+                plt.step(x_array,y_array,color=viridis(i),where='post',alpha=alpha)
+            else:
+                ax.step(x_array,y_array,color=viridis(i),where='post',alpha=alpha)
 
         #Otherwise it's a Line plot
         else:
-            plt.plot(x_array,y_array,color=viridis(i))
+            if(subplot==0):
+                plt.plot(x_array,y_array,color=viridis(i),alpha=alpha)
+            else:
+                ax.plot(x_array,y_array,color=viridis(i),alpha=alpha)
 
         #If legend is requested, append element with label
-        if(legend==1):
+        if(legend==1 and subplot==0):
             legend_elements.append(Line2D([0],[0], marker='s', color='w', label=legendlabel+" "+str(i),markerfacecolor=viridis(i), markersize=15))
     
-    #If legend is requested, crete legend
-    if(legend==1):
-        plt.legend(handles=legend_elements, loc='lower right')
+    #Only if not a subplot
+    if(subplot==0):
+
+        #If legend is requested, crete legend
+        if(legend==1):
+            plt.legend(handles=legend_elements, loc='lower right')
+
+        #Save image if requested
+        if(save==1):
+            plt.savefig(filename, format='svg')
+
+        #Show image if requested
+        if(show==1):
+            plt.show()
+
+#%%
+
+# --------------------------
+# MULTIPLE SUBPLOT FUNCTION
+# --------------------------
+#
+# DESCRIPTION: it creates a plot with multiple subplots from MultiLinePlots.
+#
+# INPUT ARGUMENTS
+#
+# -data        -> list of vectors with the data values to plot
+# -n_lines     -> number of lines to plot on each subplot
+#
+# -x_axis      -> list of vector with x-coordinates (optional), should have the same size as data list
+# -stepshape   -> 1 for Step Plot, 0 for Line Plot
+#
+# -show        -> 1 if the image must be shown in screen
+#
+# -x_label     -> label that will appear on the x-axis
+# -x_ax_lim    -> list with the limit values of the x-axis (min,max)
+# -y_label     -> label that will appear on the y-axis
+# -y_ax_lim    -> list with the limit values of the y-axis (min,max)
+#
+# -title       -> Title that will appear on the graph
+# -size        -> Size of the graph (x,y)
+# -cmap        -> Color map being used to differentiate lines
+# -save        -> 1 if the image must be saved into a .svg file
+# -filename    -> Name that will be given to the image file
+#
+
+def MultipleSubplot(data, n_lines, x_axis=[], stepshape=0, show=1, x_label="X_label", x_ax_lim = [], y_label="Y_label", y_ax_lim = [], cmap='RdYlGn', title="Title", size=(15,10), save=0, filename="test.svg"):
+
+    n_subplots = data.shape[0]
+
+    if(n_subplots>8):
+        print("PLOTING ERROR: Too many subplots. Max 8.")
+    else:
+        n = int(math.ceil(n_subplots/2))
+        if(n>0):
+            m = int(math.ceil(n_subplots/n))
+        else:
+            m = 1
+
+    fig, axs = plt.subplots(n, m, sharex=True, sharey=True, figsize=size)
+
+    #Configure Plot
+
+    fig.suptitle(title, fontsize=16)
+
+    for ax in axs.flat:
+        ax.set(xlabel=x_label, ylabel=y_label)
+
+        if(len(x_ax_lim)==2):
+            ax.set_xlim(x_ax_lim)
+
+        if(len(y_ax_lim)==2):
+            ax.set_ylim(y_ax_lim)
+
+    # Hide x labels and tick labels for top plots and y ticks for right plots.
+    for ax in axs.flat:
+        ax.label_outer()
+
+    for splot in range(0,n_subplots):
+        if(len(x_axis)>1):
+            if(n==1):
+                MultiLinePlot(data[splot], n_lines, x_axis=x_axis[splot], stepshape=0, show=0, subplot=1, ax=axs[int(splot/n)], x_label="", x_ax_lim = [], y_label="", y_ax_lim = [], legend=0, cmap='RdYlGn', save=0)
+            else:
+                MultiLinePlot(data[splot], n_lines, x_axis=x_axis[splot], stepshape=0, show=0, subplot=1, ax=axs[int(splot%n),int(splot/n)], x_label="", x_ax_lim = [], y_label="", y_ax_lim = [], legend=0, cmap='RdYlGn', save=0)
+
+        else:
+            if(n==1):
+                MultiLinePlot(data[splot], n_lines, x_axis=[], stepshape=0, show=0, subplot=1, ax=axs[int(splot/n)], x_label="", x_ax_lim = [], y_label="", y_ax_lim = [], legend=0, cmap='RdYlGn', save=0)
+            else:
+                MultiLinePlot(data[splot], n_lines, x_axis=[], stepshape=0, show=0, subplot=1, ax=axs[int(splot%n),int(splot/n)], x_label="", x_ax_lim = [], y_label="", y_ax_lim = [], legend=0, cmap='RdYlGn', save=0)
 
     #Save image if requested
     if(save==1):
@@ -158,7 +264,6 @@ def MultiLinePlot(data, n_lines, x_axis=[], stepshape=0, show=1, x_label="X_labe
     #Show image if requested
     if(show==1):
         plt.show()
-
 
 #%%
 

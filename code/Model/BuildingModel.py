@@ -169,6 +169,8 @@ class BuildingModel(Model):
                     "Utility" : "utility",
                     "Opinion" : "awareness",
                     "Uncertainty" : "awareness_unc",
+                    "Neighbor":"neighbor",
+                    "Profit":"profit",
                     "pv_alone" : "pv_alone",
                     "pv_community" : "pv_community",
                     "idea": "idea"}       
