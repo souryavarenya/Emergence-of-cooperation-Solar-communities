@@ -103,9 +103,9 @@ class BuildingModel(Model):
         self.rewire_prob_wsg = data_dict["swn_p"]
         self.net = self.init_small_world()
 
-        self.num_of_extremists = data_dict["extremists"]
-        if self.num_of_extremists != 0:
-            extremist_list = self.make_extremists(self.num_of_extremists)
+        pos_extremists = data_dict["pos_extremists"]
+        neg_extremists = data_dict["neg_extremists"]
+        pos_ext_list, neg_ext_list = self.make_extremists(pos_extremists, neg_extremists)
         
         # Create agents
         for i in range(self.num_agents):
@@ -152,7 +152,8 @@ class BuildingModel(Model):
                 pv_sf = 1
             
             # Create agent
-            a = agent(i, self, block, el_demand, pv_potential, pv_sf, is_extremist = True if i in extremist_list else False)
+            a = agent(i, self, block, el_demand, pv_potential, pv_sf, 
+                    is_extremist = "pos" if i in pos_ext_list else ("neg" if i in neg_ext_list else None))
             
             # Add agent to model schedule
             self.schedule.add(a)
@@ -194,9 +195,13 @@ class BuildingModel(Model):
         self.update_global_prices()   
         #print("==")
 
-    def make_extremists(self, number_of_extremists):
-        rlist = self.random.sample(range(self.num_agents), number_of_extremists)
-        return rlist
+    def make_extremists(self, pos_extremists, neg_extremists):
+        if pos_extremists + neg_extremists != 0:
+            rlist = self.random.sample(range(self.num_agents), pos_extremists + neg_extremists)
+            return rlist[:pos_extremists], rlist[pos_extremists:]
+        else:
+            return [],[]
+        # Returns a list of positive and negative extremists resp
 
     
     def update_global_prices(self):
