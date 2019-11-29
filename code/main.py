@@ -56,7 +56,7 @@ b_data = pd.read_csv(b_data_file, nrows=n_agents)
 #%%
 
 # ITERATE OVER ALL PROFILES OF THE EXPERIMENT
-n_profiles = 2
+n_profiles = 5
 
 for curr_profile in range(0,n_profiles):
 

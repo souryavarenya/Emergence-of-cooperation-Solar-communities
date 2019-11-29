@@ -1,9 +1,9 @@
 {
     "awareness": 0.5,
-    "awareness_var": 0.1,
-    "profit_weight": 0.8,
+    "awareness_var": 0.3,
+    "profit_weight": 0.4,
     "awareness_weight": 0.8,    
-    "neighbor_weight": 0.4,
+    "neighbor_weight": 0.0,
     "threshold_low": 0.5,
     "threshold_high": 0.75,
     "swn_k": 8,            
