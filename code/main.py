@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import json
+import time
 
 # Importing the Agent and Model Classes
 from Agent.BuildingAgent import BuildingAgent
@@ -28,6 +29,8 @@ from Visualization.AnalysisFunctions import AverageHFDataframe
 
 #%%
 
+model_start_time = time.time()
+
 # Name of files containing initialization data
 b_data_file = "Data/buildings_data_1.csv"
 m_data_file = "Data/meta_1.json"
@@ -40,11 +43,10 @@ with open(m_data_file) as myjson:
 # Define number of agents
 n_agents = data_dict['total_num_buildings']
 
-# Define number of time steps each model runs -> 12 months * 10 years
-#n_steps = 12*10
-n_steps = 175
+# Define number of time steps each model runs -> 12 months * 15 years
+#n_steps = 12*15
+n_steps = 150
 
-#HF_data_columns = ['Run',Utility','Opinion','Uncertainty']
 HF_data_columns = ['Run','Utility','Opinion','Uncertainty','Neighbor','Profit']
 MF_data_columns = ['Run','PV_alone_cnt','PV_alone_chg','PV_com_cnt','PV_com_chg','Idea_cnt','Idea_chg','Seed']
 
@@ -56,9 +58,11 @@ b_data = pd.read_csv(b_data_file, nrows=n_agents)
 #%%
 
 # ITERATE OVER ALL PROFILES OF THE EXPERIMENT
-n_profiles = 5
+n_profiles = 6
 
 for curr_profile in range(0,n_profiles):
+
+    start_time = time.time()
 
     print("****************************************")
     print(" RUNNING PROFILE "+str(curr_profile)+"...")
@@ -119,5 +123,12 @@ for curr_profile in range(0,n_profiles):
         # Write data of interest to MF csv files - Once per run
         Write2CSV(MF_out_file,MF_data_columns,dataframe,run,n_steps,n_agents,df_type='MF')
         Write2CSV(HF_out_file,HF_data_columns,dataframe,run,n_steps,n_agents,df_type='HF')
+
+    elapsed_time = time.time() - start_time
+
+    print("Profile "+str(curr_profile)+" took "+str(elapsed_time)+" seconds.")
+
+model_elapsed_time = time.time() - model_start_time
+print("Experiment simulated in "+str(model_elapsed_time)+" seconds.")
 
 ### Results and graphs -> DataAnalysis.py

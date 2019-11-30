@@ -43,11 +43,11 @@ def HistogramPlot(data, n_bins=20, show=1, x_label="X_label", x_ax_lim = [], y_l
     plt.xlabel(x_label, fontsize=12)
     plt.ylabel(y_label, fontsize=12)
 
-    if(len(x_ax_lim)==2):
-        plt.xlim(x_ax_lim)
-
     #Create Histogram
-    a,b,patches = plt.hist(data,bins=n_bins)
+    if(len(x_ax_lim)==2):
+        a,b,patches = plt.hist(data,bins=n_bins,range=x_ax_lim)
+    else:
+        a,b,patches = plt.hist(data,bins=n_bins)
 
     #Get color scheme
     viridis = cm.get_cmap(cmap, len(patches))
