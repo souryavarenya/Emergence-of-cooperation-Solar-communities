@@ -43,9 +43,9 @@ with open(m_data_file) as myjson:
 # Define number of agents
 n_agents = data_dict['total_num_buildings']
 
-# Define number of time steps each model runs -> 12 months * 10 years
-#n_steps = 12*10
-n_steps = 175
+# Define number of time steps each model runs -> 12 months * 15 years
+#n_steps = 12*15
+n_steps = 150
 
 HF_data_columns = ['Run','Utility','Opinion','Uncertainty','Neighbor','Profit']
 MF_data_columns = ['Run','PV_alone_cnt','PV_alone_chg','PV_com_cnt','PV_com_chg','Idea_cnt','Idea_chg','Seed']
@@ -58,7 +58,7 @@ b_data = pd.read_csv(b_data_file, nrows=n_agents)
 #%%
 
 # ITERATE OVER ALL PROFILES OF THE EXPERIMENT
-n_profiles = 1
+n_profiles = 6
 
 for curr_profile in range(0,n_profiles):
 
