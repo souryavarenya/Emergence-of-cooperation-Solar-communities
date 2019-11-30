@@ -11,6 +11,7 @@ code/Datalogs/Logs/profile_0_HF.csv
 code/Datalogs/Logs/profile_0_MF.csv
 code/Datalogs/Logs/profile_1_HF.csv
 code/Datalogs/Logs/profile_1_MF.csv
+code/Visualization/res/*
 code/Visualization/res/B_Profile_1_Hist_Opinion_Final.svg
 code/Visualization/res/B_Profile_1_Hist_Opinion_Initial.svg
 code/Visualization/res/B_Profile_1_Map_Opinion_Final.svg
@@ -32,3 +33,11 @@ code/Visualization/res/C_Multi_Cont_Utility.svg
 code/Visualization/res/C_Multi_State_Idea.svg
 code/Visualization/res/C_Multi_State_PValone.svg
 code/Visualization/res/C_Multi_State_PVcommunity.svg
+code/Visualization/res/B_Profile_1_Run_18_Map_Idea_Final.svg
+code/Visualization/res/B_Profile_1_Run_18_Map_PV_Final.svg
+code/Datalogs/Logs/profile_4_MF.csv
+code/Datalogs/Logs/profile_4_HF.csv
+code/Datalogs/Logs/profile_3_MF.csv
+code/Datalogs/Logs/profile_3_HF.csv
+code/Datalogs/Logs/profile_2_MF.csv
+code/Datalogs/Logs/profile_2_HF.csv
