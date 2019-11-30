@@ -33,18 +33,18 @@ save = True
 
 # COMPARE BATCHES?
 batch_comparison = False
-n_profiles = 6
+n_profiles = 5
 
 # ANALYZE SINGLE BATCH?
 single_batch = True
-batch_2_analyze = 3
+batch_2_analyze = 4
 
 # => Make continuous data plots? (Utility, etc)
 continuous = False
 # => Make state data plots? (PV alone, etc)
 states = False
 # => Make histograms? (PV alone, etc)              
-histograms = False
+histograms = True
 # => Make colormaps?
 colormaps = False  
 # => Make colormap animations?
@@ -147,10 +147,13 @@ if(batch_comparison==1):
 
     # Compare time behaviour of agents for each run of interest
     Utility_Mult_Subplot = np.zeros((n_profiles,n_steps,n_agents))
+    Opinion_Mult_Subplot = np.zeros((n_profiles,n_steps,n_agents))
     for p in range(0,n_profiles):
         Utility_Mult_Subplot[p] = Utility_space[p,Utility_interest_runs[p]]
+        Opinion_Mult_Subplot[p] = Opinion_space[p,Utility_interest_runs[p]]
 
     MultipleSubplot(Utility_Mult_Subplot, n_agents, x_axis=[], stepshape=0, show=1, x_label="Steps", x_ax_lim = [], y_label="Utility", y_ax_lim = [0,1], cmap='brg', title="Utility evolution comparison on each profile", size=(15,10), save=1, filename="Visualization/res/C_Sub_Cont_Utility.svg")
+    MultipleSubplot(Opinion_Mult_Subplot, n_agents, x_axis=[], stepshape=0, show=1, x_label="Steps", x_ax_lim = [], y_label="Opinion", y_ax_lim = [0,1], cmap='brg', title="Opinion evolution comparison on each profile", size=(15,10), save=1, filename="Visualization/res/C_Sub_Cont_Opinion.svg")
 
     # DISCRETE STATE VARIABLES
 
@@ -263,6 +266,6 @@ if(single_batch==1):
     if(animations==1):
 
         # Create animations
-        #AnimateColourMap(n_steps, x_coord, y_coord, Idea_M, dlyfactor=0.2, col_range=(0,1), x_label="", y_label="", colorbar=0, Nlegend=2, color_label=['No Idea', 'Idea'], title="Idea Spread", size=(10,5),cmap='RdYlGn',markersize=20,filename="Visualization/res/A_Profile_"+str(batch_2_analyze)+"_Run_"+str(run_2_analyze)+"_Anim_IdeaEvolution.gif")
+        AnimateColourMap(n_steps, x_coord, y_coord, Idea_M, dlyfactor=0.2, col_range=(0,1), x_label="", y_label="", colorbar=0, Nlegend=2, color_label=['No Idea', 'Idea'], title="Idea Spread", size=(10,5),cmap='RdYlGn',markersize=20,filename="Visualization/res/A_Profile_"+str(batch_2_analyze)+"_Run_"+str(run_2_analyze)+"_Anim_IdeaEvolution.gif")
         AnimateColourMap(n_steps, x_coord, y_coord, Total_PV_M, dlyfactor=0.4, col_range=(0,2), x_label="", y_label="", colorbar=0, Nlegend=3, color_label=['No PV', 'Individual PV', 'PV Community'], title="Evolution of PV Installations", size=(10,5),cmap='RdYlGn',markersize=20,filename="Visualization/res/A_Profile_"+str(batch_2_analyze)+"_Run_"+str(run_2_analyze)+"_Anim_PVEvolution.gif")
 
