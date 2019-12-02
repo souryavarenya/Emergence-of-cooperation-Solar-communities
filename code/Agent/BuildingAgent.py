@@ -69,13 +69,13 @@ class BuildingAgent(Agent):
         # ***IMPORTANT RANDOM MANAGEMENT -> maybe we need to use the mesa
         # package random package instead of the numpy??
         if is_extremist == None:
-            self.awareness = np.random.beta(model.alpha, model.beta)
-            self.awareness_unc = 0.02 + self.awareness*(1 - self.awareness)
+            self.awareness = np.random.beta(model.alpha, model.beta) - 0.5
+            self.awareness_unc = 0.02 + (0.5 + self.awareness)*(0.5 - self.awareness)
         elif is_extremist == "pos":
-            self.awareness = 0.94
+            self.awareness = 0.46
             self.awareness_unc = 0.03
         elif is_extremist == "neg":
-            self.awareness = 0.06
+            self.awareness = -0.46
             self.awareness_unc = 0.03
 
         # Define neighbor effect

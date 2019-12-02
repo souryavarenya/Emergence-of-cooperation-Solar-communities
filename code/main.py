@@ -59,6 +59,7 @@ b_data = pd.read_csv(b_data_file, nrows=n_agents)
 
 # ITERATE OVER ALL PROFILES OF THE EXPERIMENT
 n_profiles = 5
+profile_prefix = "ext1"
 
 for curr_profile in range(0,n_profiles):
 
@@ -69,7 +70,7 @@ for curr_profile in range(0,n_profiles):
     print("****************************************")
 
     # Systematical naming for input and output files                                 
-    curr_profile_name = "profile_"+str(curr_profile)    # Current Profile name
+    curr_profile_name = profile_prefix+"_"+str(curr_profile)    # Current Profile name
     m_prof_file = "Data/"+curr_profile_name+".json"     # Current input profile
 
     # Read building meta data off JSON file

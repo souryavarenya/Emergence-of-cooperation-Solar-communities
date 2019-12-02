@@ -32,7 +32,7 @@ show = True
 save = True
 
 # COMPARE BATCHES?
-batch_comparison = False
+batch_comparison = True
 n_profiles = 5
 
 # ANALYZE SINGLE BATCH?
@@ -40,21 +40,23 @@ single_batch = True
 batch_2_analyze = 4
 
 # => Make continuous data plots? (Utility, etc)
-continuous = False
+continuous = True
 # => Make state data plots? (PV alone, etc)
-states = False
+states = True
 # => Make histograms? (PV alone, etc)              
 histograms = True
 # => Make colormaps?
-colormaps = False  
+colormaps = True  
 # => Make colormap animations?
 animations = True
+
+profile_prefix = "ext1"
 
 #%%
 
 # Read a profile to initialize n_runs, n_steps and n_agents
 profile = 1 
-HF_data,MF_data,x_coord,y_coord,n_runs,n_steps,n_agents,input_dict,seeds = ReadCSVBatch (profile,"profile_")
+HF_data,MF_data,x_coord,y_coord,n_runs,n_steps,n_agents,input_dict,seeds = ReadCSVBatch (profile, profile_prefix + "_")
 
 #%%
 
@@ -80,7 +82,7 @@ PVcom_space = np.zeros((n_profiles,n_runs,n_steps))
 # Read CSV data and distribute it to the corresponding matrix positions
 for curr_profile in range(0,n_profiles):
 
-    HF_data,MF_data,x_coord,y_coord,n_runs,n_steps,n_agents,input_dict,seeds = ReadCSVBatch (curr_profile,"profile_")
+    HF_data,MF_data,x_coord,y_coord,n_runs,n_steps,n_agents,input_dict,seeds = ReadCSVBatch (curr_profile,profile_prefix + "_")
 
     Utility_space[curr_profile,:,:,:] = np.reshape(HF_data['Utility'].to_numpy(),(n_runs,n_steps,n_agents))
     Opinion_space[curr_profile,:,:,:] = np.reshape(HF_data['Opinion'].to_numpy(),(n_runs,n_steps,n_agents))
@@ -187,7 +189,7 @@ if(single_batch==1):
 
     # READ DATAFRAME FROM BATCH TO ANALYZE
 
-    HF_data,MF_data,x_coord,y_coord,n_runs,n_steps,n_agents,input_dict,seeds = ReadCSVBatch (batch_2_analyze,"profile_")
+    HF_data,MF_data,x_coord,y_coord,n_runs,n_steps,n_agents,input_dict,seeds = ReadCSVBatch (batch_2_analyze,profile_prefix + "_")
 
     # Reconstruct the Boolean State Matrices
     Idea_M = ReconstructBoolMatrix(MF_data,'Idea_cnt','Idea_chg',run_2_analyze, n_steps, n_agents)
@@ -205,28 +207,28 @@ if(single_batch==1):
     if(continuous==1):
 
         # Utility
-        MultiLinePlot(Utility_space[batch_2_analyze,run_2_analyze], n_agents, x_axis=[], y_ax_lim=[0,1], stepshape=0, show=show, x_label="Time", y_label="Utility Value", legendlabel='Agent', legend=0, cmap='brg', title=("Evolution of Average Utility for different Agents on profile "+str(batch_2_analyze)), size=(15,10), save=save, filename="Visualization/res/B_Profile_"+str(batch_2_analyze)+"_Multi_Cont_Utility.svg")
+        MultiLinePlot(Utility_space[batch_2_analyze,run_2_analyze], n_agents, x_axis=[], y_ax_lim=[0,1], stepshape=0, show=show, x_label="Time", y_label="Utility Value", legendlabel='Agent', legend=0, cmap='brg', title=("Evolution of Average Utility for different Agents on profile "+str(batch_2_analyze)), size=(15,10), save=save, filename="Visualization/res/B_"+ profile_prefix +"_"+str(batch_2_analyze)+"_Multi_Cont_Utility.svg")
 
         # Opinion
-        MultiLinePlot(Opinion_space[batch_2_analyze,run_2_analyze], n_agents, x_axis=[], y_ax_lim=[0,1], stepshape=0, show=show, x_label="Time", y_label="Opinion Value", legendlabel='Agent', legend=0, cmap='brg', title=("Evolution of Average Opinion for different Agents on profile "+str(batch_2_analyze)), size=(15,10), save=save, filename="Visualization/res/B_Profile_"+str(batch_2_analyze)+"_Multi_Cont_Opinion.svg")
+        MultiLinePlot(Opinion_space[batch_2_analyze,run_2_analyze], n_agents, x_axis=[], y_ax_lim=[0,1], stepshape=0, show=show, x_label="Time", y_label="Opinion Value", legendlabel='Agent', legend=0, cmap='brg', title=("Evolution of Average Opinion for different Agents on profile "+str(batch_2_analyze)), size=(15,10), save=save, filename="Visualization/res/B_" + profile_prefix + "_"+str(batch_2_analyze)+"_Multi_Cont_Opinion.svg")
 
         # Uncertainty
-        MultiLinePlot(Uncertainty_space[batch_2_analyze,run_2_analyze], n_agents, x_axis=[], y_ax_lim=[0,0.5], stepshape=0, show=show, x_label="Time", y_label="Uncertainty Value", legendlabel='Agent', legend=0, cmap='brg', title=("Evolution of Average Uncertainty for different Agents on profile "+str(batch_2_analyze)), size=(15,10), save=save, filename="Visualization/res/B_Profile_"+str(batch_2_analyze)+"_Multi_Cont_Uncertainty.svg")
+        MultiLinePlot(Uncertainty_space[batch_2_analyze,run_2_analyze], n_agents, x_axis=[], y_ax_lim=[0,0.5], stepshape=0, show=show, x_label="Time", y_label="Uncertainty Value", legendlabel='Agent', legend=0, cmap='brg', title=("Evolution of Average Uncertainty for different Agents on profile "+str(batch_2_analyze)), size=(15,10), save=save, filename="Visualization/res/B_" + profile_prefix + "_"+str(batch_2_analyze)+"_Multi_Cont_Uncertainty.svg")
 
     # DISCRETE STATE VARIABLES
     if(states==1):
 
         # Evolution of #ideas over time for all runs
         Idea_change_list,Idea_count_list = CountVarsList(MF_data,'Idea_cnt',n_runs,n_steps)
-        MultiLinePlot(Idea_count_list, n_runs, x_axis=Idea_change_list, y_ax_lim=[0,550], stepshape=1, show=show, x_label="Time", y_label="# Nodes with the Idea", legendlabel='Run', legend=0, cmap='brg', title=("# Nodes with the Idea for different runs on profile "+str(batch_2_analyze)), size=(15,10), save=save, filename="Visualization/res/B_Profile_"+str(batch_2_analyze)+"_Multi_State_Idea.svg")
+        MultiLinePlot(Idea_count_list, n_runs, x_axis=Idea_change_list, y_ax_lim=[0,550], stepshape=1, show=show, x_label="Time", y_label="# Nodes with the Idea", legendlabel='Run', legend=0, cmap='brg', title=("# Nodes with the Idea for different runs on profile "+str(batch_2_analyze)), size=(15,10), save=save, filename="Visualization/res/B_" + profile_prefix + "_"+str(batch_2_analyze)+"_Multi_State_Idea.svg")
 
         # Evolution of #pv_alone buildings over time for all runs
         PV_alone_change_list,PV_alone_count_list = CountVarsList(MF_data,'PV_alone_cnt',n_runs,n_steps)
-        MultiLinePlot(PV_alone_count_list, n_runs, x_axis=PV_alone_change_list, y_ax_lim=[0,550], stepshape=1, show=show, x_label="Time", y_label="# Individual PV", legendlabel='Run', legend=0, cmap='brg', title=("# Individual PV for different runs on profile "+str(batch_2_analyze)), size=(15,10), save=save, filename="Visualization/res/B_Profile_"+str(batch_2_analyze)+"_Multi_State_PValone.svg")
+        MultiLinePlot(PV_alone_count_list, n_runs, x_axis=PV_alone_change_list, y_ax_lim=[0,550], stepshape=1, show=show, x_label="Time", y_label="# Individual PV", legendlabel='Run', legend=0, cmap='brg', title=("# Individual PV for different runs on profile "+str(batch_2_analyze)), size=(15,10), save=save, filename="Visualization/res/B_" + profile_prefix + "_"+str(batch_2_analyze)+"_Multi_State_PValone.svg")
 
         # Evolution of #pv communities over time for all runs
         PV_com_change_list,PV_com_count_list = CountVarsList(MF_data,'PV_com_cnt',n_runs,n_steps)
-        MultiLinePlot(PV_com_count_list, n_runs, x_axis=PV_com_change_list, y_ax_lim=[0,550], stepshape=1, show=show, x_label="Time", y_label="# PV Communities", legendlabel='Run', legend=0, cmap='brg', title=("# PV Communities for different runs on profile "+str(batch_2_analyze)), size=(15,10), save=save, filename="Visualization/res/B_Profile_"+str(batch_2_analyze)+"_Multi_State_PVcommunity.svg")
+        MultiLinePlot(PV_com_count_list, n_runs, x_axis=PV_com_change_list, y_ax_lim=[0,550], stepshape=1, show=show, x_label="Time", y_label="# PV Communities", legendlabel='Run', legend=0, cmap='brg', title=("# PV Communities for different runs on profile "+str(batch_2_analyze)), size=(15,10), save=save, filename="Visualization/res/B_" + profile_prefix + "_"+str(batch_2_analyze)+"_Multi_State_PVcommunity.svg")
 
     # ----------------------------
     # FINAL AND INITIAL HISTOGRAMS
@@ -234,10 +236,10 @@ if(single_batch==1):
     if(histograms==1):
 
         # Initial Opinion Histogram
-        HistogramPlot(Opinion_space[batch_2_analyze,run_2_analyze,0], x_ax_lim=[0,1], n_bins=50, show=show, x_label="Opinion value", y_label="Frequency", cmap='RdYlGn', title=("Initial Opinion Histogram on profile "+str(batch_2_analyze)), size=(15,10), save=save, filename="Visualization/res/B_Profile_"+str(batch_2_analyze)+"_Hist_Opinion_Initial.svg")
+        HistogramPlot(Opinion_space[batch_2_analyze,run_2_analyze,0], x_ax_lim=[0,1], n_bins=50, show=show, x_label="Opinion value", y_label="Frequency", cmap='RdYlGn', title=("Initial Opinion Histogram on profile "+str(batch_2_analyze)), size=(15,10), save=save, filename="Visualization/res/B_" + profile_prefix + "_"+str(batch_2_analyze)+"_Hist_Opinion_Initial.svg")
 
         # Final Opinion Histogram
-        HistogramPlot(Opinion_space[batch_2_analyze,run_2_analyze,n_steps-1], x_ax_lim=[0,1], n_bins=50, show=show, x_label="Opinion value", y_label="Frequency", cmap='RdYlGn', title=("Final Opinion Histogram on profile "+str(batch_2_analyze)), size=(15,10), save=save, filename="Visualization/res/B_Profile_"+str(batch_2_analyze)+"_Hist_Opinion_Final.svg")
+        HistogramPlot(Opinion_space[batch_2_analyze,run_2_analyze,n_steps-1], x_ax_lim=[0,1], n_bins=50, show=show, x_label="Opinion value", y_label="Frequency", cmap='RdYlGn', title=("Final Opinion Histogram on profile "+str(batch_2_analyze)), size=(15,10), save=save, filename="Visualization/res/B_" + profile_prefix + "_"+str(batch_2_analyze)+"_Hist_Opinion_Final.svg")
 
     # ----------------------------
     # COLORMAPS
@@ -245,19 +247,19 @@ if(single_batch==1):
     if(colormaps==1):
 
         # Final Utility Color Map
-        ColourMap(x_coord, y_coord, Opinion_space[batch_2_analyze,run_2_analyze,n_steps-1], col_range=(0,1), x_label="x coordinate", y_label="y coordinate", colorbar=1, Nlegend=2, color_label=['Low (0)','', 'High (1)'],title=("Final utility distribution on profile "+str(batch_2_analyze)),size=(10,5),cmap='RdYlGn',markersize=20,save=save,show=show,filename="Visualization/res/B_Profile_"+str(batch_2_analyze)+"_Map_Utility_Final.svg")
+        ColourMap(x_coord, y_coord, Opinion_space[batch_2_analyze,run_2_analyze,n_steps-1], col_range=(0,1), x_label="x coordinate", y_label="y coordinate", colorbar=1, Nlegend=2, color_label=['Low (0)','', 'High (1)'],title=("Final utility distribution on profile "+str(batch_2_analyze)),size=(10,5),cmap='RdYlGn',markersize=20,save=save,show=show,filename="Visualization/res/B_" + profile_prefix + "_"+str(batch_2_analyze)+"_Map_Utility_Final.svg")
 
         # Initial Opinion Color Map
-        ColourMap(x_coord, y_coord, Opinion_space[batch_2_analyze,run_2_analyze,0], col_range=(0,1), x_label="x coordinate", y_label="y coordinate", colorbar=1, Nlegend=2, color_label=['Low (0)','', 'High (1)'],title=("Initial Opinion distribution on profile "+str(batch_2_analyze)),size=(10,5),cmap='RdYlGn',markersize=20,save=save,show=show,filename="Visualization/res/B_Profile_"+str(batch_2_analyze)+"_Map_Opinion_Initial.svg")
+        ColourMap(x_coord, y_coord, Opinion_space[batch_2_analyze,run_2_analyze,0], col_range=(0,1), x_label="x coordinate", y_label="y coordinate", colorbar=1, Nlegend=2, color_label=['Low (0)','', 'High (1)'],title=("Initial Opinion distribution on profile "+str(batch_2_analyze)),size=(10,5),cmap='RdYlGn',markersize=20,save=save,show=show,filename="Visualization/res/B_" + profile_prefix + "_"+str(batch_2_analyze)+"_Map_Opinion_Initial.svg")
 
         # Final Opinion Color Map
-        ColourMap(x_coord, y_coord, Utility_space[batch_2_analyze,run_2_analyze,n_steps-1], col_range=(0,1), x_label="x coordinate", y_label="y coordinate", colorbar=1, Nlegend=2, color_label=['Low (0)','', 'High (1)'],title=("Final Opinion distribution on profile "+str(batch_2_analyze)),size=(10,5),cmap='RdYlGn',markersize=20,save=save,show=show,filename="Visualization/res/B_Profile_"+str(batch_2_analyze)+"_Map_Opinion_Final.svg")
+        ColourMap(x_coord, y_coord, Utility_space[batch_2_analyze,run_2_analyze,n_steps-1], col_range=(0,1), x_label="x coordinate", y_label="y coordinate", colorbar=1, Nlegend=2, color_label=['Low (0)','', 'High (1)'],title=("Final Opinion distribution on profile "+str(batch_2_analyze)),size=(10,5),cmap='RdYlGn',markersize=20,save=save,show=show,filename="Visualization/res/B_" + profile_prefix + "_"+str(batch_2_analyze)+"_Map_Opinion_Final.svg")
 
         # Final Idea Color Map
-        ColourMap(x_coord, y_coord, Idea_M[n_steps-1], col_range=(0,1), x_label="x coordinate", y_label="y coordinate", colorbar=0, Nlegend=2, color_label=['No Idea', 'Idea'],title=("Final Idea distribution on profile "+str(batch_2_analyze))+" and run "+str(run_2_analyze),size=(10,5),cmap='RdYlGn',markersize=20,save=save,show=show,filename="Visualization/res/B_Profile_"+str(batch_2_analyze)+"_Run_"+str(run_2_analyze)+"_Map_Idea_Final.svg")
+        ColourMap(x_coord, y_coord, Idea_M[n_steps-1], col_range=(0,1), x_label="x coordinate", y_label="y coordinate", colorbar=0, Nlegend=2, color_label=['No Idea', 'Idea'],title=("Final Idea distribution on profile "+str(batch_2_analyze))+" and run "+str(run_2_analyze),size=(10,5),cmap='RdYlGn',markersize=20,save=save,show=show,filename="Visualization/res/B_" + profile_prefix + "_"+str(batch_2_analyze)+"_Run_"+str(run_2_analyze)+"_Map_Idea_Final.svg")
 
         # Final PV Installations Color Map
-        ColourMap(x_coord, y_coord, Total_PV_M[n_steps-1], col_range=(0,2), x_label="x coordinate", y_label="y coordinate", colorbar=0, Nlegend=3, color_label=['No PV', 'Individual PV', 'PV Community'],title=("Final PV distribution on profile "+str(batch_2_analyze))+" and run "+str(run_2_analyze),size=(10,5),cmap='RdYlGn',markersize=20,save=save,show=show,filename="Visualization/res/B_Profile_"+str(batch_2_analyze)+"_Run_"+str(run_2_analyze)+"_Map_PV_Final.svg")
+        ColourMap(x_coord, y_coord, Total_PV_M[n_steps-1], col_range=(0,2), x_label="x coordinate", y_label="y coordinate", colorbar=0, Nlegend=3, color_label=['No PV', 'Individual PV', 'PV Community'],title=("Final PV distribution on profile "+str(batch_2_analyze))+" and run "+str(run_2_analyze),size=(10,5),cmap='RdYlGn',markersize=20,save=save,show=show,filename="Visualization/res/B_" + profile_prefix + "_"+str(batch_2_analyze)+"_Run_"+str(run_2_analyze)+"_Map_PV_Final.svg")
 
     # ----------------------------
     # COLORMAP ANIMATIONS
@@ -266,6 +268,6 @@ if(single_batch==1):
     if(animations==1):
 
         # Create animations
-        AnimateColourMap(n_steps, x_coord, y_coord, Idea_M, dlyfactor=0.2, col_range=(0,1), x_label="", y_label="", colorbar=0, Nlegend=2, color_label=['No Idea', 'Idea'], title="Idea Spread", size=(10,5),cmap='RdYlGn',markersize=20,filename="Visualization/res/A_Profile_"+str(batch_2_analyze)+"_Run_"+str(run_2_analyze)+"_Anim_IdeaEvolution.gif")
-        AnimateColourMap(n_steps, x_coord, y_coord, Total_PV_M, dlyfactor=0.4, col_range=(0,2), x_label="", y_label="", colorbar=0, Nlegend=3, color_label=['No PV', 'Individual PV', 'PV Community'], title="Evolution of PV Installations", size=(10,5),cmap='RdYlGn',markersize=20,filename="Visualization/res/A_Profile_"+str(batch_2_analyze)+"_Run_"+str(run_2_analyze)+"_Anim_PVEvolution.gif")
+        AnimateColourMap(n_steps, x_coord, y_coord, Idea_M, dlyfactor=0.2, col_range=(0,1), x_label="", y_label="", colorbar=0, Nlegend=2, color_label=['No Idea', 'Idea'], title="Idea Spread", size=(10,5),cmap='RdYlGn',markersize=20,filename="Visualization/res/A_" + profile_prefix + "_"+str(batch_2_analyze)+"_Run_"+str(run_2_analyze)+"_Anim_IdeaEvolution.gif")
+        AnimateColourMap(n_steps, x_coord, y_coord, Total_PV_M, dlyfactor=0.4, col_range=(0,2), x_label="", y_label="", colorbar=0, Nlegend=3, color_label=['No PV', 'Individual PV', 'PV Community'], title="Evolution of PV Installations", size=(10,5),cmap='RdYlGn',markersize=20,filename="Visualization/res/A_" + profile_prefix + "_"+str(batch_2_analyze)+"_Run_"+str(run_2_analyze)+"_Anim_PVEvolution.gif")
 
