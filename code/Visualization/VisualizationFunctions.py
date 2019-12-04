@@ -351,7 +351,7 @@ def ColourMap(x_axis, y_axis, col_axis, col_range=(0,1), x_label="X_label", y_la
     plt.ylabel(x_label, fontsize=12)
     
     #Create Scatter Plot
-    scatter = plt.scatter(x_axis,y_axis, c=col_axis, cmap=cmap, marker='s',s=markersize,edgecolors='0.8', vmin=col_range[0], vmax=col_range[1])
+    scatter = plt.scatter(x_axis,y_axis, c=col_axis, cmap=cmap, marker='s',s=markersize, vmin=col_range[0], vmax=col_range[1])
     
     #Setup Colorbar if requested
     if(colorbar==1):

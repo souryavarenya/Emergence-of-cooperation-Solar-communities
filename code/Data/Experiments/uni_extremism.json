@@ -12,10 +12,12 @@
     "show_plots": true,
     "save_plots": true,
     "batch_comparison": true,
-    "batch_to_analyze": -1,
+    "single_batch": true,
+    "batch_to_analyze": 2,
     "continuous_plots": true,
     "state_plots": true,
     "histogram_plots": true,
     "color_map_plots": true,
-    "color_map_anims": true
+    "color_map_anims": true,
+    "presentation_plots":false
 }

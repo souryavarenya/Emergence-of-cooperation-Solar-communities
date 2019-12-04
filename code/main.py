@@ -58,7 +58,7 @@ n_steps = expt_data["n_time_steps"]
 
 # Defining csv keys
 HF_data_columns = ['Run','Utility','Opinion','Uncertainty','Neighbor','Profit']
-MF_data_columns = ['Run','PV_alone_cnt','PV_alone_chg','PV_com_cnt','PV_com_chg','Idea_cnt','Idea_chg','Seed']
+MF_data_columns = ['Run','PV_alone_cnt','PV_alone_chg','PV_com_cnt','PV_com_chg','Com_Idea_cnt','Com_Idea_chg','Seed']
 
 # Read building data from the CSV %%file
 b_data = pd.read_csv(b_data_file, nrows=n_agents)
@@ -99,7 +99,7 @@ def run_profile(expt_data, profile_id):
         os.makedirs(log_dir)
     HF_out_file = log_dir + "/" + curr_profile_name + "_HF.csv"
     MF_out_file = log_dir + "/" + curr_profile_name + "_MF.csv"
-    Building_Coord_file = log_dir + "/" + curr_profile_name + "Coordinates.csv"
+    Building_Coord_file = log_dir + "/" + curr_profile_name + "_Coordinates.csv"
 
     # Create dataframe and write coordinates to csv file
     coord_dataframe = pd.DataFrame(data={'x': x_coord, 'y': y_coord})
