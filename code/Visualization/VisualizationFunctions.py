@@ -235,11 +235,19 @@ def MultipleSubplot(data, n_lines, testvar=0, x_axis=[], stepshape=0, show=1, su
         n=2
         m=1
 
+    if(testvar==3):
+        n=3
+        m=1
+
     fig, axs = plt.subplots(m, n, sharex=True, sharey=True, figsize=size)
 
     if(testvar==2):
         n=1
         m=2
+
+    if(testvar==3):
+        n=1
+        m=3
 
     #Configure Plot
 

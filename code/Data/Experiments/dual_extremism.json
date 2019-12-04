@@ -10,7 +10,7 @@
     "run_profiles":[0,1,2,3,4],
     "n_profiles":5,
     "show_plots": false,
-    "save_plots": false,
+    "save_plots": true,
     "batch_comparison": false,
     "single_batch": false,
     "batch_to_analyze": 1,
