@@ -34,6 +34,8 @@ class BuildingModel(Model):
         # 1. Define the number of agents in the model
         self.num_agents = n_agents
 
+        self.myseed = seed
+
         # Initialize a dictionary of community blocks (block has more than 2 buildings)
         self.community_blocks = { block_id:{} for block_id in data_dict["comm_blocks"]}
         # - community blocks -> Dictionary of dictionaries containing agent id and corresponding community value
@@ -165,7 +167,8 @@ class BuildingModel(Model):
             
             # Create agent
             a = agent(i, self, block, el_demand, pv_potential, pv_sf, 
-                    is_extremist = "pos" if i in pos_ext_list else ("neg" if i in neg_ext_list else None))
+                    is_extremist = "pos" if i in pos_ext_list else ("neg" if i in neg_ext_list else None),
+                    seed = self.myseed)
             
             # Add agent to model schedule
             self.schedule.add(a)
@@ -237,4 +240,5 @@ class BuildingModel(Model):
         
         return nx.generators.random_graphs.watts_strogatz_graph(self.num_agents,
                                                                 self.num_neighbors_wsg,
-                                                                self.rewire_prob_wsg)
+                                                                self.rewire_prob_wsg,
+                                                                seed=self.myseed)

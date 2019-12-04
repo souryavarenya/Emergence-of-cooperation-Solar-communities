@@ -2,7 +2,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import json
+import json, sys
 
 # Import Visualization Functions
 from Visualization.VisualizationFunctions import ColourMap
@@ -20,41 +20,51 @@ from Visualization.AnalysisFunctions import AverageHFDataframe
 # Import Datalogging Functions
 from Datalogs.DataloggingFunctions import ReadCSVBatch
 
+try:
+    expt_name = sys.argv[1]
+except:
+    print("Need to enter the experiment name")
+    print("Example - uni_extremism, dual_extremism,.. ")
+    sys.exit()
+
 #%%
 # -----------------------------------------
-# OPTIONS - Use these to control the Script
+# Analysis options imported from experiment json
 # -----------------------------------------
 
+# Import configuration from json
+expt_file = "Data/Experiments/" + expt_name + ".json"
+with open(expt_file) as myjson:
+    expt_data = json.loads(myjson.read())
+
 # SHOW PLOTS?
-show = True
-
+show = expt_data["show_plots"]
 # SAVE PLOTS?
-save = True
-
+save = expt_data["save_plots"]
 # COMPARE BATCHES?
-batch_comparison = False
-n_profiles = 5
+batch_comparison = expt_data["batch_comparison"]
+n_profiles = expt_data["n_profiles"]
 
 # ANALYZE SINGLE BATCH?
-single_batch = True
-batch_2_analyze = 4
+single_batch = False if expt_data["batch_to_analyze"] == -1 else True
+batch_2_analyze = expt_data["batch_to_analyze"]
 
 # => Make continuous data plots? (Utility, etc)
-continuous = False
+continuous = expt_data["continuous_plots"]
 # => Make state data plots? (PV alone, etc)
-states = False
+states = expt_data["state_plots"]
 # => Make histograms? (PV alone, etc)              
-histograms = True
+histograms = expt_data["histogram_plots"]
 # => Make colormaps?
-colormaps = False  
+colormaps = expt_data["color_map_plots"]  
 # => Make colormap animations?
-animations = True
+animations = expt_data["color_map_anims"]
 
 #%%
 
 # Read a profile to initialize n_runs, n_steps and n_agents
 profile = 1 
-HF_data,MF_data,x_coord,y_coord,n_runs,n_steps,n_agents,input_dict,seeds = ReadCSVBatch (profile,"profile_")
+HF_data,MF_data,x_coord,y_coord,n_runs,n_steps,n_agents,input_dict,seeds = ReadCSVBatch (expt_name, profile,"profile_")
 
 #%%
 
@@ -80,7 +90,7 @@ PVcom_space = np.zeros((n_profiles,n_runs,n_steps))
 # Read CSV data and distribute it to the corresponding matrix positions
 for curr_profile in range(0,n_profiles):
 
-    HF_data,MF_data,x_coord,y_coord,n_runs,n_steps,n_agents,input_dict,seeds = ReadCSVBatch (curr_profile,"profile_")
+    HF_data,MF_data,x_coord,y_coord,n_runs,n_steps,n_agents,input_dict,seeds = ReadCSVBatch (expt_name, curr_profile,"profile_")
 
     Utility_space[curr_profile,:,:,:] = np.reshape(HF_data['Utility'].to_numpy(),(n_runs,n_steps,n_agents))
     Opinion_space[curr_profile,:,:,:] = np.reshape(HF_data['Opinion'].to_numpy(),(n_runs,n_steps,n_agents))
@@ -187,7 +197,7 @@ if(single_batch==1):
 
     # READ DATAFRAME FROM BATCH TO ANALYZE
 
-    HF_data,MF_data,x_coord,y_coord,n_runs,n_steps,n_agents,input_dict,seeds = ReadCSVBatch (batch_2_analyze,"profile_")
+    HF_data,MF_data,x_coord,y_coord,n_runs,n_steps,n_agents,input_dict,seeds = ReadCSVBatch (expt_name, batch_2_analyze,"profile_")
 
     # Reconstruct the Boolean State Matrices
     Idea_M = ReconstructBoolMatrix(MF_data,'Idea_cnt','Idea_chg',run_2_analyze, n_steps, n_agents)
@@ -211,7 +221,7 @@ if(single_batch==1):
         MultiLinePlot(Opinion_space[batch_2_analyze,run_2_analyze], n_agents, x_axis=[], y_ax_lim=[0,1], stepshape=0, show=show, x_label="Time", y_label="Opinion Value", legendlabel='Agent', legend=0, cmap='brg', title=("Evolution of Average Opinion for different Agents on profile "+str(batch_2_analyze)), size=(15,10), save=save, filename="Visualization/res/B_Profile_"+str(batch_2_analyze)+"_Multi_Cont_Opinion.svg")
 
         # Uncertainty
-        MultiLinePlot(Uncertainty_space[batch_2_analyze,run_2_analyze], n_agents, x_axis=[], y_ax_lim=[0,0.5], stepshape=0, show=show, x_label="Time", y_label="Uncertainty Value", legendlabel='Agent', legend=0, cmap='brg', title=("Evolution of Average Uncertainty for different Agents on profile "+str(batch_2_analyze)), size=(15,10), save=save, filename="Visualization/res/B_Profile_"+str(batch_2_analyze)+"_Multi_Cont_Uncertainty.svg")
+        MultiLinePlot(Uncertainty_space[batch_2_analyze,run_2_analyze], n_agents, x_axis=[], y_ax_lim=[0,0.4], stepshape=0, show=show, x_label="Time", y_label="Uncertainty Value", legendlabel='Agent', legend=0, cmap='brg', title=("Evolution of Average Uncertainty for different Agents on profile "+str(batch_2_analyze)), size=(15,10), save=save, filename="Visualization/res/B_Profile_"+str(batch_2_analyze)+"_Multi_Cont_Uncertainty.svg")
 
     # DISCRETE STATE VARIABLES
     if(states==1):

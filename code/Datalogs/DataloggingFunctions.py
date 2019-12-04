@@ -200,17 +200,17 @@ def Write2CSV (filename,columns,collector_dataframe,run,n_steps,n_agents,df_type
 #
 # HF_data,MF_data,x_coord,y_coord,n_runs,n_steps,n_agents,input_dict,seeds
 
-def ReadCSVBatch (curr_profile,profile_suffix):
+def ReadCSVBatch (expt_name,curr_profile,profile_suffix):
 
     # Systematical naming for input and output files                                
     curr_profile_name = profile_suffix+str(curr_profile)     # Current Profile name
-    m_prof_file = "Data/"+curr_profile_name+".json"         # Current input profile
-    m_data_file = "Data/meta_1.json"
+    m_prof_file = "Data/Experiments/" + expt_name + "/" + curr_profile_name + ".json"         # Current input profile
+    m_data_file = "Data/buildings_meta.json"
 
     # Datalogging files
-    HF_data_file = "Datalogs/Logs/"+curr_profile_name+"_HF.csv"
-    MF_data_file = "Datalogs/Logs/"+curr_profile_name+"_MF.csv"
-    Coord_file = "Datalogs/Logs/Coordinates.csv"
+    HF_data_file = "Datalogs/Logs/" + expt_name + "/" + curr_profile_name + "_HF.csv"
+    MF_data_file = "Datalogs/Logs/" + expt_name + "/" + curr_profile_name + "_MF.csv"
+    Coord_file = "Datalogs/Logs/" + expt_name + "/" + curr_profile_name + "_Coordinates.csv"
 
     # Input JSON File
     with open(m_data_file) as myjson:
