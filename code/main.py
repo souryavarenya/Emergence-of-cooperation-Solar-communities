@@ -9,8 +9,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import json
-import time
+import json, time, multiprocessing, sys, os
 
 # Importing the Agent and Model Classes
 from Agent.BuildingAgent import BuildingAgent
@@ -27,15 +26,26 @@ from Datalogs.DataloggingFunctions import Write2CSV
 # Import Analysis Functions
 from Visualization.AnalysisFunctions import AverageHFDataframe
 
-#%%
+###############################################################################################
 
-model_start_time = time.time()
+# Read the expt name from command line arguments (mandatory!)
+try:
+    expt_name = sys.argv[1]
+except:
+    print("Need to enter the experiment name")
+    print("Example - uni_extremism, dual_extremism,.. ")
+    sys.exit()
 
-# Name of files containing initialization data
-b_data_file = "Data/buildings_data_1.csv"
-m_data_file = "Data/meta_1.json"
+# Read experiment data
+expt_file = "Data/Experiments/" + expt_name + ".json"
+with open(expt_file) as myjson:
+    expt_data = json.loads(myjson.read())
 
-# Read building meta data off JSON file
+# Files of building data and the meta data
+b_data_file = "Data/buildings_data.csv"
+m_data_file = "Data/buildings_meta.json"
+
+# Read building meta data from JSON file
 with open(m_data_file) as myjson:
     data_dict = json.loads(myjson.read())
 
@@ -43,34 +53,30 @@ with open(m_data_file) as myjson:
 # Define number of agents
 n_agents = data_dict['total_num_buildings']
 
-# Define number of time steps each model runs -> 12 months * 15 years
-#n_steps = 12*15
-n_steps = 150
+# Define number of time steps each model runs -> 12 years 6 months (arbitrary)
+n_steps = expt_data["n_time_steps"]
 
+# Defining csv keys
 HF_data_columns = ['Run','Utility','Opinion','Uncertainty','Neighbor','Profit']
 MF_data_columns = ['Run','PV_alone_cnt','PV_alone_chg','PV_com_cnt','PV_com_chg','Idea_cnt','Idea_chg','Seed']
-
-Building_Coord_columns = ['x','y']
 
 # Read building data from the CSV %%file
 b_data = pd.read_csv(b_data_file, nrows=n_agents)
 
-#%%
+################################################################################################
 
-# ITERATE OVER ALL PROFILES OF THE EXPERIMENT
-n_profiles = 5
-
-for curr_profile in range(0,n_profiles):
+# Function for running each profile - to be called from multiprocessing
+def run_profile(expt_data, profile_id):
 
     start_time = time.time()
-
     print("****************************************")
-    print(" RUNNING PROFILE "+str(curr_profile)+"...")
+    print(" RUNNING PROFILE " + str(profile_id) + " OF " + expt_data["experiment_name"])
     print("****************************************")
 
     # Systematical naming for input and output files                                 
-    curr_profile_name = "profile_"+str(curr_profile)    # Current Profile name
-    m_prof_file = "Data/"+curr_profile_name+".json"     # Current input profile
+    curr_profile_name = "profile_"+str(profile_id)    # Current Profile name
+    m_prof_file = "Data/Experiments/" + expt_data["rel_profile_dir"] + "/" + curr_profile_name+".json"     
+    # Current input profile
 
     # Read building meta data off JSON file
     with open(m_data_file) as myjson:
@@ -88,9 +94,12 @@ for curr_profile in range(0,n_profiles):
     y_coord = model.y_coord
 
     # Datalogging files
-    HF_out_file = "Datalogs/Logs/"+curr_profile_name+"_HF.csv"
-    MF_out_file = "Datalogs/Logs/"+curr_profile_name+"_MF.csv"
-    Building_Coord_file = "Datalogs/Logs/Coordinates.csv"
+    log_dir = "Datalogs/Logs/"+expt_data["experiment_name"]
+    if not os.path.exists(log_dir):
+        os.makedirs(log_dir)
+    HF_out_file = log_dir + "/" + curr_profile_name + "_HF.csv"
+    MF_out_file = log_dir + "/" + curr_profile_name + "_MF.csv"
+    Building_Coord_file = log_dir + "/" + curr_profile_name + "Coordinates.csv"
 
     # Create dataframe and write coordinates to csv file
     coord_dataframe = pd.DataFrame(data={'x': x_coord, 'y': y_coord})
@@ -101,17 +110,22 @@ for curr_profile in range(0,n_profiles):
     InitializeCSV(HF_out_file,HF_data_columns,['Step','AgentID'])
     InitializeCSV(MF_out_file,MF_data_columns,['Step'])
 
-    batch_size = 50
+    batch_size = expt_data["n_batches"]
+
+    try:
+        myseeds = expt_data["batch_seeds"]
+    except:
+        myseeds = None
 
     # Batch of batch_size runs
 
-    for run in range(0,batch_size):
+    for run in range(batch_size):
 
-        #Seed
-        seed = 123456789
+        # Seed if defined in expt file
+        cur_seed = myseeds[run] if myseeds != None else None
 
         # Re-Initialize model
-        model = BuildingModel(BuildingAgent, b_data, n_agents, data_dict)
+        model = BuildingModel(BuildingAgent, b_data, n_agents, data_dict, seed = cur_seed)
 
         # Run n_steps
         for timestep in range(n_steps):
@@ -126,9 +140,27 @@ for curr_profile in range(0,n_profiles):
 
     elapsed_time = time.time() - start_time
 
-    print("Profile "+str(curr_profile)+" took "+str(elapsed_time)+" seconds.")
+    print("Profile "+str(profile_id)+" took "+str(elapsed_time)+" seconds.")
 
-model_elapsed_time = time.time() - model_start_time
-print("Experiment simulated in "+str(model_elapsed_time)+" seconds.")
+##########################################################################################################
 
-### Results and graphs -> DataAnalysis.py
+### Initiate Multiprocessing
+
+if __name__ == '__main__':
+
+    # Start profiling time
+    model_start_time = time.time()
+
+    processes = []
+
+    for profile_id in expt_data["run_profiles"]:
+        p = multiprocessing.Process(target=run_profile, args=(expt_data,profile_id,))
+        processes.append(p)
+        p.start()
+        
+    for process in processes:
+        process.join()
+
+    # Profiling Ends and Delta reported
+    model_elapsed_time = time.time() - model_start_time
+    print("Experiment simulated in "+str(model_elapsed_time)+" seconds.")

@@ -1,7 +1,5 @@
 
-import random
-
-import numpy as np
+from numpy.random import default_rng
 from mesa import Agent
 
 from Tools import RelativeAgreement, SimplePayback
@@ -13,7 +11,7 @@ class BuildingAgent(Agent):
     """
     Creates a building owner agent.
     """    
-    def __init__(self, unique_id, model, block, el_demand, pv_potential, pv_sf, is_extremist = False):
+    def __init__(self, unique_id, model, block, el_demand, pv_potential, pv_sf, is_extremist = None, seed=None):
         '''
         Initializes all the attributes of the building owner agent.
         Inputs:
@@ -23,22 +21,12 @@ class BuildingAgent(Agent):
             el_demand : integer, annual electricity demand [kWh]
             pv_sf : float, scaling factor of PV system size agent may buy [-]
         '''
-        # To do:
-        # 1. Update agent attribute initialization
-        # 1.1 set awareness based on normal distribution
-        # 1.2 set profit based on payback period calculation
-        # 1.3 set social pressure as result of relative agreement algorithm
-        # 1.4 set neighbor effect as calculation of nearby adopters
-        # 2. Create mechanism to form a social network for each agent during
-        # the agent initialization
-        # 3. Create process for updating the attributes that change over time
-        # 3.1 profit -> via payback calculation
-        # 3.2 social -> via relative agreement algorithm
-        # 3.3 neighbor -> via fraction of nearby adopters
-        # 4. Create process for joining community        
         
         # Set the agent's unique_id from the model object
         super().__init__(unique_id, model)
+
+        # Creates a random number generator with given seed
+        self.rng = default_rng(seed)
 
         # Flag for marking first step
         self.first_step = True
@@ -69,7 +57,7 @@ class BuildingAgent(Agent):
         # ***IMPORTANT RANDOM MANAGEMENT -> maybe we need to use the mesa
         # package random package instead of the numpy??
         if is_extremist == None:
-            self.awareness = np.random.beta(model.alpha, model.beta)
+            self.awareness = self.rng.beta(model.alpha, model.beta)
             self.awareness_unc = 0.02 + self.awareness*(1 - self.awareness)
         elif is_extremist == "pos":
             self.awareness = 0.94
@@ -179,7 +167,7 @@ class BuildingAgent(Agent):
         '''
         
         # Selects a connection randomly
-        sel_connection = random.choice(self.connection_list)
+        sel_connection = self.rng.choice(self.connection_list)
 
         # initial opinion and uncertainty values of self
         opunc0 = (self.awareness,self.awareness_unc)
