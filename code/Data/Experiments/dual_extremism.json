@@ -1,0 +1,21 @@
+{
+    "experiment_name":"dual_extremism",
+    "rel_profile_dir":"dual_extremism",
+    "n_time_steps":150,
+    "n_batches":50,
+    "batch_seeds":[3662, 5290, 3650, 2610, 9334, 355, 374, 9327, 879, 2781, 3947, 8253, 4539, 
+                    5269, 7042, 2345, 9222, 6581, 3192, 2315, 7327, 283, 4494, 4418, 7219, 
+                    6015, 2973, 9311, 5552, 4082, 6091, 6148, 9983, 5090, 6505, 5043, 6878, 
+                    8951, 8451, 4135, 2754, 9849, 3721, 3777, 54, 422, 2403, 2728, 7312, 132],
+    "run_profiles":[0,1,2,3,4],
+    "n_profiles":5,
+    "show_plots": true,
+    "save_plots": true,
+    "batch_comparison": true,
+    "batch_to_analyze": -1,
+    "continuous_plots": true,
+    "state_plots": true,
+    "histogram_plots": true,
+    "color_map_plots": true,
+    "color_map_anims": true
+}
