@@ -129,6 +129,9 @@ for r in range(0,n_runs):
 Utility_diff = np.sum(np.sum(Utility_diff,axis=3),axis=2)
 Utility_interest_runs = np.argmin(Utility_diff,axis=1)      # Runs of interest -> The ones with smallest sum of square deviations wrto Run
 run_2_analyze = Utility_interest_runs[0]
+print(Utility_interest_runs)
+
+run_2_analyze = 6   # Same run with same seed for all run analysis
 
 '''
 ***********************
@@ -169,9 +172,9 @@ if(batch_comparison==1):
     Utility_Mult_Subplot = np.zeros((n_profiles,n_steps,n_agents))
     Opinion_Mult_Subplot = np.zeros((n_profiles,n_steps,n_agents))
     for p in range(0,n_profiles):
-        idx = np.argsort(Opinion_space[p,Utility_interest_runs[0],0])
-        Utility_Mult_Subplot[p] = Utility_space[p,Utility_interest_runs[0],:,idx].transpose()
-        Opinion_Mult_Subplot[p] = Opinion_space[p,Utility_interest_runs[0],:,idx].transpose()
+        idx = np.argsort(Opinion_space[p,run_2_analyze,0])
+        Utility_Mult_Subplot[p] = Utility_space[p,run_2_analyze,:,idx].transpose()
+        Opinion_Mult_Subplot[p] = Opinion_space[p,run_2_analyze,:,idx].transpose()
 
     MultipleSubplot(Utility_Mult_Subplot, n_agents, x_axis=[], stepshape=0, show=show, x_label="Time", x_ax_lim = [], y_label="Utility", y_ax_lim = [0,1], alpha=0.2, cmap='RdYlGn', title="Utility evolution comparison on each profile, for all agents", size=figsize, save=1, filename="Visualization/res/C_Sub_Cont_Utility.svg")
     MultipleSubplot(Opinion_Mult_Subplot, n_agents, x_axis=[], stepshape=0, show=show, x_label="Time", x_ax_lim = [], y_label="Opinion", y_ax_lim = [0,1], alpha=0.2, cmap='RdYlGn', title="Opinion evolution comparison on each profile, for all agents", size=figsize, save=1, filename="Visualization/res/C_Sub_Cont_Opinion.svg")
@@ -267,6 +270,10 @@ if(single_batch==1):
     # ----------------------------
     if(colormaps==1):
 
+        #Normalize coordinates
+        x_coord = x_coord - np.min(x_coord)
+        y_coord = y_coord - np.min(y_coord)
+
         # Final Utility Color Map
         ColourMap(x_coord, y_coord, Opinion_space[batch_2_analyze,run_2_analyze,n_steps-1], col_range=(0,1), x_label="x coordinate", y_label="y coordinate", colorbar=1, Nlegend=2, color_label=['Low (0)','', 'High (1)'],title=("Final utility distribution on profile "+str(batch_2_analyze)),size=mapsize,cmap='RdYlGn',markersize=20,save=save,show=show,filename="Visualization/res/B_Profile_"+str(batch_2_analyze)+"_Map_Utility_Final.svg")
 
@@ -308,7 +315,7 @@ if(presentation_plots):
         label_list = ["Base Scenario","+5% Extremists","+10% Extremists","+20% Extremists","+40% Extremists"]
 
     for batch in range(0,n_profiles):
-        run = Utility_interest_runs[0]
+        run = run_2_analyze
 
         HF_data,MF_data,x_coord,y_coord,n_runs,n_steps,n_agents,input_dict,seeds = ReadCSVBatch  (expt_name, batch,"profile_")
 
@@ -325,6 +332,10 @@ if(presentation_plots):
         
         ColourMap(x_coord, y_coord, Total_PV_M[n_steps-1], col_range=(0,3), x_label="x coordinate", y_label="y coordinate", colorbar=0, Nlegend=4, color_label=['No PV', 'Ind. PV', 'Comm. Idea','PV Comm.'],title=("Final PV landscape with "+label_list[batch]),size=mapsize,cmap='RdYlGn',markersize=20,save=save,show=show,filename="Visualization/res/B_Profile_"+str(batch)+"_Map_PV_Final_PRESENTATION.svg")
         
+        #Normalize coordinates
+        x_coord = x_coord - np.min(x_coord)
+        y_coord = y_coord - np.min(y_coord)
+
         if(presentation_animations):
             AnimateColourMap(n_steps, x_coord, y_coord, Total_PV_M, dlyfactor=0.2, col_range=(0,3), x_label="", y_label="", colorbar=0, Nlegend=4, color_label=['No PV', 'Ind. PV', 'Comm. Idea','PV Comm.'], title="PV landscape with "+label_list[batch], size=mapsize,cmap='RdYlGn',markersize=20,filename="Visualization/res/A_Profile_"+str(batch)+"_Anim_PVEvolution_PRESENTATION.gif")        
 
@@ -337,12 +348,12 @@ if(presentation_plots):
     Utility_Mult_Subplot = np.zeros((n_profiles,n_steps,n_agents))
     Opinion_Mult_Subplot = np.zeros((n_profiles,n_steps,n_agents))
     for p in range(0,n_profiles):
-        idx = np.argsort(Opinion_space[p,Utility_interest_runs[0],0])
-        Utility_Mult_Subplot[p] = Utility_space[p,Utility_interest_runs[0],:,idx].transpose()
-        Opinion_Mult_Subplot[p] = Opinion_space[p,Utility_interest_runs[0],:,idx].transpose()
+        idx = np.argsort(Opinion_space[p,run_2_analyze,0])
+        Utility_Mult_Subplot[p] = Utility_space[p,run_2_analyze,:,idx].transpose()
+        Opinion_Mult_Subplot[p] = Opinion_space[p,run_2_analyze,:,idx].transpose()
 
-    MultipleSubplot(Utility_Mult_Subplot, n_agents, testvar=1, x_axis=[], stepshape=0, show=show, subtitles=label_list, x_label="Time", x_ax_lim = [], y_label="Utility", y_ax_lim = [0,1], cmap='RdYlGn', title="Utility evolution comparison on each profile, for all agents", size=figsize, save=1, alpha=0.2, filename="Visualization/res/C_Sub_Cont_Utility_PRESENTATION.svg")
-    MultipleSubplot(Opinion_Mult_Subplot, n_agents, testvar=1, x_axis=[], stepshape=0, show=show, subtitles=label_list, x_label="Time", x_ax_lim = [], y_label="Opinion", y_ax_lim = [0,1], cmap='RdYlGn', title="Opinion evolution comparison on each profile, for all agents", size=figsize, save=1, alpha=0.2, filename="Visualization/res/C_Sub_Cont_Opinion_PRESENTATION.svg")
+    MultipleSubplot(Utility_Mult_Subplot, n_agents, testvar=1, x_axis=[], stepshape=0, show=show, subtitles=label_list, x_label="Time", x_ax_lim = [], y_label="Utility", y_ax_lim = [0,1], cmap='RdYlGn', title="Utility evolution comparison on each profile, for all agents", size=(10,7), save=1, alpha=0.2, filename="Visualization/res/C_Sub_Cont_Utility_PRESENTATION.svg")
+    MultipleSubplot(Opinion_Mult_Subplot, n_agents, testvar=1, x_axis=[], stepshape=0, show=show, subtitles=label_list, x_label="Time", x_ax_lim = [], y_label="Opinion", y_ax_lim = [0,1], cmap='RdYlGn', title="Opinion evolution comparison on each profile, for all agents", size=(10,7), save=1, alpha=0.2, filename="Visualization/res/C_Sub_Cont_Opinion_PRESENTATION.svg")
 
     # -------------------------------------------------
     # Average behaviour subplots:
@@ -391,18 +402,22 @@ if(presentation_plots):
 
         HF_data,MF_data,x_coord,y_coord,n_runs,n_steps,n_agents,input_dict,seeds = ReadCSVBatch  (expt_name, 0, "profile_")
 
+        #Normalize coordinates
+        x_coord = x_coord - np.min(x_coord)
+        y_coord = y_coord - np.min(y_coord)
+
         # Reconstruct the Boolean State Matrices
-        Com_Idea_M = ReconstructBoolMatrix(MF_data,'Com_Idea_cnt','Com_Idea_chg',Utility_interest_runs[0], n_steps, n_agents)
-        IndPV_M = ReconstructBoolMatrix(MF_data,'PV_alone_cnt','PV_alone_chg',Utility_interest_runs[0], n_steps, n_agents)
-        ComPV_M = ReconstructBoolMatrix(MF_data,'PV_com_cnt','PV_com_chg',Utility_interest_runs[0], n_steps, n_agents)
+        Com_Idea_M = ReconstructBoolMatrix(MF_data,'Com_Idea_cnt','Com_Idea_chg',run_2_analyze, n_steps, n_agents)
+        IndPV_M = ReconstructBoolMatrix(MF_data,'PV_alone_cnt','PV_alone_chg',run_2_analyze, n_steps, n_agents)
+        ComPV_M = ReconstructBoolMatrix(MF_data,'PV_com_cnt','PV_com_chg',run_2_analyze, n_steps, n_agents)
 
         # PV Installation Matrix: {0-> No PV, 1-> Individual, 2-> Community}
         Total_PV_M = IndPV_M + ComPV_M + Com_Idea_M
 
-        idx = np.argsort(Opinion_space[0,Utility_interest_runs[0],0])
+        idx = np.argsort(Opinion_space[0,run_2_analyze,0])
 
-        MultipleSubplot(np.array([Opinion_space[0,Utility_interest_runs[0],:,idx].transpose(),Profit_space[0,Utility_interest_runs[0],:,idx].transpose(),Neighbor_space[0,Utility_interest_runs[0],:,idx].transpose()]), n_agents, testvar=3, x_axis=[], stepshape=0, show=show, subtitles=["Opinion","Profit","Neighbor"], x_label="Time", x_ax_lim = [], y_label="Value", y_ax_lim = [0,1], cmap='RdYlGn', title="", size=(10,4), save=1, alpha=0.2, filename="Visualization/res/C_Sub_Cont_All_Base_PRESENTATION.svg")
-        MultiLinePlot(Utility_space[0,Utility_interest_runs[0],:,idx].transpose(), n_agents, x_axis=[], y_ax_lim=[0,1], stepshape=0, show=show, custom_labels=label_list, x_label="Time", y_label="Utility Value", legend=0, cmap='RdYlGn', title="Utility Signal for all Agents", alpha=0.2, size=figsize, save=save, filename="Visualization/res/C_Single_Cont_Utility_Base_PRESENTATION.svg")
+        MultipleSubplot(np.array([Opinion_space[0,run_2_analyze,:,idx].transpose(),Profit_space[0,run_2_analyze,:,idx].transpose(),Neighbor_space[0,run_2_analyze,:,idx].transpose()]), n_agents, testvar=3, x_axis=[], stepshape=0, show=show, subtitles=["Opinion","Profit","Neighbor"], x_label="Time", x_ax_lim = [], y_label="Value", y_ax_lim = [0,1], cmap='RdYlGn', title="", size=(10,4), save=1, alpha=0.2, filename="Visualization/res/C_Sub_Cont_All_Base_PRESENTATION.svg")
+        MultiLinePlot(Utility_space[0,run_2_analyze,:,idx].transpose(), n_agents, x_axis=[], y_ax_lim=[0,1], stepshape=0, show=show, custom_labels=label_list, x_label="Time", y_label="Utility Value", legend=0, cmap='RdYlGn', title="Utility Signal for all Agents", alpha=0.2, size=figsize, save=save, filename="Visualization/res/C_Single_Cont_Utility_Base_PRESENTATION.svg")
 
         MultipleSubplot(np.array([Opinion_avg,Profit_avg,Neighbor_avg]), 1, testvar=3, x_axis=[], stepshape=0, show=show, subtitles=["Opinion","Profit","Neighbor"], x_label="Time", x_ax_lim = [], y_label="Value", y_ax_lim = [0,1], cmap='brg', title="", size=(10,4), save=1, alpha=1, filename="Visualization/res/C_Sub_Cont_Avg_Base_PRESENTATION.svg")
         MultiLinePlot(Utility_avg, 1, x_axis=[], y_ax_lim=[0,1], stepshape=0, show=show, custom_labels=label_list, x_label="Time", y_label="Utility Value", legend=0, cmap='RdBu', title="Average Utility Signal", size=figsize, alpha=1, save=save, filename="Visualization/res/C_Single_Cont_AvgUtility_Base_PRESENTATION.svg")
@@ -413,7 +428,7 @@ if(presentation_plots):
 
         MultipleSubplot(np.array([Avg_PValone_matrix,Avg_Com_Idea_matrix,Avg_PVcom_matrix]), 1, testvar=3, x_axis=[], stepshape=0, show=show, subtitles=["Ind. PV","Comm. Ideas","Comm. PV"], x_label="Time", x_ax_lim = [], y_label="# Agents", y_ax_lim = [0,550], cmap='brg', title="", size=(10,4), save=1, alpha=1, filename="Visualization/res/C_Sub_States_All_Base_PRESENTATION.svg")
 
-        HistogramPlot(Opinion_space[0,Utility_interest_runs[0],0], x_ax_lim=[0,1], n_bins=50, show=show, x_label="Opinion value", y_label="Frequency", cmap='RdYlGn', title=("Initial Opinion of a representative run"), size=figsize, save=save, filename="Visualization/res/B_Profile_"+str(0)+"_Hist_Opinion_Initial_Base_PRESENTATION.svg")
-        HistogramPlot(Opinion_space[0,Utility_interest_runs[0],n_steps-1], x_ax_lim=[0,1], n_bins=50, show=show, x_label="Opinion value", y_label="Frequency", cmap='RdYlGn', title=("Final Opinion of a representative run"), size=figsize, save=save, filename="Visualization/res/B_Profile_"+str(0)+"_Hist_Opinion_Final_Base_PRESENTATION.svg")
+        HistogramPlot(Opinion_space[0,run_2_analyze,0], x_ax_lim=[0,1], n_bins=50, show=show, x_label="Opinion value", y_label="Frequency", cmap='RdYlGn', title=("Initial Opinion of a representative run"), size=figsize, save=save, filename="Visualization/res/B_Profile_"+str(0)+"_Hist_Opinion_Initial_Base_PRESENTATION.svg")
+        HistogramPlot(Opinion_space[0,run_2_analyze,n_steps-1], x_ax_lim=[0,1], n_bins=50, show=show, x_label="Opinion value", y_label="Frequency", cmap='RdYlGn', title=("Final Opinion of a representative run"), size=figsize, save=save, filename="Visualization/res/B_Profile_"+str(0)+"_Hist_Opinion_Final_Base_PRESENTATION.svg")
 
         ColourMap(x_coord, y_coord, Total_PV_M[n_steps-1], col_range=(0,3), x_label="x coordinate", y_label="y coordinate", colorbar=0, Nlegend=4, color_label=['No PV', 'Ind. PV', 'Comm. Idea','PV Comm.'],title=("Final PV landscape of a representative run"),size=mapsize,cmap='RdYlGn',markersize=20,save=save,show=show,filename="Visualization/res/B_Profile_"+str(0)+"_Map_PV_Final_Base_PRESENTATION.svg")

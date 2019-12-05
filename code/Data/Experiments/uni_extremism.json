@@ -13,7 +13,7 @@
     "save_plots": true,
     "batch_comparison": false,
     "single_batch": false,
-    "batch_to_analyze": 2,
+    "batch_to_analyze": 1,
     "continuous_plots": false,
     "state_plots": false,
     "histogram_plots": false,
