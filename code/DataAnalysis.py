@@ -5,20 +5,20 @@ import pandas as pd
 import json, sys
 
 # Import Visualization Functions
-from Visualization.VisualizationFunctions import ColourMap
-from Visualization.VisualizationFunctions import AnimateColourMap
-from Visualization.VisualizationFunctions import MultiLinePlot
-from Visualization.VisualizationFunctions import MultipleSubplot
-from Visualization.VisualizationFunctions import HistogramPlot
+from Tools.VisualizationFunctions import ColourMap
+from Tools.VisualizationFunctions import AnimateColourMap
+from Tools.VisualizationFunctions import MultiLinePlot
+from Tools.VisualizationFunctions import MultipleSubplot
+from Tools.VisualizationFunctions import HistogramPlot
 
 # Import Analysis Functions
-from Visualization.AnalysisFunctions import CountVarsList
-from Visualization.AnalysisFunctions import CountVarsMatrix
-from Visualization.AnalysisFunctions import ReconstructBoolMatrix
-from Visualization.AnalysisFunctions import AverageHFDataframe
+from Tools.AnalysisFunctions import CountVarsList
+from Tools.AnalysisFunctions import CountVarsMatrix
+from Tools.AnalysisFunctions import ReconstructBoolMatrix
+from Tools.AnalysisFunctions import AverageHFDataframe
 
 # Import Datalogging Functions
-from Datalogs.DataloggingFunctions import ReadCSVBatch
+from Tools.DataloggingFunctions import ReadCSVBatch
 
 try:
     expt_name = sys.argv[1]
