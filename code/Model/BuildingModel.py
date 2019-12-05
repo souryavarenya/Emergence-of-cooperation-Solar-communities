@@ -103,11 +103,11 @@ class BuildingModel(Model):
         # self.el_price = 0.30
         self.el_price = data_dict["el_price"] 
         
-        # Change of solar PV system prices every year [as fraction of prior]
-        self.pv_price_yoy = data_dict["pv_price_yoy"]
+        # Change of solar PV system prices every month [as fraction of prior]
+        self.pv_price_mom = (1 + data_dict["pv_price_yoy"])**(1/12) - 1
         
-        # Change of electricity prices every year [as fraction of prior]
-        self.el_price_yoy = data_dict["el_price_yoy"]   
+        # Change of electricity prices every month [as fraction of prior]
+        self.pv_price_mom = (1 + data_dict["el_price_yoy"])**(1/12) - 1
 
         self.idea_phase = True
         # Flag for switching between phase steps
@@ -236,10 +236,10 @@ class BuildingModel(Model):
         '''
         
         # Update solar PV price
-        self.pv_price = self.pv_price * (1 - self.pv_price_yoy)
+        self.pv_price = self.pv_price * (1 - self.pv_price_mom)
         
         # Update electricity prices from list
-        self.el_price = self.el_price * (1 - self.el_price_yoy)
+        self.el_price = self.el_price * (1 - self.el_price_mom)
 
     def init_small_world(self):
         '''
