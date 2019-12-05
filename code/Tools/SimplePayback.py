@@ -5,7 +5,7 @@ Created on Wed Nov 20 12:48:13 2019
 @author: anunezji
 """
 
-def compute_pbp(self, pv_sf, pv_potential):
+def compute_pbp(self, pv_sf, pv_sc, pv_potential):
     '''
     This mehtod calculates the payback period of an individual solar PV
     installation for the agent.
@@ -13,6 +13,7 @@ def compute_pbp(self, pv_sf, pv_potential):
         self : agent
         pv_potential : integer, annual max solar generation [kWh]
         pv_sf : float, scaling factor of solar PV system size [-]
+        pv_sc : float, solar electricity self-consumed by agent [-]
     Outputs:
         pbp : integer, number of years to recoup investment
         
@@ -26,11 +27,6 @@ def compute_pbp(self, pv_sf, pv_potential):
     # For simplicity and data availability reasons, we use the following values
     # for all agents:
     
-    # Self-consumption, fraction of solar generation consumed on-site
-    sc = 0.30
-    # Average household self-consumes between 20-40% of solar PV generation
-    # Source: Fraunhofer ISE (2019) Recent facts about photovoltaics in Germany
-    
     # Operation and maintenance cost of solar PV system, as fraction 
     # of investment cost
     om = 0.015
@@ -38,8 +34,8 @@ def compute_pbp(self, pv_sf, pv_potential):
     # https://doi.org/10.1016/j.enpol.2011.07.045
     
     # Solar photovoltaic yield in Switzerland in kWh per kW
-    sy = 975
-    # @ALEJANDRO: ADD SOURCE
+    sy = 980
+    # IEA PVPS 2019 National Survey Report for Switzerland
     
     # Remuneration for solar electricity fed to the grid in CHF/kWh
     pv_fg = 0.08
@@ -63,10 +59,10 @@ def compute_pbp(self, pv_sf, pv_potential):
     ### Determine annual cashflows
     
     # Avoided costs from reduced consumption of electricity from the grid CHF
-    cf_ac = self.model.el_price * (sc * pv_sf * pv_potential)
+    cf_ac = self.model.el_price * (pv_sc * pv_sf * pv_potential)
     
     # Remuneration for solar electricity fed to grid CHF
-    cf_fg = pv_sf * pv_potential * (1 - sc) * pv_fg
+    cf_fg = pv_sf * pv_potential * (1 - pv_sc) * pv_fg
     
     # Operation and maintenance annual cost in CHF
     cf_om = - om * pv_inv
@@ -87,6 +83,6 @@ def compute_pbp(self, pv_sf, pv_potential):
         pbp = self.model.max_pbp 
 
     # Condition the return before exiting
-    pbp = min(int(round(pbp,0)), self.model.max_pbp)
+    pbp = min(pbp, self.model.max_pbp)
     
     return pbp

@@ -13,7 +13,8 @@ class BuildingAgent(Agent):
     """
     Creates a building owner agent.
     """    
-    def __init__(self, unique_id, model, block, el_demand, pv_potential, pv_sf, is_extremist = None, seed=None):
+    def __init__(self, unique_id, model, block, el_demand, pv_potential,
+                 pv_sf, pv_sc, is_extremist = None, seed=None):
         '''
         Initializes all the attributes of the building owner agent.
         Inputs:
@@ -22,6 +23,7 @@ class BuildingAgent(Agent):
             block : string, building block unique identifier
             el_demand : integer, annual electricity demand [kWh]
             pv_sf : float, scaling factor of PV system size agent may buy [-]
+            pv_sc : float, fraction of solar electricity self-consumed [-]
         '''
         
         # Set the agent's unique_id from the model object
@@ -43,12 +45,17 @@ class BuildingAgent(Agent):
         # Initialize agent's profitability
         # Agent's payback period pbp and profit set to zero
         # These parameters are recalculated every step
-        self.pv_sf = pv_sf
         self.pbp = 0
         self.profit = 0
         
         # Define agent's solar generation potential
         self.pv_potential = pv_potential
+        
+        # Define agent's solar sizing factor
+        self.pv_sf = pv_sf
+        
+        # Define agent's solar self-consumption
+        self.pv_sc = pv_sc
         
         # Define agent's building block
         self.block = block
@@ -155,7 +162,8 @@ class BuildingAgent(Agent):
         '''
         # Compute payback period with current prices
         self.pbp = SimplePayback.compute_pbp(self, 
-                                             self.pv_sf, 
+                                             self.pv_sf,
+                                             self.pv_sc,
                                              self.pv_potential)
         
         # Estimate profitability perception of agent
@@ -194,8 +202,23 @@ class BuildingAgent(Agent):
         Update neighbor parameter for idea calculation. Agent calculates 
         the share of buildings in their building block having a pv adopted
         '''
+        
+        # If the agent has neighbors (i.e. more than one building in block)
         if self.total_neighbors != 0:
-            self.neighbor = sum(self.model.community_idea_blocks[self.block].values())/self.total_neighbors
+            
+            # Calculate the number of buildings in the block with the idea
+            # to form a solar community
+            neighbors_com = sum(self.model.community_idea_blocks[self.block].values())
+            
+            # If this agent has the idea to join a community
+            if self.community = True :
+                
+                # Exclude the agent and calculate peer pressure
+                self.neighbor = (neighbors_com - 1) / self.total_neighbors
+            else:
+                
+                # Calculate peer pressure directly
+                self.neighbor = neighbors_com / self.total_neighbors
 
     def get_idea(self):
         '''

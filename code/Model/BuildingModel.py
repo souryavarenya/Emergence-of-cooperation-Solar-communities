@@ -150,11 +150,15 @@ class BuildingModel(Model):
             except KeyError:
                 pass
             
-            # Retrieve agent's electricity demand from data
+            # Retrieve agent's electricity demand from data [kWh/year]
             el_demand = b_data.at[i, "demand_kwh"]
             
-            # Retrieve agent's solar potential from data
+            # Retrieve agent's solar potential from data [kWh/year]
             pv_potential = b_data.at[i, "max_pv_gen_kwh"]
+            
+            # Retrieve agent's self-consumption [fraction of solar electricity
+            # consumed on-site]
+            pv_sc = b_data.at[i, "self_consumption"]
             
             # Determine the size of the solar PV system
             # We use a typical rule of thumb in the industry: size of PV system 
@@ -174,7 +178,7 @@ class BuildingModel(Model):
                 pv_sf = 1
             
             # Create agent
-            a = agent(i, self, block, el_demand, pv_potential, pv_sf, 
+            a = agent(i, self, block, el_demand, pv_potential, pv_sf, pv_sc,
                     is_extremist = "pos" if i in pos_ext_list else ("neg" if i in neg_ext_list else None),
                     seed = self.myseed)
             
