@@ -1,7 +1,7 @@
 {
     "awareness": 0.5,
     "awareness_var": 0.2,
-    "ra_gain": 0.2,
+    "ra_gain": 0.5,
     "profit_weight": 0.2,
     "awareness_weight": 0.8,   
     "neighbor_weight": 0.4,
