@@ -107,7 +107,7 @@ class BuildingModel(Model):
         self.pv_price_mom = (1 + data_dict["pv_price_yoy"])**(1/12) - 1
         
         # Change of electricity prices every month [as fraction of prior]
-        self.pv_price_mom = (1 + data_dict["el_price_yoy"])**(1/12) - 1
+        self.el_price_mom = (1 + data_dict["el_price_yoy"])**(1/12) - 1
 
         self.idea_phase = True
         # Flag for switching between phase steps
