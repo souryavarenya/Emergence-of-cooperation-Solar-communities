@@ -16,15 +16,15 @@ from Agent.BuildingAgent import BuildingAgent
 from Model.BuildingModel import BuildingModel
 
 # Import Visualization Functions
-from Visualization.VisualizationFunctions import ColourMap
-from Visualization.VisualizationFunctions import AnimateColourMap
+from Tools.VisualizationFunctions import ColourMap
+from Tools.VisualizationFunctions import AnimateColourMap
 
 # Import Datalogging Functions
-from Datalogs.DataloggingFunctions import InitializeCSV
-from Datalogs.DataloggingFunctions import Write2CSV
+from Tools.DataloggingFunctions import InitializeCSV
+from Tools.DataloggingFunctions import Write2CSV
 
 # Import Analysis Functions
-from Visualization.AnalysisFunctions import AverageHFDataframe
+from Tools.AnalysisFunctions import AverageHFDataframe
 
 ###############################################################################################
 
@@ -32,9 +32,15 @@ from Visualization.AnalysisFunctions import AverageHFDataframe
 try:
     expt_name = sys.argv[1]
 except:
-    print("Need to enter the experiment name")
-    print("Example - uni_extremism, dual_extremism,.. ")
-    sys.exit()
+    print("Running Default Experiment - uni_extremism")
+    expt_name = "uni_extremism"
+
+# if len(sys.argv) > 1:
+#     expt_name = sys.argv[1]
+# else:
+#     print("Enter the experiment name")
+#     print("Example - uni_extremism, dual_extremism,.. ")
+#     expt_name = input()
 
 # Read experiment data
 expt_file = "Data/Experiments/" + expt_name + ".json"
