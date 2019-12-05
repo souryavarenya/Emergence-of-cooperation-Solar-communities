@@ -1,5 +1,7 @@
 
 from numpy.random import default_rng
+import random
+import numpy as np
 from mesa import Agent
 
 from Tools import RelativeAgreement, SimplePayback
@@ -26,7 +28,7 @@ class BuildingAgent(Agent):
         super().__init__(unique_id, model)
 
         # Creates a random number generator with given seed
-        self.rng = default_rng(seed)
+        #self.rng = default_rng(seed)
 
         # Flag for marking first step
         self.first_step = True
@@ -57,7 +59,7 @@ class BuildingAgent(Agent):
         # ***IMPORTANT RANDOM MANAGEMENT -> maybe we need to use the mesa
         # package random package instead of the numpy??
         if is_extremist == None:
-            self.awareness = self.rng.beta(model.alpha, model.beta)
+            self.awareness = np.random.beta(model.alpha, model.beta)
             self.awareness_unc = 0.02 + self.awareness*(1 - self.awareness)
         elif is_extremist == "pos":
             self.awareness = 0.94
@@ -133,8 +135,8 @@ class BuildingAgent(Agent):
         creation of all agents
         '''
         # Counts the number of block neighbors a building has 
-        if self.block in self.model.community_blocks:
-            self.total_neighbors = len(self.model.community_blocks[self.block])-1
+        if self.block in self.model.community_idea_blocks:
+            self.total_neighbors = len(self.model.community_idea_blocks[self.block])-1
         else:
             self.total_neighbors = 0         
             
@@ -167,7 +169,7 @@ class BuildingAgent(Agent):
         '''
         
         # Selects a connection randomly
-        sel_connection = self.rng.choice(self.connection_list)
+        sel_connection = np.random.choice(self.connection_list)
 
         # initial opinion and uncertainty values of self
         opunc0 = (self.awareness,self.awareness_unc)
@@ -193,7 +195,7 @@ class BuildingAgent(Agent):
         the share of buildings in their building block having a pv adopted
         '''
         if self.total_neighbors != 0:
-            self.neighbor = sum(self.model.community_blocks[self.block].values())/self.total_neighbors
+            self.neighbor = sum(self.model.community_idea_blocks[self.block].values())/self.total_neighbors
 
     def get_idea(self):
         '''
@@ -214,11 +216,6 @@ class BuildingAgent(Agent):
         # Update agent's utility
         self.utility = min([f_pp + f_aw + f_pe, 1])
         
-        # print("\n--\nHi there, I am agent " + str(self.unique_id) +
-        #       " and I have a utility level of " + str(round(self.utility,2)) + 
-        #       " during the step number " + str(self.model.schedule.steps) +
-        #       ".")
-        
         # 5. Compare the agent's utility to the threshold for:
         # 5.a Developing the intention to install solar PV alone
         if self.utility >= self.model.threshold_low:
@@ -226,6 +223,10 @@ class BuildingAgent(Agent):
         # 5.b Developing the intention to install solar & join a community
         if self.utility >= self.model.threshold_high:
             self.community = True
+            try:
+                self.model.community_idea_blocks[self.block].update({self.unique_id:True})
+            except:
+                pass
 
     def implement_pv(self):
         '''
@@ -259,11 +260,6 @@ class BuildingAgent(Agent):
         '''
         self.pv_alone = True
         
-        # print("\nOh wow! I just install solar PV on my rooftop!" +
-        #       "\nMy id is " + str(self.unique_id) + 
-        #       ", and my utility is " + str(self.utility) +
-        #       ".")
-        
     def join_community(self):
         '''
         This method integrates the agent in a solar community.
@@ -271,12 +267,11 @@ class BuildingAgent(Agent):
         self.pv_alone = True
         
         try:
-            self.model.community_blocks[self.block].update({self.unique_id:True})
-            self.pv_community = True
+            # If there is more than 1 agent in the block with the idea
+            if(sum(self.model.community_idea_blocks[self.block].values())>1):
+
+                self.model.community_install_blocks[self.block].update({self.unique_id:True})
+                self.pv_community = True
         except:
             pass
-        
-        # print("\nSweet! Just joined a community!" +
-        #       "\nMy id is " + str(self.unique_id) + 
-        #       ", and my utility is " + str(self.utility) +
-        #       ".")
+

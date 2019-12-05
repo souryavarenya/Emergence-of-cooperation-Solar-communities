@@ -104,7 +104,7 @@ def HistogramPlot(data, n_bins=20, show=1, x_label="X_label", x_ax_lim = [], y_l
 # -filename    -> Name that will be given to the image file
 #
 
-def MultiLinePlot(data, n_lines, x_axis=[], stepshape=0, show=1, subplot=0, ax= 0, x_label="X_label", x_ax_lim = [], y_label="Y_label", y_ax_lim = [], legend=1, legendlabel='Agent', cmap='RdYlGn', alpha=0.5, title="Title", size=(15,10), save=0, filename="test.svg"):
+def MultiLinePlot(data, n_lines, x_axis=[], stepshape=0, show=1, subplot=0, ax= 0, x_label="X_label", x_ax_lim = [], y_label="Y_label", y_ax_lim = [], legend=1, legendlabel='Agent', legendpos='lower right',custom_labels=[], cmap='RdYlGn', alpha=0.5, title="Title", size=(15,10), save=0, filename="test.svg"):
 
     #Configure Plot (only if it's not a subplot)
     if(subplot==0):
@@ -168,14 +168,17 @@ def MultiLinePlot(data, n_lines, x_axis=[], stepshape=0, show=1, subplot=0, ax= 
 
         #If legend is requested, append element with label
         if(legend==1 and subplot==0):
-            legend_elements.append(Line2D([0],[0], marker='s', color='w', label=legendlabel+" "+str(i),markerfacecolor=viridis(i), markersize=15))
+            if(len(custom_labels)>1):
+                legend_elements.append(Line2D([0],[0], marker='s', color='w', label=custom_labels[i], markerfacecolor=viridis(i), markersize=15))
+            else:
+                legend_elements.append(Line2D([0],[0], marker='s', color='w', label=legendlabel+" "+str(i), markerfacecolor=viridis(i), markersize=15))
     
     #Only if not a subplot
     if(subplot==0):
 
         #If legend is requested, crete legend
         if(legend==1):
-            plt.legend(handles=legend_elements, loc='lower right')
+            plt.legend(handles=legend_elements, loc=legendpos, prop={'size': 10})
 
         #Save image if requested
         if(save==1):
@@ -215,7 +218,7 @@ def MultiLinePlot(data, n_lines, x_axis=[], stepshape=0, show=1, subplot=0, ax= 
 # -filename    -> Name that will be given to the image file
 #
 
-def MultipleSubplot(data, n_lines, x_axis=[], stepshape=0, show=1, x_label="X_label", x_ax_lim = [], y_label="Y_label", y_ax_lim = [], cmap='RdYlGn', title="Title", size=(15,10), save=0, filename="test.svg"):
+def MultipleSubplot(data, n_lines, testvar=0, x_axis=[], stepshape=0, show=1, subtitles=[], x_label="X_label", x_ax_lim = [], y_label="Y_label", y_ax_lim = [], cmap='RdYlGn', title="Title", alpha=0.5, size=(15,10), save=0, filename="test.svg"):
 
     n_subplots = data.shape[0]
 
@@ -228,7 +231,23 @@ def MultipleSubplot(data, n_lines, x_axis=[], stepshape=0, show=1, x_label="X_la
         else:
             m = 1
 
+    if(testvar==2):
+        n=2
+        m=1
+
+    if(testvar==3):
+        n=3
+        m=1
+
     fig, axs = plt.subplots(m, n, sharex=True, sharey=True, figsize=size)
+
+    if(testvar==2):
+        n=1
+        m=2
+
+    if(testvar==3):
+        n=1
+        m=3
 
     #Configure Plot
 
@@ -247,23 +266,44 @@ def MultipleSubplot(data, n_lines, x_axis=[], stepshape=0, show=1, x_label="X_la
     for ax in axs.flat:
         ax.label_outer()
 
+    if (len(subtitles)>1):
+        sub_insert = True
+    else:
+        sub_insert = False
+
     for splot in range(0,n_subplots):
 
         if(len(x_axis)>1):
             if(n==1):
-                MultiLinePlot(data[splot], n_lines, x_axis=x_axis[splot], stepshape=0, show=0, subplot=1, ax=axs[int(splot/n)], x_label="", x_ax_lim = [], y_label="", y_ax_lim = [], legend=0, cmap='RdYlGn', save=0)
-                axs[int(splot/n)].set_title("Profile "+str(splot))
+                MultiLinePlot(data[splot], n_lines, x_axis=x_axis[splot], stepshape=0, show=0, subplot=1, ax=axs[int(splot/n)], x_label="", x_ax_lim = [], y_label="", y_ax_lim = [], legend=0, alpha=alpha, cmap='RdYlGn', save=0)
+                if(sub_insert):
+                    axs[int(splot/n)].set_title(subtitles[splot])
+                else:
+                    axs[int(splot/n)].set_title("Profile "+str(splot))
             else:
-                MultiLinePlot(data[splot], n_lines, x_axis=x_axis[splot], stepshape=0, show=0, subplot=1, ax=axs[int(splot/n),int(splot%n)], x_label="", x_ax_lim = [], y_label="", y_ax_lim = [], legend=0, cmap='RdYlGn', save=0)
-                axs[int(splot/n),int(splot%n)].set_title("Profile "+str(splot))
+                MultiLinePlot(data[splot], n_lines, x_axis=x_axis[splot], stepshape=0, show=0, subplot=1, ax=axs[int(splot/n),int(splot%n)], x_label="", x_ax_lim = [], y_label="", y_ax_lim = [], legend=0, alpha=alpha, cmap='RdYlGn', save=0)
+                if(sub_insert):
+                    axs[int(splot/n),int(splot%n)].set_title(subtitles[splot])
+                else:
+                    axs[int(splot/n),int(splot%n)].set_title("Profile "+str(splot))
 
         else:
             if(n==1):
-                MultiLinePlot(data[splot], n_lines, x_axis=[], stepshape=0, show=0, subplot=1, ax=axs[int(splot/n)], x_label="", x_ax_lim = [], y_label="", y_ax_lim = [], legend=0, cmap='RdYlGn', save=0)
-                axs[int(splot/n)].set_title("Profile "+str(splot))
+                MultiLinePlot(data[splot], n_lines, x_axis=[], stepshape=0, show=0, subplot=1, ax=axs[int(splot/n)], x_label="", x_ax_lim = [], y_label="", y_ax_lim = [], legend=0, alpha=alpha, cmap='RdYlGn', save=0)
+                if(sub_insert):
+                    axs[int(splot/n)].set_title(subtitles[splot])
+                else:
+                    axs[int(splot/n)].set_title("Profile "+str(splot))
             else:
-                MultiLinePlot(data[splot], n_lines, x_axis=[], stepshape=0, show=0, subplot=1, ax=axs[int(splot/n),int(splot%n)], x_label="", x_ax_lim = [], y_label="", y_ax_lim = [], legend=0, cmap='RdYlGn', save=0)
-                axs[int(splot/n),int(splot%n)].set_title("Profile "+str(splot))
+                MultiLinePlot(data[splot], n_lines, x_axis=[], stepshape=0, show=0, subplot=1, ax=axs[int(splot/n),int(splot%n)], x_label="", x_ax_lim = [], y_label="", y_ax_lim = [], legend=0, alpha=alpha, cmap='RdYlGn', save=0)
+                if(sub_insert):
+                    axs[int(splot/n),int(splot%n)].set_title(subtitles[splot])
+                else:
+                    axs[int(splot/n),int(splot%n)].set_title("Profile "+str(splot))
+
+    # TEST ONLY
+    if(testvar==1):
+        fig.delaxes(axs[m-1,n-1])
 
     #Save image if requested
     if(save==1):
@@ -339,7 +379,7 @@ def ColourMap(x_axis, y_axis, col_axis, col_range=(0,1), x_label="X_label", y_la
         for i in range(0,Nlegend):
             legend_elements.append(Line2D([0],[0], marker='s', color='w', label=color_label[i],markerfacecolor=viridis(i), markersize=15))
         
-        plt.legend(handles=legend_elements, loc='upper left')
+        plt.legend(handles=legend_elements, loc='lower left')
     
     #Save image if requested
     if(save==1):

@@ -132,7 +132,7 @@ def Write2CSV (filename,columns,collector_dataframe,run,n_steps,n_agents,df_type
         # Create data Matrices from the input DataFrame in order to analyze them
         pv_alone_mat = np.reshape(collector_dataframe.pv_alone.to_numpy(),(n_steps,n_agents))
         pv_com_mat = np.reshape(collector_dataframe.pv_community.to_numpy(),(n_steps,n_agents))
-        idea_mat = np.reshape(collector_dataframe.idea.to_numpy(),(n_steps,n_agents))
+        Com_Idea_mat = np.reshape(collector_dataframe.community.to_numpy(),(n_steps,n_agents))
 
         # Analyze the PV_alone Matrix with CHANGE COUNT Function to get the corresponding set of lists
         pv_alone_t, pv_alone_cnt, pv_alone_chg = ChangeCount(pv_alone_mat)
@@ -149,15 +149,15 @@ def Write2CSV (filename,columns,collector_dataframe,run,n_steps,n_agents,df_type
         dataframe_pv_com.index.name = 'Step'
         
         # Analyze the Idea Matrix with CHANGE COUNT Function to get the corresponding set of lists
-        idea_t, idea_cnt, idea_chg = ChangeCount(idea_mat)
+        Com_Idea_t, Com_Idea_cnt, Com_Idea_chg = ChangeCount(Com_Idea_mat)
 
         # Create dataframe from obtained lists
-        dataframe_idea = pd.DataFrame(list(zip(idea_cnt,idea_chg)),index=idea_t,columns=['Idea_cnt','Idea_chg'])
-        dataframe_idea.index.name = 'Step'
+        dataframe_com_idea = pd.DataFrame(list(zip(Com_Idea_cnt,Com_Idea_chg)),index=Com_Idea_t,columns=['Com_Idea_cnt','Com_Idea_chg'])
+        dataframe_com_idea.index.name = 'Step'
 
         # Merge the dataframes with the join function. Values on one DataFrame that don't exist on the other are replaced by NaN
         joint_dataframe = dataframe_pv_alone.join(dataframe_pv_com,how='outer')
-        joint_dataframe = joint_dataframe.join(dataframe_idea,how='outer')
+        joint_dataframe = joint_dataframe.join(dataframe_com_idea,how='outer')
 
         # Add current run to Run column
         joint_dataframe.insert(0,"Run",np.full(len(joint_dataframe.index),run))

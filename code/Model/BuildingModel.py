@@ -6,6 +6,9 @@ from mesa import Model
 # Import NetworkX Library
 import networkx as nx
 
+# Import numpy
+import numpy as np
+
 # Import random agent activator
 from mesa.time import RandomActivation
 
@@ -37,8 +40,10 @@ class BuildingModel(Model):
         self.myseed = seed
 
         # Initialize a dictionary of community blocks (block has more than 2 buildings)
-        self.community_blocks = { block_id:{} for block_id in data_dict["comm_blocks"]}
-        # - community blocks -> Dictionary of dictionaries containing agent id and corresponding community value
+        self.community_idea_blocks = { block_id:{} for block_id in data_dict["comm_blocks"]}
+        self.community_install_blocks = { block_id:{} for block_id in data_dict["comm_blocks"]}
+        # - community idea blocks    -> Dictionary of dictionaries containing agent id and corresponding community value for developed ideas
+        # - community install blocks -> Dictionary of dictionaries containing agent id and corresponding community value for installations
 
         # 2. Define the spatial dimension of the model creating a grid
         # Create the grid with calculated dimensions
@@ -70,7 +75,7 @@ class BuildingModel(Model):
         self.beta = self.alpha*((1/self.awareness)-1)
 
         if((self.alpha<1)or((self.beta<1))):
-            print("WARNING: degenerate PERT for Awareness! Maybe awareness variance is too large?")
+            print("WARNING: degenerate Beta for Awareness! Maybe awareness variance is too large?")
 
         # Rel Agreement Gain
         self.ra_gain = data_dict["ra_gain"]
@@ -121,6 +126,8 @@ class BuildingModel(Model):
         neg_extremists = data_dict["neg_extremists"]
         pos_ext_list, neg_ext_list = self.make_extremists(pos_extremists, neg_extremists)
         
+        np.random.seed(self.myseed)
+
         # Create agents
         for i in range(self.num_agents):
  
@@ -138,7 +145,8 @@ class BuildingModel(Model):
             # Add agent to the community block initialized with False
             # Only possible if the agent lives in a block - so just attempt blindly. 
             try:
-                self.community_blocks[block].update({i:False})
+                self.community_idea_blocks[block].update({i:False})
+                self.community_install_blocks[block].update({i:False})
             except KeyError:
                 pass
             
@@ -187,8 +195,8 @@ class BuildingModel(Model):
                     "Neighbor":"neighbor",
                     "Profit":"profit",
                     "pv_alone" : "pv_alone",
-                    "pv_community" : "pv_community",
-                    "idea": "idea"}       
+                    "community" : "community",
+                    "pv_community": "pv_community"}       
                 )
 
         pass
