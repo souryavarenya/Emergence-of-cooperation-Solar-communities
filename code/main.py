@@ -38,6 +38,13 @@ except:
     print("Running Default Experiment - uni_extremism")
     expt_name = "uni_extremism"
 
+# if len(sys.argv) > 1:
+#     expt_name = sys.argv[1]
+# else:
+#     print("Enter the experiment name")
+#     print("Example - uni_extremism, dual_extremism,.. ")
+#     expt_name = input()
+
 # Read experiment data
 expt_file = "Data/Experiments/" + expt_name + ".json"
 with open(expt_file) as myjson:
