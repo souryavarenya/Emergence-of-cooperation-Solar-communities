@@ -344,9 +344,10 @@ if(presentation_plots):
     #       Utility evolution for particular runs
     #       Opinion evolution for particular runs
 
-    # Compare time behaviour of agents for each run of interest
+    #Compare time behaviour of agents for each run of interest
     Utility_Mult_Subplot = np.zeros((n_profiles,n_steps,n_agents))
     Opinion_Mult_Subplot = np.zeros((n_profiles,n_steps,n_agents))
+
     for p in range(0,n_profiles):
         idx = np.argsort(Opinion_space[p,run_2_analyze,0])
         Utility_Mult_Subplot[p] = Utility_space[p,run_2_analyze,:,idx].transpose()
@@ -382,15 +383,39 @@ if(presentation_plots):
     MultiLinePlot(Utility_avg, n_profiles, x_axis=[], y_ax_lim=[0,1], stepshape=0, show=show, custom_labels=label_list, x_label="Time", y_label="Utility Value", legend=1, cmap='brg', title="Average Utility Signal", size=figsize, save=save, filename="Visualization/res/C_Multi_Cont_Utility_PRESENTATION.svg")
     MultiLinePlot(Opinion_avg, n_profiles, x_axis=[], y_ax_lim=[0,1], stepshape=0, show=show, custom_labels=label_list, x_label="Time", y_label="Opinion Value", legend=1, cmap='brg', title="Average Opinion Signal", size=figsize, save=save, filename="Visualization/res/C_Multi_Cont_Opinion_PRESENTATION.svg")
 
+    # FILTER OUT EXTREMISTS AND AVERAGE ONLY THE "NORMAL" POPULATION
+
+    Opinion_normal_avg = np.zeros((n_profiles,n_steps))
+    Nonpol_number = np.zeros(n_profiles)
+
+    for batch in range(0,n_profiles):
+        for run in range(0,n_runs):
+            avg_idx = np.logical_and(Opinion_space[batch,run,n_steps-1]>0.1,Opinion_space[batch,run,n_steps-1]<0.90)
+
+            #Average over agents and accumulate to average over run
+            Opinion_normal_avg[batch] += np.mean(Opinion_space[batch,run,:,avg_idx],axis=0)
+            Nonpol_number[batch] += Opinion_space[batch,run,:,avg_idx].shape[0]
+
+    # Average over run
+    Opinion_normal_avg = Opinion_normal_avg/n_runs
+    Nonpol_number = Nonpol_number/n_runs
+    print(Nonpol_number)
+
+    # Swap axes to have (n_steps, n_profiles)
+    Opinion_normal_avg = Opinion_normal_avg.transpose()
+
+    MultiLinePlot(Opinion_normal_avg, n_profiles, x_axis=[], y_ax_lim=[0,1], stepshape=0, show=1, custom_labels=label_list, x_label="Time", y_label="Opinion Value", legend=1, cmap='brg', title="Average Opinion Signal of non-polarized Agents", size=figsize, save=save, filename="Visualization/res/C_Multi_Cont_Opinion_NonPol_PRESENTATION.svg")
+
     MultiLinePlot(Avg_PValone_matrix, n_profiles, x_axis=[], y_ax_lim=[0,550], stepshape=1, show=show, custom_labels=label_list, x_label="Time", y_label="# Solar Installations", legend=1, cmap='brg', title="Average Individual PV Installations", size=figsize, save=save, filename="Visualization/res/C_Multi_State_PValone_PRESENTATION.svg")
     MultiLinePlot(Avg_Com_Idea_matrix, n_profiles, x_axis=[], y_ax_lim=[0,550], stepshape=1, show=show, custom_labels=label_list, legendpos='upper right', x_label="Time", y_label="# Agents with Community Idea", legendlabel='Profile', legend=1, cmap='brg', title="Average Agents with the Community Idea", size=figsize, save=save, filename="Visualization/res/C_Multi_State_Com_Idea_PRESENTATION.svg")
     MultiLinePlot(Avg_PVcom_matrix, n_profiles, x_axis=[], y_ax_lim=[0,550], stepshape=1, show=show, custom_labels=label_list, legendpos='upper right', x_label="Time", y_label="# Agents in Solar Communities", legend=1, cmap='brg', title="Average Agents in Solar Communities", size=figsize, save=save, filename="Visualization/res/C_Multi_State_PVcommunity_PRESENTATION.svg")
+
 
     # ---------------------------------------------------------
     # SPECIFIC FIGURES OF INTEREST FOR REPORT - BASELINE CASE
     # ---------------------------------------------------------
 
-    if(base_scenario):
+    if(base_scenario and expt_name=="dual_extremism"):
 
         # Average the values over the agents
         Profit_avg = np.mean(Profit_avg_r,axis=2)
@@ -419,12 +444,6 @@ if(presentation_plots):
         MultipleSubplot(np.array([Opinion_space[0,run_2_analyze,:,idx].transpose(),Profit_space[0,run_2_analyze,:,idx].transpose(),Neighbor_space[0,run_2_analyze,:,idx].transpose()]), n_agents, testvar=3, x_axis=[], stepshape=0, show=show, subtitles=["Opinion","Profit","Neighbor"], x_label="Time", x_ax_lim = [], y_label="Value", y_ax_lim = [0,1], cmap='RdYlGn', title="", size=(10,4), save=1, alpha=0.2, filename="Visualization/res/C_Sub_Cont_All_Base_PRESENTATION.svg")
         MultiLinePlot(Utility_space[0,run_2_analyze,:,idx].transpose(), n_agents, x_axis=[], y_ax_lim=[0,1], stepshape=0, show=show, custom_labels=label_list, x_label="Time", y_label="Utility Value", legend=0, cmap='RdYlGn', title="Utility Signal for all Agents", alpha=0.2, size=figsize, save=save, filename="Visualization/res/C_Single_Cont_Utility_Base_PRESENTATION.svg")
 
-
-
-        MultiLinePlot(Neighbor_space[0,run_2_analyze,:,idx].transpose(), n_agents, x_axis=[], stepshape=0, show=show, custom_labels=label_list, x_label="Time", y_label="Neighbor Value", legend=0, cmap='RdYlGn', title="Neighbor Signal for all Agents", alpha=0.2, size=figsize, save=save, filename="Visualization/res/C_Single_Cont_Utility_Base_PRESENTATION.svg")
-
-
-
         MultipleSubplot(np.array([Opinion_avg,Profit_avg,Neighbor_avg]), 1, testvar=3, x_axis=[], stepshape=0, show=show, subtitles=["Opinion","Profit","Neighbor"], x_label="Time", x_ax_lim = [], y_label="Value", y_ax_lim = [0,1], cmap='brg', title="", size=(10,4), save=1, alpha=1, filename="Visualization/res/C_Sub_Cont_Avg_Base_PRESENTATION.svg")
         MultiLinePlot(Utility_avg, 1, x_axis=[], y_ax_lim=[0,1], stepshape=0, show=show, custom_labels=label_list, x_label="Time", y_label="Utility Value", legend=0, cmap='RdBu', title="Average Utility Signal", size=figsize, alpha=1, save=save, filename="Visualization/res/C_Single_Cont_AvgUtility_Base_PRESENTATION.svg")
 
@@ -432,7 +451,7 @@ if(presentation_plots):
         MultiLinePlot(Avg_PVcom_matrix, 1, x_axis=[], y_ax_lim=[0,550], stepshape=1, show=show, custom_labels=label_list, legendpos='upper right', x_label="Time", y_label="# Community Solar Ideas", legend=0, cmap='RdBu', title="Average Community PV Ideas", alpha=1, size=figsize, save=save, filename="Visualization/res/C_Single_State_PVcommunity_Base_PRESENTATION.svg")
         MultiLinePlot(Avg_PVcom_matrix, 1, x_axis=[], y_ax_lim=[0,550], stepshape=1, show=show, custom_labels=label_list, legendpos='upper right', x_label="Time", y_label="# Agents in Solar Communities", legend=0, cmap='RdBu', title="Average Agents in PV Communities", alpha=1, size=figsize, save=save, filename="Visualization/res/C_Single_State_PVcommunity_Base_PRESENTATION.svg")
 
-        MultipleSubplot(np.array([Avg_PValone_matrix,Avg_Com_Idea_matrix,Avg_PVcom_matrix]), 1, testvar=3, x_axis=[], stepshape=0, show=show, subtitles=["Ind. PV","Comm. Ideas","Comm. PV"], x_label="Time", x_ax_lim = [], y_label="# Agents", y_ax_lim = [0,550], cmap='brg', title="", size=(10,4), save=1, alpha=1, filename="Visualization/res/C_Sub_States_All_Base_PRESENTATION.svg")
+        MultipleSubplot(np.array([Avg_PValone_matrix,Avg_PVcom_matrix]), 1, testvar=2, x_axis=[], stepshape=0, show=show, subtitles=["Ind. PV","Comm. PV"], x_label="Time", x_ax_lim = [], y_label="# Agents", y_ax_lim = [0,550], cmap='brg', title="", size=(10,4), save=1, alpha=1, filename="Visualization/res/C_Sub_States_All_Base_PRESENTATION.svg")
 
         HistogramPlot(Opinion_space[0,run_2_analyze,0], x_ax_lim=[0,1], n_bins=50, show=show, x_label="Opinion value", y_label="Frequency", cmap='RdYlGn', title=("Initial Opinion of a representative run"), size=figsize, save=save, filename="Visualization/res/B_Profile_"+str(0)+"_Hist_Opinion_Initial_Base_PRESENTATION.svg")
         HistogramPlot(Opinion_space[0,run_2_analyze,n_steps-1], x_ax_lim=[0,1], n_bins=50, show=show, x_label="Opinion value", y_label="Frequency", cmap='RdYlGn', title=("Final Opinion of a representative run"), size=figsize, save=save, filename="Visualization/res/B_Profile_"+str(0)+"_Hist_Opinion_Final_Base_PRESENTATION.svg")

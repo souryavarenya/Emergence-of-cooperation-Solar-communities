@@ -37,6 +37,9 @@ import math
 
 def HistogramPlot(data, n_bins=20, show=1, x_label="X_label", x_ax_lim = [], y_label="Y_label", cmap='RdYlGn', title="Title", size=(15,10), save=0, filename="test.svg"):
 
+    #Close all open figures
+    plt.close('all')
+
     #Configure Plot
     plt.figure(figsize=size)
     plt.title(title, fontsize=16)
@@ -105,6 +108,10 @@ def HistogramPlot(data, n_bins=20, show=1, x_label="X_label", x_ax_lim = [], y_l
 #
 
 def MultiLinePlot(data, n_lines, x_axis=[], stepshape=0, show=1, subplot=0, ax= 0, x_label="X_label", x_ax_lim = [], y_label="Y_label", y_ax_lim = [], legend=1, legendlabel='Agent', legendpos='lower right',custom_labels=[], cmap='RdYlGn', alpha=0.5, title="Title", size=(15,10), save=0, filename="test.svg"):
+
+    #Close all open figures
+    if(subplot==0):
+        plt.close('all')
 
     #Configure Plot (only if it's not a subplot)
     if(subplot==0):
@@ -219,6 +226,9 @@ def MultiLinePlot(data, n_lines, x_axis=[], stepshape=0, show=1, subplot=0, ax= 
 #
 
 def MultipleSubplot(data, n_lines, testvar=0, x_axis=[], stepshape=0, show=1, subtitles=[], x_label="X_label", x_ax_lim = [], y_label="Y_label", y_ax_lim = [], cmap='RdYlGn', title="Title", alpha=0.5, size=(15,10), save=0, filename="test.svg"):
+
+    #Close all open figures
+    plt.close('all')
 
     n_subplots = data.shape[0]
 
@@ -351,6 +361,9 @@ def MultipleSubplot(data, n_lines, testvar=0, x_axis=[], stepshape=0, show=1, su
 # -scatter     -> Pointer to scatter plot generated
 
 def ColourMap(x_axis, y_axis, col_axis, col_range=(0,1), x_label="X_label", y_label="Y_label", colorbar=1, Nlegend=3, color_label=['Low', 'Medium', 'High'], title="Title", size=(15,10),cmap='RdYlGn',markersize=5,save=0,show=0,filename="test.svg", internal=False):
+
+    #Close all open figures
+    plt.close('all')
 
     #Configure Scatter Plot
     fig = plt.figure(figsize=size)
