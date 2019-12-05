@@ -32,9 +32,11 @@ from Visualization.AnalysisFunctions import AverageHFDataframe
 try:
     expt_name = sys.argv[1]
 except:
-    print("Need to enter the experiment name")
-    print("Example - uni_extremism, dual_extremism,.. ")
-    sys.exit()
+    # print("Enter the experiment name")
+    # print("Example - uni_extremism, dual_extremism,.. ")
+    # sys.exit()
+    print("Running Default Experiment - uni_extremism")
+    expt_name = "uni_extremism"
 
 # Read experiment data
 expt_file = "Data/Experiments/" + expt_name + ".json"

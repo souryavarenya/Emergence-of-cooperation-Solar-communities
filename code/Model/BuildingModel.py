@@ -148,17 +148,17 @@ class BuildingModel(Model):
                 self.community_idea_blocks[block].update({i:False})
                 self.community_install_blocks[block].update({i:False})
             except KeyError:
-                pass
+                pass    
             
             # Retrieve agent's electricity demand from data [kWh/year]
-            el_demand = b_data.at[i, "demand_kwh"]
+            el_demand = float(b_data.at[i, "demand_kwh"])
             
             # Retrieve agent's solar potential from data [kWh/year]
-            pv_potential = b_data.at[i, "max_pv_gen_kwh"]
+            pv_potential = float(b_data.at[i, "max_pv_gen_kwh"])
             
             # Retrieve agent's self-consumption [fraction of solar electricity
             # consumed on-site]
-            pv_sc = b_data.at[i, "self_consumption"]
+            pv_sc = float(b_data.at[i, "self_consumption"])
             
             # Determine the size of the solar PV system
             # We use a typical rule of thumb in the industry: size of PV system 

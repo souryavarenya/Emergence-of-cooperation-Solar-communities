@@ -13,8 +13,7 @@ class BuildingAgent(Agent):
     """
     Creates a building owner agent.
     """    
-    def __init__(self, unique_id, model, block, el_demand, pv_potential,
-                 pv_sf, pv_sc, is_extremist = None, seed=None):
+    def __init__(self, unique_id, model, block, el_demand, pv_potential, pv_sf, pv_sc, is_extremist = None, seed=None):
         '''
         Initializes all the attributes of the building owner agent.
         Inputs:
@@ -211,7 +210,7 @@ class BuildingAgent(Agent):
             neighbors_com = sum(self.model.community_idea_blocks[self.block].values())
             
             # If this agent has the idea to join a community
-            if self.community = True :
+            if self.community == True :
                 
                 # Exclude the agent and calculate peer pressure
                 self.neighbor = (neighbors_com - 1) / self.total_neighbors
