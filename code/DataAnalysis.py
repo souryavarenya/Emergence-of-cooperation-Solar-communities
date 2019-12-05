@@ -419,6 +419,12 @@ if(presentation_plots):
         MultipleSubplot(np.array([Opinion_space[0,run_2_analyze,:,idx].transpose(),Profit_space[0,run_2_analyze,:,idx].transpose(),Neighbor_space[0,run_2_analyze,:,idx].transpose()]), n_agents, testvar=3, x_axis=[], stepshape=0, show=show, subtitles=["Opinion","Profit","Neighbor"], x_label="Time", x_ax_lim = [], y_label="Value", y_ax_lim = [0,1], cmap='RdYlGn', title="", size=(10,4), save=1, alpha=0.2, filename="Visualization/res/C_Sub_Cont_All_Base_PRESENTATION.svg")
         MultiLinePlot(Utility_space[0,run_2_analyze,:,idx].transpose(), n_agents, x_axis=[], y_ax_lim=[0,1], stepshape=0, show=show, custom_labels=label_list, x_label="Time", y_label="Utility Value", legend=0, cmap='RdYlGn', title="Utility Signal for all Agents", alpha=0.2, size=figsize, save=save, filename="Visualization/res/C_Single_Cont_Utility_Base_PRESENTATION.svg")
 
+
+
+        MultiLinePlot(Neighbor_space[0,run_2_analyze,:,idx].transpose(), n_agents, x_axis=[], stepshape=0, show=show, custom_labels=label_list, x_label="Time", y_label="Neighbor Value", legend=0, cmap='RdYlGn', title="Neighbor Signal for all Agents", alpha=0.2, size=figsize, save=save, filename="Visualization/res/C_Single_Cont_Utility_Base_PRESENTATION.svg")
+
+
+
         MultipleSubplot(np.array([Opinion_avg,Profit_avg,Neighbor_avg]), 1, testvar=3, x_axis=[], stepshape=0, show=show, subtitles=["Opinion","Profit","Neighbor"], x_label="Time", x_ax_lim = [], y_label="Value", y_ax_lim = [0,1], cmap='brg', title="", size=(10,4), save=1, alpha=1, filename="Visualization/res/C_Sub_Cont_Avg_Base_PRESENTATION.svg")
         MultiLinePlot(Utility_avg, 1, x_axis=[], y_ax_lim=[0,1], stepshape=0, show=show, custom_labels=label_list, x_label="Time", y_label="Utility Value", legend=0, cmap='RdBu', title="Average Utility Signal", size=figsize, alpha=1, save=save, filename="Visualization/res/C_Single_Cont_AvgUtility_Base_PRESENTATION.svg")
 
