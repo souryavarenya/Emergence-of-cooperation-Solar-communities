@@ -48,7 +48,7 @@ The two most important variables to study with this model are the number of agen
 
 ## Expected Results
 
-1. Positive opinion extremists should stimulate the adoption of solar installations and communities, while negative opinion extremists should drag it down. Therefore:
+1. Positive opinion extremists should stimulate the adoption of solar installations and communities, whereas negative opinion extremists should drag it down. Therefore:
 
     1.1. The number of solar installations should increase/decrease (respectively) with the insertion of positive/negative extremists.
 
