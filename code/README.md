@@ -5,7 +5,7 @@
 ```bash
 .
 │   README.md 
-│   requirements.txt                                                                                                                  
+│   requirements.txt
 │   DataAnalysis.py
 │   main.py
 ├───Agent
@@ -66,8 +66,9 @@ git clone https://github.com/souryavarenya/Emergence-of-cooperation-Solar-commun
 
 Then enter the `code/` folder and install all the dependencies using the command below
 
-```shell
+```bash
 cd Emergence-of-cooperation-Solar-communities/code/
+
 pip install --user --requirement requirements.txt
 ```
 
