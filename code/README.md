@@ -7,7 +7,8 @@
 │   README.md 
 │   requirements.txt                                                                                                                  
 │   DataAnalysis.py
-│   main.py                                                                                                                             ├───Agent
+│   main.py
+├───Agent
 │   └───BuildingAgent.py             <------ Agent Defined Here
 ├───Model 
 │   └───BuildingModel.py             <------ Model Defined Here                                                                         ├───Data
@@ -34,7 +35,8 @@
 │       RelativeAgreement.py
 │       AnalysisFunctions.py
 │       VisualizationFunctions.py
-│       SimplePayback.py                                                                                                         └───Visualization
+│       SimplePayback.py
+└───Visualization
     └───res
         A_ext1_4_Run_30_Anim_IdeaEvolution.gif
         A_ext1_4_Run_30_Anim_PVEvolution.gif
@@ -107,13 +109,13 @@ Below is an example of how experiment JSON (`Data/Experiments/<expt_name.json>`)
 "experiment_name":"uni_extremism",    
 "rel_profile_dir":"uni_extremism",    
 "n_time_steps":150,    
-"n_batches":50,    
-"batch_seeds":[ 3662, 5290, 3650, 2610, 9334, 355, 374, 9327, 879,                        
-                2781, 3947, 8253, 4539, 5269, 7042, 2345, 9222, 6581,                    
-                3192, 2315, 7327, 283, 4494, 4418, 7219, 6015, 2973,                      
-                9311, 5552, 4082, 6091, 6148, 9983, 5090, 6505, 5043,                     
-                6878, 8951, 8451, 4135, 2754, 9849, 3721, 3777, 54,                     
-                422, 2403, 2728, 7312, 132],    
+"n_batches":50,
+"batch_seeds":[ 3662, 5290, 3650, 2610, 9334, 355, 374, 9327, 879,
+                2781, 3947, 8253, 4539, 5269, 7042, 2345, 9222, 6581,
+                3192, 2315, 7327, 283, 4494, 4418, 7219, 6015, 2973,
+                9311, 5552, 4082, 6091, 6148, 9983, 5090, 6505, 5043,
+                6878, 8951, 8451, 4135, 2754, 9849, 3721, 3777, 54,
+                422, 2403, 2728, 7312, 132],    
 "run_profiles":[0,1,2,3,4],    
 "n_profiles":5,    
 "show_plots": false,    
