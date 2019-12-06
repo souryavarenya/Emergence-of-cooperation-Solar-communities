@@ -70,21 +70,20 @@ Which can be broken down to:
 
 ## Research Methods
 
-(Cellular Automata, Agent-Based Model, Continuous Modeling...) (If you are not sure here: 1. Consult your colleagues, 2. ask the teachers, 3. remember that you can change it afterwards)
-
-Agent-Based Model
+Agent-Based Model, Network Theory, Relative Agreement Interactions.
 
 ## Other
 
-(mention datasets you are going to use)
+We are using a dataset kindly made available by Prakhar Mehta and Danielle Griego (see Mehta et al 2019), with data about buildings in the Alt-Wiedikon district of the city of Zurich. This includes geographical data about the location of buildings and the building blocks to which they belong, as well as data about the buildings’ annual electricity demand and potential solar generation.
 
 ## Tools Used (!!!!!Link Later)
 
-- Python 3.6 + Jupyter Notebook
+- Python 3.6
 - [Mesa Python](https://mesa.readthedocs.io/en/master/) library for agent-based modeling
 - Pandas
-- GeoPandas ?
+- networkx
 - ffmpeg
 - numpy
 - json
+- matplotlib
 - ImageMagick
