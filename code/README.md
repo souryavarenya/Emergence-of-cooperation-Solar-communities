@@ -11,13 +11,16 @@
 ├───Agent
 │   └───BuildingAgent.py             <------ Agent Defined Here
 ├───Model 
-│   └───BuildingModel.py             <------ Model Defined Here                                                                         ├───Data
+│   └───BuildingModel.py             <------ Model Defined Here
+├───Data
 │   │   buildings_data.csv
-│   │   buildings_meta.json                                                                                                              │   └───Experiments
+│   │   buildings_meta.json
+│   └───Experiments
 │       │   dual_extremism.json      <------ Macro Level Expt Params
 │       │   uni_extremism.json       <------ Adjust scenarios
 │       ├───dual_extremism
-│       │       profile_0.json       <------ Profiles within the expt                                                                   │       │       profile_1.json
+│       │       profile_0.json       <------ Profiles within the expt
+│       │       profile_1.json
 │       │       ...
 │       └───uni_extremism
 │               profile_0.json
@@ -45,11 +48,11 @@
 
 ## Installation
 
-If you don't have **Python 3** installed and **added to PATH**, install it from [here]([https://www.python.org/downloads/release/python-375/](https://www.python.org/downloads/release/python-375/). 
+If you don't have **Python 3** installed and **added to PATH**, install it from [here](https://www.python.org/downloads/release/python-375/) . 
 
 > Note: Python 3.8 is not fully supported by some libraries. Not Recommended.
 
-Also, install git if unavailable from [here]([https://git-scm.com/](https://git-scm.com/)
+Also, install git if unavailable from [here](https://git-scm.com/)
 
 These instructions can be used with <u>bash</u> (Linux, MacOS) or <u>powershell</u> (Windows)
 
