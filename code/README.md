@@ -34,7 +34,7 @@
 │       RelativeAgreement.py
 │       AnalysisFunctions.py
 │       VisualizationFunctions.py
-│       SimplePayback.py                                                                                                         └───Visualization   
+│       SimplePayback.py                                                                                                         └───Visualization
     └───res
         A_ext1_4_Run_30_Anim_IdeaEvolution.gif
         A_ext1_4_Run_30_Anim_PVEvolution.gif
@@ -68,7 +68,7 @@ pip install --user --requirement requirements.txt
 
 > Note: These dependencies must be installed for python 3. Try `pip3` if your computer has multiple versions of python installed
 
-Install ImageMagick which 
+Install ImageMagick from [here](https://imagemagick.org/script/download.php) (Needed for exporting GIF animations) 
 
 ## Running the code
 
