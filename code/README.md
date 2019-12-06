@@ -6,12 +6,35 @@
 .
 │   README.md 
 │   requirements.txt                                                                                                                  
-│   DataAnalysis.py                                                                                                    │   main.py                                                                                                                                                                                                                                                                                                                                  ├───Agent                                                                                                              │   └───BuildingAgent.py             <------ Agent Defined Here
+│   DataAnalysis.py
+│   main.py                                                                                                                             ├───Agent
+│   └───BuildingAgent.py             <------ Agent Defined Here
 ├───Model 
-│   └───BuildingModel.py             <------ Model Defined Here                                                                                                                                                                                                                                                                                                                                                                                                 ├───Data                                                                                                               │   │   buildings_data.csv                                                                                             │   │   buildings_meta.json                                                                                                              │   └───Experiments                                                                                                    │       │   dual_extremism.json      <------ Macro Level Expt Params                                                                                  │       │   uni_extremism.json       <------ Adjust scenarios                                                                                       │       ├───dual_extremism                                                                                             │       │       profile_0.json       <------ Profiles within the expt                                                                                  │       │       profile_1.json                                                                                         │       │       ...                                                                                        │       └───uni_extremism                                                                                              │               profile_0.json                                                                                         │               profile_1.json                                                                                         │               ...                                                                                                 ├───Datalogs                                                                                                                                                                                                             │   └───Logs                                                                                                           │       └───uni_extremism                                                                         │               profile_0_Coordinates.csv                                                                              │               profile_0_HF.csv                                                                                       │               profile_0_MF.csv                                                                                      │               ...                                                                                                                      ├───Tools
-│       DataloggingFunctions.py                                                                                                              │       RelativeAgreement.py
+│   └───BuildingModel.py             <------ Model Defined Here                                                                         ├───Data
+│   │   buildings_data.csv
+│   │   buildings_meta.json                                                                                                              │   └───Experiments
+│       │   dual_extremism.json      <------ Macro Level Expt Params
+│       │   uni_extremism.json       <------ Adjust scenarios
+│       ├───dual_extremism
+│       │       profile_0.json       <------ Profiles within the expt                                                                   │       │       profile_1.json
+│       │       ...
+│       └───uni_extremism
+│               profile_0.json
+│               profile_1.json
+│               ...
+├───Datalogs
+│   └───Logs
+│       └───uni_extremism
+│               profile_0_Coordinates.csv
+│               profile_0_HF.csv
+│               profile_0_MF.csv
+│               ...
+├───Tools
+│       DataloggingFunctions.py
+│       RelativeAgreement.py
 │       AnalysisFunctions.py
-│       VisualizationFunctions.py                                                                                          │       SimplePayback.py                                                                                                         └───Visualization   
+│       VisualizationFunctions.py
+│       SimplePayback.py                                                                                                         └───Visualization   
     └───res
         A_ext1_4_Run_30_Anim_IdeaEvolution.gif
         A_ext1_4_Run_30_Anim_PVEvolution.gif
