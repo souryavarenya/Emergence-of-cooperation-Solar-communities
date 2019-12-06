@@ -35,14 +35,12 @@ The two most important variables to study with this model are the number of agen
 ## Fundamental Questions
 
 1. How does the presence of opinion extremists affect the adoption of solar installations and solar communities?
-Which can be broken down to:
 
     1.1. How does the number of agents that adopt individual solar installations change with the insertion of opinion extremists?
 
     1.2. How does the number of agents that form solar communities change with the insertion of opinion extremists?
 
 2. How does the presence of opinion extremists affect the opinion dynamics of the agent network?
-Which can be broken down to:
 
     2.1. How does the average opinion of the agent network change with the insertion of opinion extremists?
 
