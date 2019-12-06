@@ -30,16 +30,29 @@ The ABM represents the decision-making of building owners on whether to adopt ro
 
 The decision-making process has two steps, inspired by the theory of planned behavior (Ajzen 1991), where agents first determine if they develop the intention of adopting solar individually, of joining a community, or neither, and then implement the behavior (i.e., adopt individually or try to join a community).
 
-The two most important variables to study with this model are the number of agents that install rooftop solar and the number of agents that join a solar community.
+The two most important variables to study with this model are the number of agents that install rooftop solar and the number of agents that join a solar community. Other intermediate variables such as the opinion of the agents are also considered to gain a better understanding of the situation.
 
 ## Fundamental Questions
 
-(At the end of the project you want to find the answer to these questions)
-(Formulate a few, clear questions. Articulate them in sub-questions, from the more general to the more specific. )
+1. How does the presence of opinion extremists affect the adoption of solar installations and solar communities?
+Which can be broken down to:
+    1.1. How does the number of agents that adopt individual solar installations change with the insertion of opinion extremists?
+    1.2. How does the number of agents that form solar communities change with the insertion of opinion extremists?
+
+2. How does the presence of opinion extremists affect the opinion dynamics of the agent network?
+Which can be broken down to:
+    2.1. How does the average opinion of the agent network change with the insertion of opinion extremists?
+    2.2. How do the opinion evolution functions of different agents change with the insertion of opinion extremists?
 
 ## Expected Results
 
-(What are the answers to the above questions that you expect to find before starting your research?)
+1. Positive opinion extremists should stimulate the adoption of solar installations and communities, while negative opinion extremists should drag it down. Therefore:
+    1.1. The number of solar installations should increase/decrease (respectively) with the insertion of positive/negative extremists.
+    1.2. The number of solar communities should increase/decrease (respectively) with the insertion of positive/negative extremists.
+
+2. The opinion dynamics of the agent network should shift towards the opinon values of the inserted extremists.
+    2.1. The average opinion should increase/decrease (respectively) with the insertion of positive/negative extremists.
+    2.1. The evolution functions of the agents should reflect a polarization of opinions around the extremists.
 
 ## References
 
@@ -50,6 +63,8 @@ The two most important variables to study with this model are the number of agen
 ## Research Methods
 
 (Cellular Automata, Agent-Based Model, Continuous Modeling...) (If you are not sure here: 1. Consult your colleagues, 2. ask the teachers, 3. remember that you can change it afterwards)
+
+Agent-Based Model
 
 ## Other
 
