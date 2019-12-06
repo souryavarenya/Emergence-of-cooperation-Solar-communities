@@ -4,20 +4,23 @@
 
 ```bash
 .
-├── Visualization
-│   ├── adoption_rate.png
-│   ├── co-operation.png
-│   └── ...
-
-├── BuildingAgent.py
-├── BuildingModel.py
-└── main.ipynb
+│   README.md 
+│   requirements.txt                                                                                                                  
+│   DataAnalysis.py                                                                                                    │   main.py                                                                                                                                                                                                            │                                                                                                                      ├───Agent                                                                                                              │   └───BuildingAgent.py                                                                                                                                                                                                                                                                                                                                                                                                      ├───Data                                                                                                               │   │   buildings_data.csv                                                                                             │   │   buildings_meta.json                                                                                                              │   └───Experiments                                                                                                    │       │   dual_extremism.json      <------ Macro Level Expt Params                                                                                  │       │   uni_extremism.json       <------ Adjust scenarios                                                                                       │       ├───dual_extremism                                                                                             │       │       profile_0.json       <------ Profiles within the expt                                                                                  │       │       profile_1.json                                                                                         │       │       ...                                                                                        │       └───uni_extremism                                                                                              │               profile_0.json                                                                                         │               profile_1.json                                                                                         │               ...                                                                                                 ├───Datalogs                                                                                                                                                                                                             │   └───Logs                                                                                                           │       └───uni_extremism                                                                         │               profile_0_Coordinates.csv                                                                              │               profile_0_HF.csv                                                                                       │               profile_0_MF.csv                                                                                      │               ...                                                                                                                                                                                                         ├───Model                                                                                                              │   └───BuildingModel.py                                                                                                                                                                         │                                                                                                                      ├───Tools
+│       DataloggingFunctions.py                                                                                                              │       RelativeAgreement.py
+│       AnalysisFunctions.py
+│       VisualizationFunctions.py                                                                                          │       SimplePayback.py                                                                                                                                                                         
+│                                                                                                                   └───Visualization   
+    └───res
+        A_ext1_4_Run_30_Anim_IdeaEvolution.gif
+        A_ext1_4_Run_30_Anim_PVEvolution.gif
+        ...
 ```
 
 #### Running it on your machine
 
+Install Python ( 3.6 + )
+
 ```shell
 ----
 ```
-
-
