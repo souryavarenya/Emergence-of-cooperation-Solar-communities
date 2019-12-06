@@ -35,7 +35,7 @@ import math
 # -filename    -> Name that will be given to the image file
 #
 
-def HistogramPlot(data, n_bins=20, show=1, x_label="X_label", x_ax_lim = [], y_label="Y_label", cmap='RdYlGn', title="Title", size=(15,10), save=0, filename="test.svg"):
+def HistogramPlot(data, n_bins=20, show=1, x_label="X_label", x_ax_lim = [], y_label="Y_label", y_ax_lim = [], cmap='RdYlGn', title="Title", size=(15,10), save=0, filename="test.svg"):
 
     #Close all open figures
     plt.close('all')
@@ -45,6 +45,9 @@ def HistogramPlot(data, n_bins=20, show=1, x_label="X_label", x_ax_lim = [], y_l
     plt.title(title, fontsize=16)
     plt.xlabel(x_label, fontsize=12)
     plt.ylabel(y_label, fontsize=12)
+
+    if(len(y_ax_lim)==2):
+        plt.ylim(y_ax_lim)
 
     #Create Histogram
     if(len(x_ax_lim)==2):
@@ -241,23 +244,15 @@ def MultipleSubplot(data, n_lines, testvar=0, x_axis=[], stepshape=0, show=1, su
         else:
             m = 1
 
-    if(testvar==2):
-        n=2
-        m=1
-
-    if(testvar==3):
-        n=3
+    if(testvar>1):
+        n=testvar
         m=1
 
     fig, axs = plt.subplots(m, n, sharex=True, sharey=True, figsize=size)
 
-    if(testvar==2):
+    if(testvar>1):
         n=1
-        m=2
-
-    if(testvar==3):
-        n=1
-        m=3
+        m=testvar
 
     #Configure Plot
 
