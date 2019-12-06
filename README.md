@@ -22,11 +22,15 @@ Opinion dynamics around the technology are thus of pivotal importance for unders
 
 Previous research points to the disproportionate influence of individuals with strong opinions – so-called “opinion extremists” – on other individuals within their social network. Such opinion extremists, therefore, provide a potential lever for policy interventions.
 
-To investigate this influence, we develop an agent-based model that represents a fraction of the building owners in Alt-Wiedikon district in Zurich, Switzerland. We simulate four scenarios with different distributions of opinion extremists to analyze their impact on the uptake of individual and community solar PV.
+To investigate this influence, we have developped an agent-based model that represents a fraction of the building owners in Alt-Wiedikon district in Zurich, Switzerland. We simulate four scenarios with different distributions of opinion extremists to analyze their impact on the uptake of individual and community solar PV.
 
 ## The Model
 
-(Define dependent and independent variables you want to study. Say how you want to measure them.) (Why is your model a good abtraction of the problem you want to study?) (Are you capturing all the relevant aspects of the problem?)
+The ABM represents the decision-making of building owners on whether to adopt rooftop solar individually or join a solar community based on economic and social factors.
+
+The decision-making process has two steps, inspired by the theory of planned behavior (Ajzen 1991), where agents first determine if they develop the intention of adopting solar individually, of joining a community, or neither, and then implement the behavior (i.e., adopt individually or try to join a community).
+
+The two most important variables to study with this model are the number of agents that install rooftop solar and the number of agents that join a solar community.
 
 ## Fundamental Questions
 
