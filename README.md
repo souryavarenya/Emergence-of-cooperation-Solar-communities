@@ -30,7 +30,7 @@ The ABM represents the decision-making of building owners on whether to adopt ro
 
 The decision-making process has two steps, inspired by the theory of planned behavior (Ajzen 1991), where agents first determine if they develop the intention of adopting solar individually, of joining a community, or neither, and then implement the behavior (i.e., adopt individually or try to join a community).
 
-The two most important variables to study with this model are the number of agents that install rooftop solar and the number of agents that join a solar community. Other intermediate variables such as the opinion of the agents are also considered to gain a better understanding of the situation.
+The two most important variables to study with this model are the number of agents that install rooftop solar and the number of agents that join a solar community. Other intermediate variables such as the opinion quantification of the agents are also considered to gain a better understanding of the situation.
 
 ## Fundamental Questions
 
