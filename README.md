@@ -8,11 +8,7 @@
 >   * Schwarz, Marius
 > * Project Title: Emergence of Co-operation for Solar Communities
 
-## <REMOVE> G-Drive
 
-[https://drive.google.com/drive/folders/1p-_3aSWZEwiGsiweO4M7A74dusm4do5C](https://drive.google.com/drive/folders/1p-_3aSWZEwiGsiweO4M7A74dusm4do5C)
-
-(sign-in access required)
 
 ## General Introduction
 
@@ -35,36 +31,40 @@ The two most important variables to study with this model are the number of agen
 ## Fundamental Questions
 
 1. How does the presence of opinion extremists affect the adoption of solar installations and solar communities?
-
+   
     1.1. How does the number of agents that adopt individual solar installations change with the insertion of opinion extremists?
-
+   
     1.2. How does the number of agents that form solar communities change with the insertion of opinion extremists?
 
 2. How does the presence of opinion extremists affect the opinion dynamics of the agent network?
-
+   
     2.1. How does the average opinion of the agent network change with the insertion of opinion extremists?
-
+   
     2.2. How do the opinion evolution functions of different agents change with the insertion of opinion extremists?
 
 ## Expected Results
 
 1. Positive opinion extremists should stimulate the adoption of solar installations and communities, whereas negative opinion extremists should drag it down. Therefore:
-
+   
     1.1. The number of solar installations should increase/decrease (respectively) with the insertion of positive/negative extremists.
-
+   
     1.2. The number of solar communities should increase/decrease (respectively) with the insertion of positive/negative extremists.
 
 2. The opinion dynamics of the agent network should shift towards the opinon values of the inserted extremists.
-
+   
     2.1. The average opinion should increase/decrease (respectively) with the insertion of positive/negative extremists.
-
+   
     2.1. The evolution functions of the agents should reflect a polarization of opinions around the extremists.
 
 ## References
 
-(Add the bibliographic references you intend to use)
-(Explain possible extension to the above models)
-(Code / Projects Reports of the previous year)
+Deffuant, G., Amblard, F., Weisbuch, G., & Faure, T. (2002). How can extremism prevail? A study based on the relative agreement interaction model. *Journal of artificial societies and social simulation*, *5*(4).
+
+Schiera, D. S., Minuto, F. D., Bottaccioli, L., Borchiellini, R., & Lanzini, A. (2019). Analysis of rooftop photovoltaics diffusion in energy community buildings by a novel Gis-and agent-based modeling co-simulation platform. *IEEE Access*, *7*, 93404-93432.
+
+Mehta, P., Griego, D., Nunez-Jimenez, A., & Schlueter, A. (2019, November). The Impact of self-consumption regulation on individual and community solar PV adoption in Switzerland: an agent-based model. In *Journal of Physics: Conference Series* (Vol. 1343, No. 1, p. 012143). IOP Publishing.
+
+Other references in the document
 
 ## Research Methods
 
@@ -73,15 +73,3 @@ Agent-Based Model, Network Theory, Relative Agreement Interactions.
 ## Other
 
 We are using a dataset kindly made available by Prakhar Mehta and Danielle Griego (see Mehta et al 2019), with data about buildings in the Alt-Wiedikon district of the city of Zurich. This includes geographical data about the location of buildings and the building blocks to which they belong, as well as data about the buildings’ annual electricity demand and potential solar generation.
-
-## Tools Used (!!!!!Link Later)
-
-- Python 3.6
-- [Mesa Python](https://mesa.readthedocs.io/en/master/) library for agent-based modeling
-- Pandas
-- networkx
-- ffmpeg
-- numpy
-- json
-- matplotlib
-- ImageMagick
