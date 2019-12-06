@@ -16,9 +16,13 @@
 
 ## General Introduction
 
-(States your motivation clearly: why is it important / interesting to solve this problem?)
-(Add real-world examples, if any)
-(Put the problem into a historical context, from what does it originate? Are there already some proposed solutions?)
+The diffusion of solar photovoltaic (PV) systems has the potential to decarbonize a large portion of the energy consumption in cities. However, consumers’ lack of awareness and uncertainty about solar PV hinder the diffusion the technology.
+
+Opinion dynamics around the technology are thus of pivotal importance for understanding how policy interventions could accelerate the uptake of the technology.
+
+Previous research points to the disproportionate influence of individuals with strong opinions – so-called “opinion extremists” – on other individuals within their social network. Such opinion extremists, therefore, provide a potential lever for policy interventions.
+
+To investigate this influence, we develop an agent-based model that represents a fraction of the building owners in Alt-Wiedikon district in Zurich, Switzerland. We simulate four scenarios with different distributions of opinion extremists to analyze their impact on the uptake of individual and community solar PV.
 
 ## The Model
 
