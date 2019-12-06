@@ -36,22 +36,30 @@ The two most important variables to study with this model are the number of agen
 
 1. How does the presence of opinion extremists affect the adoption of solar installations and solar communities?
 Which can be broken down to:
+
     1.1. How does the number of agents that adopt individual solar installations change with the insertion of opinion extremists?
+
     1.2. How does the number of agents that form solar communities change with the insertion of opinion extremists?
 
 2. How does the presence of opinion extremists affect the opinion dynamics of the agent network?
 Which can be broken down to:
+
     2.1. How does the average opinion of the agent network change with the insertion of opinion extremists?
+
     2.2. How do the opinion evolution functions of different agents change with the insertion of opinion extremists?
 
 ## Expected Results
 
 1. Positive opinion extremists should stimulate the adoption of solar installations and communities, while negative opinion extremists should drag it down. Therefore:
+
     1.1. The number of solar installations should increase/decrease (respectively) with the insertion of positive/negative extremists.
+
     1.2. The number of solar communities should increase/decrease (respectively) with the insertion of positive/negative extremists.
 
 2. The opinion dynamics of the agent network should shift towards the opinon values of the inserted extremists.
+
     2.1. The average opinion should increase/decrease (respectively) with the insertion of positive/negative extremists.
+
     2.1. The evolution functions of the agents should reflect a polarization of opinions around the extremists.
 
 ## References
