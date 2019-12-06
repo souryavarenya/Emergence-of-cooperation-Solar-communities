@@ -14,9 +14,6 @@ from mesa.time import RandomActivation
 
 # Import space package
 from mesa.space import MultiGrid, ContinuousSpace 
-#--> SingleGrid - uses a grid lattice that allows only one agent per cell
-#--> MultiGrid - uses a grid lattice that allows multiple agents per cell
-#--> Continuous Space
 
 # Import data collector object class
 from mesa.datacollection import DataCollector
@@ -45,9 +42,6 @@ class BuildingModel(Model):
         # - community idea blocks    -> Dictionary of dictionaries containing agent id and corresponding community value for developed ideas
         # - community install blocks -> Dictionary of dictionaries containing agent id and corresponding community value for installations
 
-        # 2. Define the spatial dimension of the model creating a grid
-        # Create the grid with calculated dimensions
-        ## self.grid = MultiGrid(width, height, False)
         self.space = ContinuousSpace(data_dict["max_x"],
                                      data_dict["max_y"],
                                      False,
@@ -57,19 +51,19 @@ class BuildingModel(Model):
         # the edges of the grid do not wrap around.
         # In continuous space, all min and max co-ords can be given.
         
-        # 3. Define activator method used in the model
+        # Define activator method used in the model
         self.schedule = RandomActivation(self)
         
-        # 4. Define a variable for conditional shut off of the model
+        # Define a variable for conditional shut off of the model
         self.running = True
         # Note: here set as always true so model runs until max step.
         
-        # 5. Setup Global Variables
+        # Setup Global Variables
         self.awareness = data_dict["awareness"]
         self.awareness_var = data_dict["awareness_var"]
 
         # Get Alpha and Beta for PERT
-            # alpha and beta calculated as shown here: https://stats.stackexchange.com/questions/12232/calculating-the-parameters-of-a-beta-distribution-using-the-mean-and-variance
+        # alpha and beta calculated as shown here: https://stats.stackexchange.com/questions/12232/calculating-the-parameters-of-a-beta-distribution-using-the-mean-and-variance
 
         self.alpha = (self.awareness**2)*(((1-self.awareness)/(self.awareness_var**2))-(1/self.awareness))
         self.beta = self.alpha*((1/self.awareness)-1)
@@ -100,7 +94,6 @@ class BuildingModel(Model):
         self.pv_price = data_dict["pv_price"]
         
         # Price of electricity [CHF/kWh]
-        # self.el_price = 0.30
         self.el_price = data_dict["el_price"] 
         
         # Change of solar PV system prices every month [as fraction of prior]

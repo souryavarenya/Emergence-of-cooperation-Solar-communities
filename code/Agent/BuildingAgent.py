@@ -1,5 +1,4 @@
 
-from numpy.random import default_rng
 import random
 import numpy as np
 from mesa import Agent
@@ -27,9 +26,6 @@ class BuildingAgent(Agent):
         
         # Set the agent's unique_id from the model object
         super().__init__(unique_id, model)
-
-        # Creates a random number generator with given seed
-        #self.rng = default_rng(seed)
 
         # Flag for marking first step
         self.first_step = True
@@ -62,8 +58,6 @@ class BuildingAgent(Agent):
         # Define the agent's environmental awareness
         # Initializes a random value around the given mean awareness 
         # and clips it between 0 and 1
-        # ***IMPORTANT RANDOM MANAGEMENT -> maybe we need to use the mesa
-        # package random package instead of the numpy??
         if is_extremist == None:
             self.awareness = np.random.beta(model.alpha, model.beta)
             self.awareness_unc = 0.02 + self.awareness*(1 - self.awareness)
@@ -75,8 +69,6 @@ class BuildingAgent(Agent):
             self.awareness_unc = 0.03
 
         # Define neighbor effect
-        # ***to-do: initialize to zero?***
-        # Q: does it need to be an attribute?
         self.neighbor = 0
         self.total_neighbors = 0
 
@@ -102,8 +94,8 @@ class BuildingAgent(Agent):
         # Track if the agent has joined a solar community
         self.pv_community = False
 
-        # Divide the step into idea formation and implementation
-        # Flag for checking idea phase 
+    # Divide the step into idea formation and implementation
+    # Flag for checking idea phase 
         
     def step(self):
         '''

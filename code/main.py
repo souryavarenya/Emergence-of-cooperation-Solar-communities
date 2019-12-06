@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 ########## Team Red Panda ###########
 # - Fornt Mas, Jordi                #
 # - Kovvali, Sourya                 #
@@ -34,13 +35,6 @@ try:
 except:
     print("Running Default Experiment - uni_extremism")
     expt_name = "uni_extremism"
-
-# if len(sys.argv) > 1:
-#     expt_name = sys.argv[1]
-# else:
-#     print("Enter the experiment name")
-#     print("Example - uni_extremism, dual_extremism,.. ")
-#     expt_name = input()
 
 # Read experiment data
 expt_file = "Data/Experiments/" + expt_name + ".json"
@@ -109,8 +103,8 @@ def run_profile(expt_data, profile_id):
 
     # Create dataframe and write coordinates to csv file
     coord_dataframe = pd.DataFrame(data={'x': x_coord, 'y': y_coord})
-    coord_dataframe.index.name = 'AgentID'                                         # The main index must also have a name!
-    coord_dataframe.to_csv(Building_Coord_file, sep=';', mode='w', header=True)    # Write dataframe to CSV, with header and in write mode
+    coord_dataframe.index.name = 'AgentID'                                         
+    coord_dataframe.to_csv(Building_Coord_file, sep=';', mode='w', header=True) 
 
     # Initialize CSV Outputs - Once per batch
     InitializeCSV(HF_out_file,HF_data_columns,['Step','AgentID'])

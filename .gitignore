@@ -49,35 +49,7 @@ code/Datalogs/Logs/profile_8_HF.csv
 code/Datalogs/Logs/profile_8_MF.csv
 code/Datalogs/Logs/profile_9_HF.csv
 code/Datalogs/Logs/profile_9_MF.csv
-code/Datalogs/Logs/
-code/Visualization/res/
-code/Visualization/res/B_Profile_0_Hist_Opinion_Final.svg
-code/Visualization/res/B_Profile_0_Hist_Opinion_Initial.svg
-code/Visualization/res/B_Profile_2_Hist_Opinion_Final.svg
-code/Visualization/res/B_Profile_2_Hist_Opinion_Initial.svg
-code/Visualization/res/B_Profile_3_Hist_Opinion_Final.svg
-code/Visualization/res/B_Profile_3_Hist_Opinion_Initial.svg
-code/Visualization/res/A_Profile_3_Run_46_Anim_PVEvolution.gif
-code/Visualization/res/B_Profile_3_Map_Opinion_Final.svg
-code/Visualization/res/B_Profile_3_Map_Opinion_Initial.svg
-code/Visualization/res/B_Profile_3_Map_Utility_Final.svg
-code/Visualization/res/B_Profile_3_Multi_Cont_Opinion.svg
-code/Visualization/res/B_Profile_3_Multi_Cont_Uncertainty.svg
-code/Visualization/res/B_Profile_3_Multi_Cont_Utility.svg
-code/Visualization/res/B_Profile_3_Multi_State_Idea.svg
-code/Visualization/res/B_Profile_3_Multi_State_PValone.svg
-code/Visualization/res/B_Profile_3_Multi_State_PVcommunity.svg
-code/Visualization/res/B_Profile_3_Run_46_Map_Idea_Final.svg
-code/Visualization/res/C_Sub_Cont_Utility.svg
-code/Datalogs/Logs/Nueva carpeta/profile_0_HF.csv
-code/Datalogs/Logs/Nueva carpeta/profile_0_MF.csv
-code/Datalogs/Logs/Nueva carpeta/Coordinates.csv
-code/Datalogs/Logs/Nueva carpeta/profile_1_HF.csv
-code/Datalogs/Logs/Nueva carpeta/profile_1_MF.csv
-code/Datalogs/Logs/Nueva carpeta/profile_2_HF.csv
-code/Datalogs/Logs/Nueva carpeta/profile_2_MF.csv
-code/Datalogs/Logs/Nueva carpeta/profile_3_HF.csv
-code/Datalogs/Logs/Nueva carpeta/profile_3_MF.csv
-code/Datalogs/Logs/Nueva carpeta/profile_4_HF.csv
-code/Datalogs/Logs/Nueva carpeta/profile_4_MF.csv
-code/Datalogs/Logs/Coordinates.csv
+code/Datalogs/Logs/*
+!code/Datalogs/Logs/placeholder.md
+code/Visualization/res/*
+!code/Visualization/res/placeholder.md
