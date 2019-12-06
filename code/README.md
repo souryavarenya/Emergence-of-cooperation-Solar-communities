@@ -57,6 +57,8 @@ python DataAnalysis.py uni_extremism
 ```
 > Note: You must close the plot to generate the next one. 
 
+> Note: Some warnings might pop up - can be ignored 
+
 > Note: Sometimes, it might take a while between closing a plot and next one being generated - since the data is huge.
 
 That's it! You have successfully finished running an experiment and visualizing the data
